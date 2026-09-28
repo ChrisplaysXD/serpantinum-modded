@@ -488,7 +488,7 @@ PanelWindow {
         if (!result) return null;
 
         let scale = masterWindow.globalUiScale || 1.0;
-        let isFixed = (name === "guide" || name === "wallpaper" || name === "notifications" || name === "system" || name === "hidden");
+        let isFixed = (name === "guide" || name === "keybinds" || name === "wallpaper" || name === "notifications" || name === "system" || name === "hidden");
 
         if (effHidden && !isFixed) {
             let offsetAdjustment = Math.round(46 * scale);
@@ -673,7 +673,7 @@ PanelWindow {
         let gen = masterWindow.switchGeneration;
         masterWindow.targetActive = newWidget;
 
-        if (newWidget !== "guide") {
+        if (newWidget !== "guide" && newWidget !== "keybinds") {
             masterWindow.userMoved = false;
         }
 
