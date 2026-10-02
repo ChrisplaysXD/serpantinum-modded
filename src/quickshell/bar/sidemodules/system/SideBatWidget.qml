@@ -59,15 +59,6 @@ Rectangle {
     visible: opacity > 0
     Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
 
-    property real globalWavePhase: 0.0
-    NumberAnimation on globalWavePhase {
-        from: 0
-        to: Math.PI * 2
-        duration: sideBatRoot.isCharging ? 1800 : 3600
-        loops: Animation.Infinite
-        running: sideBatRoot.showLayout && sideBatRoot.moduleActive
-    }
-
     Timer {
         running: sideBatRoot.moduleActive && barWindow && barWindow.isStartupReady && barWindow.isDataReady
         interval: 100
@@ -85,13 +76,21 @@ Rectangle {
         width: barWindow ? barWindow.s(sideBatRoot.isCompact ? 26 : 28) : (sideBatRoot.isCompact ? 26 : 28)
         height: barWindow ? barWindow.s(sideBatRoot.isCompact ? 26 : 28) : (sideBatRoot.isCompact ? 26 : 28)
         radius: Math.max(0, ThemeBackend.borderRadius - (barWindow ? barWindow.s(2) : 2))
-        color: sideBatRoot.isCompact ? Qt.lighter(ThemeBackend.surface0, 1.18) : ThemeBackend.surface0
-        border.color: sideBatRoot.isCompact ? ThemeBackend.surface2 : ThemeBackend.surface1
+        property color baseColor: sideBatRoot.isCompact ? Qt.lighter(ThemeBackend.surface0, 1.18) : ThemeBackend.surface0
+        color: batMouseArea.pressed ? Qt.darker(baseColor, 1.15) : (batMouseArea.containsMouse ? Qt.lighter(baseColor, 1.08) : baseColor)
+        Behavior on color { ColorAnimation { duration: 150 } }
+        property color baseBorderColor: sideBatRoot.isCompact ? ThemeBackend.surface2 : ThemeBackend.surface1
+        border.color: batMouseArea.containsMouse ? ThemeBackend.surface2 : baseBorderColor
+        Behavior on border.color { ColorAnimation { duration: 150 } }
         border.width: 1
         clip: true
 
+        scale: batMouseArea.pressed ? 0.94 : (batMouseArea.containsMouse ? 1.04 : 1.0)
+        Behavior on scale { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
+
         property real value: sideBatRoot.isDesktop ? 0.0 : (UPower.displayDevice.ready ? UPower.displayDevice.percentage : 0.0)
-        property color accentColor: sideBatRoot.batDynamicColor
+        property color baseAccentColor: sideBatRoot.batDynamicColor
+        property color accentColor: batMouseArea.pressed ? Qt.darker(baseAccentColor, 1.15) : (batMouseArea.containsMouse ? Qt.lighter(baseAccentColor, 1.08) : baseAccentColor)
         property bool initAnimTrigger: false
 
         property real animValue: value
@@ -99,9 +98,6 @@ Rectangle {
 
         property real fillRatio: Math.max(0.0, Math.min(1.0, isNaN(animValue) ? 0.0 : animValue))
         property real fillY: height * (1.0 - fillRatio)
-        property real maxWaveAmp: sideBatRoot.isCharging ? (barWindow ? barWindow.s(2.5) : 2.5) : (barWindow ? barWindow.s(0.5) : 0.5)
-        property real waveAmp: (fillRatio < 0.99 && fillRatio > 0.01) ? maxWaveAmp * Math.sin(fillRatio * Math.PI) : 0
-        property real waveCenterOffset: 0.375 * waveAmp * (Math.sin(sideBatRoot.globalWavePhase) - Math.cos(sideBatRoot.globalWavePhase))
 
         Timer {
             running: sideBatRoot.moduleActive && sideBatRoot.showLayout && !batBtn.initAnimTrigger
@@ -146,18 +142,7 @@ Rectangle {
                 ctx.clip();
 
                 ctx.beginPath();
-                ctx.moveTo(0, batBtn.fillY);
-                if (batBtn.waveAmp > 0) {
-                    var cp1y = batBtn.fillY + Math.sin(sideBatRoot.globalWavePhase) * batBtn.waveAmp;
-                    var cp2y = batBtn.fillY + Math.cos(sideBatRoot.globalWavePhase + Math.PI) * batBtn.waveAmp;
-                    ctx.bezierCurveTo(width * 0.33, cp2y, width * 0.66, cp1y, width, batBtn.fillY);
-                    ctx.lineTo(width, height);
-                    ctx.lineTo(0, height);
-                } else {
-                    ctx.lineTo(width, batBtn.fillY);
-                    ctx.lineTo(width, height);
-                    ctx.lineTo(0, height);
-                }
+                ctx.rect(0, batBtn.fillY, width, height - batBtn.fillY);
                 ctx.closePath();
 
                 var grad = ctx.createLinearGradient(0, 0, 0, height);
@@ -170,18 +155,11 @@ Rectangle {
             }
 
             Connections {
-                target: sideBatRoot
-                enabled: (sideBatRoot.showLayout && sideBatRoot.moduleActive) && batBtn.waveAmp > 0
-                function onGlobalWavePhaseChanged() { pillCanvas.requestPaint(); }
-            }
-
-            Connections {
                 target: batBtn
                 enabled: sideBatRoot.showLayout && sideBatRoot.moduleActive
                 function onRadiusChanged() { pillCanvas.requestPaint(); }
                 function onFillRatioChanged() { pillCanvas.requestPaint(); }
                 function onAccentColorChanged() { pillCanvas.requestPaint(); }
-                function onWaveAmpChanged() { pillCanvas.requestPaint(); }
             }
         }
 
@@ -198,7 +176,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            height: Math.min(parent.height, Math.max(0, (parent.height * batBtn.fillRatio) - batBtn.waveCenterOffset))
+            height: Math.min(parent.height, Math.max(0, parent.height * batBtn.fillRatio))
             clip: true
             visible: batBtn.fillRatio > 0
 
@@ -219,7 +197,9 @@ Rectangle {
         }
 
         MouseArea {
+            id: batMouseArea
             anchors.fill: parent
+            hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: Quickshell.execDetached(["bash", "-c", Caching.serpantinumDir + "/scripts/qs_manager.sh toggle system"])
         }

@@ -917,6 +917,12 @@ PanelWindow {
                         placeholderText: typeof I18n !== "undefined" ? I18n.t("clipboard.search", "Search clipboard") : "Search clipboard"
                         showClearButton: true
 
+                        onHasFocusChanged: {
+                            if (!searchInput.hasFocus && clipboardWindow.isVisible) {
+                                clipList.forceActiveFocus();
+                            }
+                        }
+
                         onTextEdited: function(newText) {
                             filterClips(newText);
                         }
@@ -1015,6 +1021,24 @@ PanelWindow {
                         interactive: !clipboardWindow.isClearingClips && (contentHeight > height)
 
                         highlightFollowsCurrentItem: false
+
+                        Keys.forwardTo: [searchInput]
+
+                        Keys.onPressed: function(event) {
+                            if (event.key === Qt.Key_Backspace) {
+                                clipboardWindow.grabInputFocus();
+                                if (searchInput.text.length > 0) {
+                                    searchInput.text = searchInput.text.slice(0, -1);
+                                }
+                                event.accepted = true;
+                                return;
+                            }
+                            if (event.text && event.text.length > 0 && event.key !== Qt.Key_Return && event.key !== Qt.Key_Enter && event.key !== Qt.Key_Escape && event.key !== Qt.Key_Tab && event.key !== Qt.Key_Backtab && event.key !== Qt.Key_Delete) {
+                                clipboardWindow.grabInputFocus();
+                                searchInput.text += event.text;
+                                event.accepted = true;
+                            }
+                        }
 
                         function resetScroll() {
                             scrollAnim.stop();
@@ -1209,7 +1233,7 @@ PanelWindow {
                             }
 
                             property string clipIdString: (typeof model !== "undefined" && model && model.id !== undefined) ? model.id.toString() : (clipBoxModel.get(index) ? clipBoxModel.get(index).id.toString() : "")
-                            
+
                             onClipIdStringChanged: {
                                 itemExpanded = false;
                                 dragX = 0;

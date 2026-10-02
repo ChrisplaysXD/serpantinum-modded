@@ -20,7 +20,10 @@ Rectangle {
     property real targetY: 0
     property bool showLayout: false
 
+    property int circleSize: barWindow ? barWindow.s(isCompact ? 22 : 28) : (isCompact ? 22 : 28)
+
     property bool isSysVisible: moduleActive && showLayout
+    property color basePrimary: (ThemeBackend.primary !== undefined && ThemeBackend.primary !== "") ? ThemeBackend.primary : ThemeBackend.mauve
 
     function updateSubscription() {
         if (isSysVisible) {
@@ -35,7 +38,7 @@ Rectangle {
     onIsSysVisibleChanged: updateSubscription()
 
     property real targetWidth: barWindow ? (isGrouped ? barWindow.barHeight - 8 : ((isSolid && distinctPills) ? barWindow.barHeight - 6 : barWindow.barHeight)) : (isGrouped ? 22 : ((isSolid && distinctPills) ? 24 : 30))
-    property real targetHeight: (moduleActive && sysCol.implicitHeight > 0) ? (sysCol.implicitHeight + (barWindow ? barWindow.s(isCompact ? 8 : 10) : (isCompact ? 8 : 10))) : 0
+    property real targetHeight: (moduleActive && sysLayout.implicitHeight > 0) ? (sysLayout.implicitHeight + (barWindow ? barWindow.s(isCompact ? 8 : 10) : (isCompact ? 8 : 10))) : 0
 
     width: targetWidth
     height: targetHeight
@@ -50,7 +53,7 @@ Rectangle {
         NumberAnimation { duration: 600; easing.type: Easing.OutQuint }
     }
 
-    radius: Math.min(ThemeBackend.borderRadius, width / 2)
+    radius: ThemeBackend.borderRadius
     border.width: 0
     color: isGrouped ? "transparent" : (isSolid ? (distinctPills ? Qt.darker(ThemeBackend.surface0, 1.15) : "transparent") : ThemeBackend.base)
     clip: true
@@ -59,15 +62,6 @@ Rectangle {
     opacity: (showLayout && moduleActive) ? ((barWindow && barWindow.barOpacity !== undefined) ? barWindow.barOpacity : 1.0) : 0.0
     visible: opacity > 0
     Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
-
-    property real globalWavePhase: 0.0
-    NumberAnimation on globalWavePhase {
-        from: 0
-        to: Math.PI * 2
-        duration: 1800
-        loops: Animation.Infinite
-        running: sideSysMonRoot.isSysVisible
-    }
 
     Timer {
         running: sideSysMonRoot.moduleActive && barWindow && barWindow.isStartupReady && barWindow.isDataReady
@@ -80,28 +74,27 @@ Rectangle {
         Behavior on y { NumberAnimation { duration: 800; easing.type: Easing.OutQuint } }
     }
 
-    component SysMonPill: Rectangle {
-        id: pillRoot
+    component SysMonCircle: Rectangle {
+        id: circleRoot
         property real value: 0
+        property string textVal: ""
         property string icon: ""
-        property color accentColor: ThemeBackend.mauve
+        property color accentColor: sideSysMonRoot.basePrimary
+        property bool showText: textVal !== ""
         property bool initAnimTrigger: false
 
-        property real animValue: value
+        property real animValue: initAnimTrigger ? value : 0
         Behavior on animValue { NumberAnimation { duration: 600; easing.type: Easing.OutQuint } }
 
         property real fillRatio: Math.max(0.0, Math.min(1.0, isNaN(animValue) ? 0.0 : animValue))
-        property real fillY: height * (1.0 - fillRatio)
-        property real waveAmp: (fillRatio < 0.99 && fillRatio > 0.01) ? (barWindow ? barWindow.s(sideSysMonRoot.isCompact ? 2.0 : 2.5) : (sideSysMonRoot.isCompact ? 2.0 : 2.5)) * Math.sin(fillRatio * Math.PI) : 0
-        property real waveCenterOffset: 0.375 * waveAmp * (Math.sin(sideSysMonRoot.globalWavePhase) - Math.cos(sideSysMonRoot.globalWavePhase))
 
-        height: sysCol.pillHeight
-        width: sysCol.pillWidth
-        radius: Math.min(Math.max(0, ThemeBackend.borderRadius - (barWindow ? barWindow.s(2) : 2)), width / 2)
-        color: sideSysMonRoot.isCompact ? Qt.lighter(ThemeBackend.surface0, 1.18) : ThemeBackend.surface0
-        border.color: sideSysMonRoot.isCompact ? ThemeBackend.surface2 : ThemeBackend.surface1
-        border.width: 1
-        clip: true
+        implicitWidth: sideSysMonRoot.circleSize
+        implicitHeight: sideSysMonRoot.circleSize
+        width: implicitWidth
+        height: implicitHeight
+        radius: width / 2
+        color: "transparent"
+        border.width: 0
 
         Timer {
             running: sideSysMonRoot.moduleActive && sideSysMonRoot.showLayout && !initAnimTrigger
@@ -117,126 +110,130 @@ Rectangle {
         Behavior on opacity { NumberAnimation { duration: 450; easing.type: Easing.OutCubic } }
 
         Canvas {
-            id: pillCanvas
+            id: circleCanvas
             anchors.fill: parent
             renderTarget: Canvas.FramebufferObject
             renderStrategy: Canvas.Cooperative
+            antialiasing: true
 
             onPaint: {
                 var ctx = getContext("2d");
                 ctx.clearRect(0, 0, width, height);
-                if (pillRoot.fillRatio <= 0) return;
+
+                var cx = width / 2;
+                var cy = height / 2;
+                var strokeW = barWindow ? barWindow.s(2.2) : 2.2;
+                var amp = barWindow ? barWindow.s(0.9) : 0.9;
+                var radius = Math.min(cx, cy) - amp - (strokeW / 2) - (barWindow ? barWindow.s(0.4) : 0.4);
+                if (radius <= 0) return;
 
                 ctx.save();
-                var r = pillRoot.radius;
-                ctx.beginPath();
-                ctx.moveTo(r, 0);
-                ctx.lineTo(width - r, 0);
-                ctx.quadraticCurveTo(width, 0, width, r);
-                ctx.lineTo(width, height - r);
-                ctx.quadraticCurveTo(width, height, width - r, height);
-                ctx.lineTo(r, height);
-                ctx.quadraticCurveTo(0, height, 0, height - r);
-                ctx.lineTo(0, r);
-                ctx.quadraticCurveTo(0, 0, r, 0);
-                ctx.closePath();
-                ctx.clip();
 
                 ctx.beginPath();
-                ctx.moveTo(0, pillRoot.fillY);
-                if (pillRoot.waveAmp > 0) {
-                    var cp1y = pillRoot.fillY + Math.sin(sideSysMonRoot.globalWavePhase) * pillRoot.waveAmp;
-                    var cp2y = pillRoot.fillY + Math.cos(sideSysMonRoot.globalWavePhase + Math.PI) * pillRoot.waveAmp;
-                    ctx.bezierCurveTo(width * 0.33, cp2y, width * 0.66, cp1y, width, pillRoot.fillY);
-                    ctx.lineTo(width, height);
-                    ctx.lineTo(0, height);
-                } else {
-                    ctx.lineTo(width, pillRoot.fillY);
-                    ctx.lineTo(width, height);
-                    ctx.lineTo(0, height);
+                ctx.arc(cx, cy, radius, 0, Math.PI * 2, false);
+                ctx.strokeStyle = Qt.rgba(circleRoot.accentColor.r, circleRoot.accentColor.g, circleRoot.accentColor.b, 0.22);
+                ctx.lineWidth = strokeW;
+                ctx.stroke();
+
+                if (circleRoot.fillRatio > 0.001) {
+                    var totalP = 2 * Math.PI * radius;
+                    var cycles = Math.max(5, Math.round(totalP / 8.5));
+                    var freq = (Math.PI * 2 * cycles) / totalP;
+                    var startAngle = -Math.PI / 2;
+                    var sweepAngle = Math.PI * 2 * circleRoot.fillRatio;
+                    var arcLen = totalP * circleRoot.fillRatio;
+                    var steps = Math.max(6, Math.ceil(arcLen / 1.2));
+
+                    ctx.beginPath();
+                    for (var i = 0; i <= steps; i++) {
+                        var t = i / steps;
+                        var a = startAngle + sweepAngle * t;
+                        var arcDist = (a - startAngle) * radius;
+                        var wOff = amp * Math.sin(freq * arcDist);
+                        var px = cx + (radius + wOff) * Math.cos(a);
+                        var py = cy + (radius + wOff) * Math.sin(a);
+
+                        if (i === 0) {
+                            ctx.moveTo(px, py);
+                        } else {
+                            ctx.lineTo(px, py);
+                        }
+                    }
+
+                    if (circleRoot.fillRatio >= 0.999) {
+                        ctx.closePath();
+                    }
+
+                    ctx.strokeStyle = circleRoot.accentColor;
+                    ctx.lineWidth = strokeW;
+                    ctx.lineCap = "round";
+                    ctx.lineJoin = "round";
+                    ctx.stroke();
                 }
-                ctx.closePath();
 
-                var grad = ctx.createLinearGradient(0, 0, 0, height);
-                grad.addColorStop(0, Qt.lighter(pillRoot.accentColor, 1.25).toString());
-                grad.addColorStop(1, pillRoot.accentColor.toString());
-                ctx.fillStyle = grad;
-                ctx.globalAlpha = 0.95;
-                ctx.fill();
+                var displayText = circleRoot.showText ? circleRoot.textVal : circleRoot.icon;
+                var fontSize = circleRoot.showText
+                    ? (barWindow ? barWindow.s(sideSysMonRoot.isCompact ? 7.5 : 9) : (sideSysMonRoot.isCompact ? 7.5 : 9))
+                    : (barWindow ? barWindow.s(sideSysMonRoot.isCompact ? 9 : 11) : (sideSysMonRoot.isCompact ? 9 : 11));
+
+                var fontFam = (ThemeBackend.fontFamily !== undefined && ThemeBackend.fontFamily !== "") ? ThemeBackend.fontFamily : "sans-serif";
+                var fontStr = (circleRoot.showText ? "bold " : "normal ") + Math.round(fontSize) + "px \"" + fontFam + "\", \"Iosevka Nerd Font\", \"JetBrainsMono Nerd Font\", sans-serif";
+                var baseTextColor = (ThemeBackend.text !== undefined && ThemeBackend.text !== "") ? ThemeBackend.text : "#ffffff";
+
+                ctx.font = fontStr;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = baseTextColor;
+                ctx.fillText(displayText, cx, cy);
+
                 ctx.restore();
+            }
+
+            Component.onCompleted: circleCanvas.requestPaint()
+            onWidthChanged: circleCanvas.requestPaint()
+            onHeightChanged: circleCanvas.requestPaint()
+
+            Connections {
+                target: circleRoot
+                enabled: sideSysMonRoot.isSysVisible
+                function onFillRatioChanged() { circleCanvas.requestPaint(); }
+                function onAccentColorChanged() { circleCanvas.requestPaint(); }
+                function onTextValChanged() { circleCanvas.requestPaint(); }
+                function onIconChanged() { circleCanvas.requestPaint(); }
+                function onShowTextChanged() { circleCanvas.requestPaint(); }
             }
 
             Connections {
                 target: sideSysMonRoot
-                enabled: sideSysMonRoot.isSysVisible && pillRoot.waveAmp > 0
-                function onGlobalWavePhaseChanged() { pillCanvas.requestPaint(); }
-            }
-
-            Connections {
-                target: pillRoot
                 enabled: sideSysMonRoot.isSysVisible
-                function onFillRatioChanged() { pillCanvas.requestPaint(); }
-                function onAccentColorChanged() { pillCanvas.requestPaint(); }
-            }
-        }
-
-        Text {
-            anchors.centerIn: parent
-            text: icon
-            font.family: ThemeBackend.fontFamily
-            font.pixelSize: barWindow ? barWindow.s(sideSysMonRoot.isCompact ? 13 : 14.5) : (sideSysMonRoot.isCompact ? 13 : 14.5)
-            color: sideSysMonRoot.isCompact ? ThemeBackend.text : ThemeBackend.subtext0
-        }
-
-        Item {
-            id: waveClipBox
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: Math.min(parent.height, Math.max(0, (parent.height * pillRoot.fillRatio) - pillRoot.waveCenterOffset))
-            clip: true
-            visible: pillRoot.fillRatio > 0
-
-            Item {
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: pillRoot.height
-
-                Text {
-                    anchors.centerIn: parent
-                    text: icon
-                    font.family: ThemeBackend.fontFamily
-                    font.pixelSize: barWindow ? barWindow.s(sideSysMonRoot.isCompact ? 13 : 14.5) : (sideSysMonRoot.isCompact ? 13 : 14.5)
-                    color: Qt.rgba(ThemeBackend.crust.r, ThemeBackend.crust.g, ThemeBackend.crust.b, 0.75)
-                }
+                function onBasePrimaryChanged() { circleCanvas.requestPaint(); }
             }
         }
     }
 
     Column {
-        id: sysCol
+        id: sysLayout
         anchors.centerIn: parent
-        spacing: barWindow ? barWindow.s(sideSysMonRoot.isCompact ? 3 : 4) : (sideSysMonRoot.isCompact ? 3 : 4)
-        property int pillHeight: barWindow ? barWindow.s(sideSysMonRoot.isCompact ? 26 : 28) : (sideSysMonRoot.isCompact ? 26 : 28)
-        property int pillWidth: pillHeight
+        spacing: barWindow ? barWindow.s(sideSysMonRoot.isCompact ? 5 : 6) : (sideSysMonRoot.isCompact ? 5 : 6)
+        property int circleSize: sideSysMonRoot.circleSize
 
-        SysMonPill {
+        SysMonCircle {
             value: isNaN(SysData.cpu) ? 0 : SysData.cpu / 100.0
-            icon: "\uF2DB"
-            accentColor: ThemeBackend.mauve
-        }
-
-        SysMonPill {
-            value: isNaN(SysData.ramPercent) ? 0 : SysData.ramPercent / 100.0
             icon: "󰍛"
-            accentColor: ThemeBackend.sapphire
+            accentColor: Qt.tint(sideSysMonRoot.basePrimary, Qt.rgba(1.0, 0.22, 0.22, 0.25))
         }
 
-        SysMonPill {
+        SysMonCircle {
+            value: isNaN(SysData.ramPercent) ? 0 : SysData.ramPercent / 100.0
+            icon: "\uF2DB"
+            accentColor: Qt.lighter(sideSysMonRoot.basePrimary, 1.15)
+        }
+
+        SysMonCircle {
             value: isNaN(SysData.temp) ? 0 : Math.max(0, Math.min(1, SysData.temp / 100.0))
+            textVal: isNaN(SysData.temp) ? "0" : Math.round(SysData.temp).toString()
             icon: "\uF2C9"
-            accentColor: ThemeBackend.red
+            accentColor: Qt.darker(sideSysMonRoot.basePrimary, 1.15)
         }
     }
 

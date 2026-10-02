@@ -2,14 +2,15 @@
 
 source "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/caching.sh"
 
-RUN_DIR="${QS_RUN_FOCUSTIME:-${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/serpantinum/focustime}"
+RUN_DIR="${QS_RUN_FOCUSTIME:-${XDG_RUNTIME_DIR:-/run/user/${UID:-$(id -u)}}/serpantinum/focustime}"
 mkdir -p "$RUN_DIR"
 
 LOG_FILE="$RUN_DIR/focus_events.jsonl"
 STATE_FILE="$RUN_DIR/focus_state.json"
-touch "$LOG_FILE" "$STATE_FILE"
+: >> "$LOG_FILE"
+: >> "$STATE_FILE"
 
-for pid in $(pgrep -f "$(basename "$0")"); do
+for pid in $(pgrep -f "${0##*/}"); do
     if [ "$pid" != "$$" ] && [ "$pid" != "$PPID" ]; then
         kill -9 "$pid" 2>/dev/null
     fi
@@ -22,54 +23,53 @@ cleanup() {
 }
 trap cleanup EXIT SIGTERM SIGINT
 
-detect_compositor() {
-    if [ -n "$NIRI_SOCKET" ] || pgrep -x niri >/dev/null 2>&1; then
-        echo "niri"
-    elif [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ] || pgrep -x Hyprland >/dev/null 2>&1; then
-        echo "hyprland"
-    else
-        echo "unknown"
-    fi
-}
+if [ -n "$NIRI_SOCKET" ] || pgrep -x niri >/dev/null 2>&1; then
+    COMPOSITOR="niri"
+elif [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ] || pgrep -x Hyprland >/dev/null 2>&1; then
+    COMPOSITOR="hyprland"
+else
+    COMPOSITOR="unknown"
+fi
 
-COMPOSITOR=$(detect_compositor)
-
-is_locked() {
-    pgrep -x hyprlock >/dev/null 2>&1 || pgrep -x swaylock >/dev/null 2>&1 || pgrep -x gtklock >/dev/null 2>&1 || pgrep -x waylock >/dev/null 2>&1
-}
+cls=""
+title=""
 
 get_active_window_hyprland() {
-    local data cls title cls_lower title_lower
+    local data cls_lower title_lower
     data=$(timeout 2 hyprctl activewindow -j 2>/dev/null)
     if [ -z "$data" ] || [ "$data" = "{}" ]; then
-        echo "Desktop|Desktop"
+        cls="Desktop"
+        title="Desktop"
         return
     fi
-    IFS='|' read -r cls title < <(echo "$data" | jq -r '(.initialClass // .class // "Unknown") as $c | "\($c)|\(.initialTitle // .title // $c)"')
+    IFS='|' read -r cls title < <(jq -r '(.initialClass // .class // "Unknown") as $c | "\($c)|\(.initialTitle // .title // $c)"' <<< "$data")
+    cls="${cls:-Desktop}"
+    title="${title:-Desktop}"
     cls_lower="${cls,,}"
     title_lower="${title,,}"
     if [[ "$cls_lower" == *quickshell* ]] || [[ "$title_lower" == *qs-master* ]] || [[ "$cls_lower" == *qs-master* ]]; then
-        echo "Quickshell|Quickshell"
-        return
+        cls="Quickshell"
+        title="Quickshell"
     fi
-    echo "${cls}|${title}"
 }
 
 get_active_window_niri() {
-    local data cls title cls_lower title_lower
+    local data cls_lower title_lower
     data=$(timeout 2 niri msg -j focused-window 2>/dev/null)
     if [ -z "$data" ] || [ "$data" = "null" ] || [ "$data" = "{}" ]; then
-        echo "Desktop|Desktop"
+        cls="Desktop"
+        title="Desktop"
         return
     fi
-    IFS='|' read -r cls title < <(echo "$data" | jq -r '(.app_id // "Unknown") as $c | "\($c)|\(.title // $c)"')
+    IFS='|' read -r cls title < <(jq -r '(.app_id // "Unknown") as $c | "\($c)|\(.title // $c)"' <<< "$data")
+    cls="${cls:-Desktop}"
+    title="${title:-Desktop}"
     cls_lower="${cls,,}"
     title_lower="${title,,}"
     if [[ "$cls_lower" == *quickshell* ]] || [[ "$title_lower" == *qs-master* ]] || [[ "$cls_lower" == *qs-master* ]]; then
-        echo "Quickshell|Quickshell"
-        return
+        cls="Quickshell"
+        title="Quickshell"
     fi
-    echo "${cls}|${title}"
 }
 
 get_active_window() {
@@ -84,22 +84,29 @@ last_cls=""
 last_title=""
 
 emit_state() {
-    local cls="$1" title="$2" ts json_payload
+    local target_cls="$1" target_title="$2" ts esc_cls esc_title json_payload
 
-    if is_locked || [ "$cls" = "hyprlock" ] || [ "$cls" = "swaylock" ] || [ "$cls" = "gtklock" ] || [ "$cls" = "waylock" ]; then
-        cls="Locked"
-        title="Locked"
-    fi
-
-    if [ "$cls" = "$last_cls" ] && [ "$title" = "$last_title" ]; then
+    if [ "$target_cls" = "$last_cls" ] && [ "$target_title" = "$last_title" ]; then
         return
     fi
-    last_cls="$cls"
-    last_title="$title"
+    last_cls="$target_cls"
+    last_title="$target_title"
 
-    ts=$(date +%s)
-    json_payload=$(jq -nc --arg cls "$cls" --arg title "$title" --argjson ts "$ts" \
-        '{timestamp: $ts, app_class: $cls, app_title: $title}')
+    printf -v ts '%(%s)T' -1
+
+    esc_cls="${target_cls//\\/\\\\}"
+    esc_cls="${esc_cls//\"/\\\"}"
+    esc_cls="${esc_cls//$'\n'/\\n}"
+    esc_cls="${esc_cls//$'\r'/\\r}"
+    esc_cls="${esc_cls//$'\t'/\\t}"
+
+    esc_title="${target_title//\\/\\\\}"
+    esc_title="${esc_title//\"/\\\"}"
+    esc_title="${esc_title//$'\n'/\\n}"
+    esc_title="${esc_title//$'\r'/\\r}"
+    esc_title="${esc_title//$'\t'/\\t}"
+
+    json_payload="{\"timestamp\":$ts,\"app_class\":\"$esc_cls\",\"app_title\":\"$esc_title\"}"
 
     echo "$json_payload" >> "$LOG_FILE"
     echo "$json_payload" > "$STATE_FILE.tmp"
@@ -108,24 +115,28 @@ emit_state() {
 
 listen_events() {
     if [ "$COMPOSITOR" = "niri" ]; then
-        niri msg --json event-stream 2>/dev/null | grep --line-buffered -E '"(WindowFocusChanged|WindowOpenedOrChanged|WindowClosed|WorkspaceActivated)"'
+        niri msg --json event-stream 2>/dev/null
     else
         socat -u UNIX-CONNECT:"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" - 2>/dev/null
     fi
 }
 
-IFS='|' read -r cur_cls cur_title < <(get_active_window)
-emit_state "$cur_cls" "$cur_title"
+get_active_window
+emit_state "$cls" "$title"
 
 while true; do
     while read -r line; do
         case "$COMPOSITOR" in
             niri)
-                while read -t 0.05 -r extra_line; do
-                    continue
-                done
-                IFS='|' read -r cls title < <(get_active_window)
-                emit_state "$cls" "$title"
+                case "$line" in
+                    *'"WindowFocusChanged"'*|*'"WindowOpenedOrChanged"'*|*'"WindowClosed"'*|*'"WorkspaceActivated"'*)
+                        while read -t 0.05 -r extra_line; do
+                            continue
+                        done
+                        get_active_window
+                        emit_state "$cls" "$title"
+                        ;;
+                esac
                 ;;
             *)
                 case "$line" in
@@ -133,7 +144,7 @@ while true; do
                         while read -t 0.05 -r extra_line; do
                             continue
                         done
-                        IFS='|' read -r cls title < <(get_active_window)
+                        get_active_window
                         emit_state "$cls" "$title"
                         ;;
                 esac

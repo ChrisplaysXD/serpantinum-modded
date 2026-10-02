@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Mpris
 import "../../reusables"
+import "../../reusables/inputs"
 import "../../"
 
 Item {
@@ -99,7 +100,7 @@ Item {
             let rawVal = v0 + (v1 - v0) * frac;
 
             let val = rawVal < 0.03 ? 0.0 : Math.pow((rawVal - 0.03) / 0.97, 1.15);
-            val = Math.max(0.0, Math.min(1.0, val));
+            val = Math.max(0.0, Math.min(1.0, val)) * 0.55;
             out.push(val);
         }
 
@@ -141,20 +142,20 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                height: Math.max(30, parent.height * 0.85)
+                height: Math.max(20, parent.height * 0.55)
                 spacing: root.barSpacing
 
                 Repeater {
                     model: root.activeBars
                     delegate: Rectangle {
                         width: (parent.width - (root.activeBars - 1) * root.barSpacing) / root.activeBars
-                        height: Math.max(2, level * parent.height * 0.9)
+                        height: Math.max(2, level * parent.height * 0.85)
                         topLeftRadius: width * 0.5
                         topRightRadius: width * 0.5
                         bottomLeftRadius: 0
                         bottomRightRadius: 0
                         color: ThemeBackend.mauve
-                        opacity: 0.22 + (level * 0.18)
+                        opacity: 0.08 + (level * 0.12)
                         anchors.bottom: parent.bottom
 
                         Behavior on height {
@@ -177,18 +178,16 @@ Item {
             }
         }
 
-        RowLayout {
+        Item {
             anchors.fill: parent
             anchors.margins: root.dynMargin
-            spacing: root.dynSpacing
 
             Rectangle {
                 id: artRect
-                Layout.preferredWidth: Math.min(200, root.height - root.dynMargin * 2)
-                Layout.preferredHeight: Layout.preferredWidth
-                Layout.minimumWidth: 0
-                Layout.minimumHeight: 0
-                Layout.alignment: Qt.AlignVCenter
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                width: root.showArt ? Math.min(200, root.height - root.dynMargin * 2) : 0
+                height: width
                 radius: ThemeBackend.borderRadius
                 color: ThemeBackend.surface1
                 border.width: 1
@@ -232,19 +231,20 @@ Item {
                 }
             }
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.preferredHeight: artRect.visible ? artRect.height : (root.height - root.dynMargin * 2)
-                Layout.minimumWidth: 0
-                Layout.minimumHeight: 0
-                Layout.alignment: Qt.AlignVCenter
-                spacing: Math.max(1, root.dynSpacing * 0.2)
+            Item {
+                id: detailsColumn
+                anchors.left: root.showArt ? artRect.right : parent.left
+                anchors.leftMargin: root.showArt ? root.dynSpacing : 0
+                anchors.right: parent.right
+                anchors.top: root.showArt ? artRect.top : parent.top
+                anchors.bottom: root.showArt ? artRect.bottom : parent.bottom
 
                 Item {
                     id: titleClip
-                    Layout.fillWidth: true
-                    Layout.minimumWidth: 0
-                    implicitHeight: titleTextMain.implicitHeight
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: titleTextMain.implicitHeight
                     clip: true
 
                     property int marqueeSpacing: 30
@@ -299,39 +299,25 @@ Item {
                 }
 
                 Text {
+                    id: artistText
+                    anchors.top: titleClip.bottom
+                    anchors.topMargin: Math.max(1, root.dynSpacing * 0.2)
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     text: root.isMediaActive ? (MprisController.trackArtist || "Unknown Artist") : ""
                     font.family: ThemeBackend.fontFamily
                     font.weight: Font.Medium
                     font.pixelSize: root.subSize
                     color: ThemeBackend.subtext1
-                    Layout.fillWidth: true
-                    Layout.minimumWidth: 0
                     elide: Text.ElideRight
                     visible: root.isMediaActive && root.showArtist
                 }
 
-                Text {
-                    text: root.isMediaActive && root.player ? (root.formatTime(MprisController.livePosition) + " / " + root.formatTime(root.player.length)) : "--:-- / --:--"
-                    font.family: ThemeBackend.fontFamily
-                    font.weight: Font.Bold
-                    font.pixelSize: root.subSize
-                    color: ThemeBackend.subtext0
-                    Layout.fillWidth: true
-                    Layout.minimumWidth: 0
-                    elide: Text.ElideRight
-                    visible: root.showTime
-                }
-
-                Item {
-                    Layout.fillHeight: true
-                    Layout.minimumHeight: 0
-                    Layout.minimumWidth: 0
-                }
-
                 RowLayout {
+                    id: controlsRow
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
                     spacing: Math.max(2, root.dynSpacing * 0.5)
-                    Layout.minimumWidth: 0
-                    Layout.minimumHeight: 0
 
                     IconButton {
                         Layout.preferredWidth: root.btnSize
@@ -370,6 +356,84 @@ Item {
                         accentColor: ThemeBackend.surface1
                         textColor: isHoveredOrHighlighted ? ThemeBackend.text : ThemeBackend.overlay2
                         onClicked: if (root.player && root.player.canGoNext) root.player.next()
+                    }
+                }
+
+                Item {
+                    id: middleArea
+                    anchors.top: artistText.visible ? artistText.bottom : titleClip.bottom
+                    anchors.bottom: controlsRow.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    RowLayout {
+                        id: seekRow
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: Math.max(14, Math.round(root.subSize * 1.2))
+                        spacing: Math.max(4, root.dynSpacing * 0.4)
+                        visible: root.showTime && root.isMediaActive
+
+                        Text {
+                            text: root.isMediaActive && root.player ? root.formatTime(MprisController.livePosition) : "--:--"
+                            font.family: ThemeBackend.fontFamily
+                            font.weight: Font.Bold
+                            font.pixelSize: Math.max(7, root.subSize * 0.85)
+                            color: ThemeBackend.subtext0
+                            verticalAlignment: Text.AlignVCenter
+                            Layout.alignment: Qt.AlignVCenter
+                        }
+
+                        WavySeekBar {
+                            id: progBar
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: Math.max(14, Math.round(root.subSize * 1.2))
+                            Layout.maximumHeight: Math.max(14, Math.round(root.subSize * 1.2))
+                            Layout.minimumWidth: 0
+                            Layout.alignment: Qt.AlignVCenter
+                            from: 0.0
+                            to: root.player ? root.player.length : 100.0
+                            value: MprisController.livePosition
+                            playing: root.player ? root.player.isPlaying : false
+                            waveColor: ThemeBackend.mauve
+
+                            property bool seekPending: false
+
+                            Timer {
+                                id: seekTimer
+                                interval: 1000
+                                onTriggered: progBar.seekPending = false
+                            }
+
+                            Connections {
+                                target: MprisController
+                                function onLivePositionChanged() {
+                                    if (!progBar.isDragging && !progBar.seekPending) {
+                                        progBar.value = MprisController.livePosition;
+                                    }
+                                }
+                            }
+
+                            onMoved: val => {
+                                if (root.player && root.player.canSeek) {
+                                    progBar.seekPending = true;
+                                    seekTimer.restart();
+                                    progBar.value = val;
+                                    root.player.position = val;
+                                }
+                            }
+                        }
+
+                        Text {
+                            text: root.isMediaActive && root.player ? root.formatTime(root.player.length) : "--:--"
+                            font.family: ThemeBackend.fontFamily
+                            font.weight: Font.Bold
+                            font.pixelSize: Math.max(7, root.subSize * 0.85)
+                            color: ThemeBackend.subtext0
+                            verticalAlignment: Text.AlignVCenter
+                            Layout.alignment: Qt.AlignVCenter
+                        }
                     }
                 }
             }

@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Quickshell
 import "../../"
 import "../../reusables"
+import "../../reusables/guide"
 
 Item {
     id: barModulesRoot
@@ -38,6 +39,12 @@ Item {
         let bs = Config.getSetting("bar", {});
         if (bs && bs.workspaceCount !== undefined) return bs.workspaceCount;
         return 8;
+    }
+
+    property bool hideEmptyWorkspaces: {
+        let bs = Config.getSetting("bar", {});
+        if (bs && bs.hideEmptyWorkspaces !== undefined) return Boolean(bs.hideEmptyWorkspaces);
+        return false;
     }
 
     property string timeStyle: {
@@ -158,6 +165,12 @@ Item {
             barModulesRoot.workspaceCount = 8;
         }
 
+        if (bs && bs.hideEmptyWorkspaces !== undefined) {
+            barModulesRoot.hideEmptyWorkspaces = Boolean(bs.hideEmptyWorkspaces);
+        } else {
+            barModulesRoot.hideEmptyWorkspaces = false;
+        }
+
         if (bs && bs.timeStyle) {
             barModulesRoot.timeStyle = bs.timeStyle;
         } else {
@@ -192,6 +205,14 @@ Item {
         let current = Config.getSetting("bar", {});
         current.workspaceCount = count;
         if (current.sideWorkspaceCount !== undefined) delete current.sideWorkspaceCount;
+        Config.setSetting("bar", current);
+    }
+
+    function setHideEmptyWorkspaces(val) {
+        barModulesRoot.hideEmptyWorkspaces = val;
+        let current = Config.getSetting("bar", {});
+        current.hideEmptyWorkspaces = val;
+        if (current.sideHideEmptyWorkspaces !== undefined) delete current.sideHideEmptyWorkspaces;
         Config.setSetting("bar", current);
     }
 
@@ -299,289 +320,289 @@ Item {
                         }
                     }
 
-                    Rectangle {
-                        Layout.fillWidth: true
-                        implicitHeight: rowWorkspacesCountLayout.implicitHeight + rootObj.s(24)
-                        radius: ThemeBackend.borderRadius
-                        color: Qt.alpha(ThemeBackend.surface1, 0.35)
-                        border.width: 0
+                    SettingsRow {
+                        rootObj: barModulesRoot.rootObj
+                        baseColor: Qt.alpha(ThemeBackend.surface1, 0.35)
+                        icon: "󰮯"
+                        title: I18n.t("guide.bar.workspaces.title")
+                        description: I18n.t("guide.bar.workspaces.desc")
 
-                        RowLayout {
-                            id: rowWorkspacesCountLayout
-                            anchors.left: parent.left
-                            anchors.leftMargin: rootObj.s(14)
-                            anchors.right: parent.right
-                            anchors.rightMargin: rootObj.s(14)
-                            anchors.verticalCenter: parent.verticalCenter
-                            spacing: rootObj.s(12)
-
-                            IconButton {
-                                enabled: false
-                                size: rootObj.s(32)
-                                Layout.preferredWidth: rootObj.s(32)
-                                Layout.preferredHeight: rootObj.s(32)
-                                Layout.alignment: Qt.AlignVCenter
-                                cornerRadius: ThemeBackend.borderRadius
-                                buttonIcon: "󰮯"
-                                iconFontSize: rootObj.s(16)
-                                accentColor: ThemeBackend.surface0
-                                textColor: "#ffffff"
-                            }
-
-                            ColumnLayout {
-                                Layout.fillWidth: true
-                                Layout.alignment: Qt.AlignVCenter
-                                spacing: rootObj.s(2)
-                                Text { Layout.fillWidth: true; text: I18n.t("guide.bar.workspaces.title"); font.family: ThemeBackend.fontFamily; font.pixelSize: rootObj.s(13); color: ThemeBackend.text }
-                                Text { Layout.fillWidth: true; text: I18n.t("guide.bar.workspaces.desc"); font.family: ThemeBackend.fontFamily; font.pixelSize: rootObj.s(11); color: ThemeBackend.subtext0 }
-                            }
-
-                            NumberSelector {
-                                id: workspaceCountSelector
-                                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                                implicitWidth: rootObj.s(140)
-                                implicitHeight: rootObj.s(32)
-                                from: 2
-                                to: 10
-                                stepSize: 1
-                                decimals: 0
-                                value: barModulesRoot.workspaceCount
-                                baseColor: ThemeBackend.surface0
-                                accentColor: ThemeBackend.mauve
-                                buttonColor: ThemeBackend.surface1
-                                buttonTextColor: ThemeBackend.text
-                                textColor: ThemeBackend.text
-                                subTextColor: ThemeBackend.subtext0
-                                borderColor: Qt.alpha(ThemeBackend.surface2, 0.6)
-                                cornerRadius: ThemeBackend.borderRadius
-                                fontFamily: ThemeBackend.fontFamily
-                                fontPixelSize: rootObj.s(12)
-                                onValueChanged: {
-                                    let rounded = Math.round(workspaceCountSelector.value);
-                                    if (barModulesRoot.workspaceCount !== rounded) {
-                                        barModulesRoot.setWorkspaceCount(rounded);
-                                    }
+                        NumberSelector {
+                            id: workspaceCountSelector
+                            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                            implicitWidth: rootObj.s(140)
+                            implicitHeight: rootObj.s(32)
+                            from: 2
+                            to: 10
+                            stepSize: 1
+                            decimals: 0
+                            value: barModulesRoot.workspaceCount
+                            baseColor: ThemeBackend.surface0
+                            accentColor: ThemeBackend.mauve
+                            buttonColor: ThemeBackend.surface1
+                            buttonTextColor: ThemeBackend.text
+                            textColor: ThemeBackend.text
+                            subTextColor: ThemeBackend.subtext0
+                            borderColor: Qt.alpha(ThemeBackend.surface2, 0.6)
+                            cornerRadius: ThemeBackend.borderRadius
+                            fontFamily: ThemeBackend.fontFamily
+                            fontPixelSize: rootObj.s(12)
+                            onValueChanged: {
+                                let rounded = Math.round(workspaceCountSelector.value);
+                                if (barModulesRoot.workspaceCount !== rounded) {
+                                    barModulesRoot.setWorkspaceCount(rounded);
                                 }
-                                onTriggered: {
-                                    barModulesRoot.setWorkspaceCount(Math.round(workspaceCountSelector.value));
-                                }
+                            }
+                            onTriggered: {
+                                barModulesRoot.setWorkspaceCount(Math.round(workspaceCountSelector.value));
                             }
                         }
                     }
 
-                    GridLayout {
-                        id: stylesGrid
-                        Layout.fillWidth: true
-                        columns: Math.max(1, Math.min(3, Math.floor(workspacesCardLayout.width / rootObj.s(160))))
-                        rowSpacing: rootObj.s(10)
-                        columnSpacing: rootObj.s(10)
+                    SettingsRow {
+                        rootObj: barModulesRoot.rootObj
+                        baseColor: Qt.alpha(ThemeBackend.surface1, 0.35)
+                        icon: "󰈈"
+                        title: I18n.t("guide.bar.workspaces.hide_empty.title", "Hide empty workspaces")
+                        description: I18n.t("guide.bar.workspaces.hide_empty.desc", "Show only occupied workspaces and the active one")
 
-                        Repeater {
-                            model: barModulesRoot.workspaceStyles
-                            delegate: Rectangle {
-                                id: styleCard
-                                required property var modelData
-                                required property int index
+                        Toggle {
+                            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                            checked: barModulesRoot.hideEmptyWorkspaces
+                            accentColor: ThemeBackend.mauve
+                            baseColor: ThemeBackend.surface1
+                            handleColor: ThemeBackend.crust
+                            handleOffColor: ThemeBackend.text
+                            onToggled: function(c) {
+                                barModulesRoot.setHideEmptyWorkspaces(c);
+                            }
+                        }
+                    }
 
-                                readonly property bool isSelected: barModulesRoot.workspacesStyle === modelData.id
-                                property real popScale: 1.0
-                                property real flashOpacity: 0.0
+                    SettingsRow {
+                        id: workspacesStyleRow
+                        rootObj: barModulesRoot.rootObj
+                        settingId: "bar_workspaces_style"
+                        searchKeywords: "pills numbers pacman workspaces style"
+                        baseColor: Qt.alpha(ThemeBackend.surface1, 0.35)
+                        icon: "󰮯"
+                        title: I18n.t("guide.bar.workspaces.style.title", "Workspaces Style")
+                        description: I18n.t("guide.bar.workspaces.style.desc", "Choose the visual style for workspace indicators")
 
-                                Layout.fillWidth: true
-                                Layout.preferredWidth: 1
-                                implicitHeight: styleInnerCol.implicitHeight + rootObj.s(16)
-                                radius: ThemeBackend.borderRadius
-                                clip: true
+                        bottomContent: GridLayout {
+                            id: stylesGrid
+                            Layout.fillWidth: true
+                            columns: Math.max(1, Math.min(3, Math.floor(workspacesCardLayout.width / rootObj.s(160))))
+                            rowSpacing: rootObj.s(10)
+                            columnSpacing: rootObj.s(10)
 
-                                color: cardMouse.pressed
-                                    ? Qt.darker(ThemeBackend.surface0, 1.15)
-                                    : (isSelected
-                                        ? (cardHover.hovered ? Qt.lighter(ThemeBackend.surface0, 1.30) : Qt.lighter(ThemeBackend.surface0, 1.24))
-                                        : (cardHover.hovered ? Qt.lighter(ThemeBackend.surface0, 1.10) : ThemeBackend.surface0))
+                            Repeater {
+                                model: barModulesRoot.workspaceStyles
+                                delegate: Rectangle {
+                                    id: styleCard
+                                    required property var modelData
+                                    required property int index
 
-                                border.width: 1
-                                border.color: isSelected
-                                    ? Qt.alpha(ThemeBackend.surface2, 0.75)
-                                    : (cardHover.hovered ? Qt.alpha(ThemeBackend.surface2, 0.5) : Qt.alpha(ThemeBackend.surface1, 0.4))
+                                    readonly property bool isSelected: barModulesRoot.workspacesStyle === modelData.id
+                                    property real popScale: 1.0
+                                    property real flashOpacity: 0.0
 
-                                Behavior on color { ColorAnimation { duration: 180 } }
-                                Behavior on border.color { ColorAnimation { duration: 180 } }
+                                    Layout.fillWidth: true
+                                    Layout.preferredWidth: 1
+                                    implicitHeight: styleInnerCol.implicitHeight + rootObj.s(16)
+                                    radius: ThemeBackend.borderRadius
+                                    clip: true
 
-                                scale: (cardMouse.pressed ? 0.985 : (cardHover.hovered ? 1.015 : 1.0)) * styleCard.popScale
-                                Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutQuint } }
+                                    color: cardMouse.pressed
+                                        ? Qt.darker(ThemeBackend.surface0, 1.15)
+                                        : (isSelected
+                                            ? (cardHover.hovered ? Qt.lighter(ThemeBackend.surface0, 1.30) : Qt.lighter(ThemeBackend.surface0, 1.24))
+                                            : (cardHover.hovered ? Qt.lighter(ThemeBackend.surface0, 1.10) : ThemeBackend.surface0))
 
-                                HoverHandler {
-                                    id: cardHover
-                                }
+                                    border.width: 1
+                                    border.color: isSelected
+                                        ? Qt.alpha(ThemeBackend.surface2, 0.75)
+                                        : (cardHover.hovered ? Qt.alpha(ThemeBackend.surface2, 0.5) : Qt.alpha(ThemeBackend.surface1, 0.4))
 
-                                Rectangle {
-                                    anchors.fill: parent
-                                    radius: parent.radius
-                                    color: "#ffffff"
-                                    opacity: styleCard.flashOpacity
-                                    PropertyAnimation on opacity { id: flashAnim; to: 0; duration: 350; easing.type: Easing.OutExpo }
-                                }
+                                    Behavior on color { ColorAnimation { duration: 180 } }
+                                    Behavior on border.color { ColorAnimation { duration: 180 } }
 
-                                SequentialAnimation {
-                                    id: popAnim
-                                    NumberAnimation { target: styleCard; property: "popScale"; to: 1.02; duration: 100; easing.type: Easing.OutQuad }
-                                    NumberAnimation { target: styleCard; property: "popScale"; to: 1.0; duration: 350; easing.type: Easing.OutQuint }
-                                }
+                                    scale: (cardMouse.pressed ? 0.985 : (cardHover.hovered ? 1.015 : 1.0)) * styleCard.popScale
+                                    Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutQuint } }
 
-                                MouseArea {
-                                    id: cardMouse
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    cursorShape: Qt.PointingHandCursor
-                                    onClicked: {
-                                        popAnim.start();
-                                        styleCard.flashOpacity = 0.15;
-                                        flashAnim.start();
-                                        if (typeof Sounds !== "undefined") {
-                                            Sounds.playSfx("reusables/clickbutton/click.wav");
-                                        }
-                                        barModulesRoot.setWorkspacesStyle(modelData.id);
+                                    HoverHandler {
+                                        id: cardHover
                                     }
-                                }
-
-                                ColumnLayout {
-                                    id: styleInnerCol
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.top: parent.top
-                                    anchors.margins: rootObj.s(8)
-                                    spacing: rootObj.s(8)
 
                                     Rectangle {
-                                        id: previewBox
-                                        Layout.fillWidth: true
-                                        implicitHeight: rootObj.s(barModulesRoot.isSideBar ? 160 : 72)
-                                        radius: ThemeBackend.borderRadius
-                                        color: Qt.darker(ThemeBackend.mantle, 1.1)
-                                        clip: true
+                                        anchors.fill: parent
+                                        radius: parent.radius
+                                        color: "#ffffff"
+                                        opacity: styleCard.flashOpacity
+                                        PropertyAnimation on opacity { id: flashAnim; to: 0; duration: 350; easing.type: Easing.OutExpo }
+                                    }
 
-                                        Item {
-                                            anchors.fill: parent
-                                            enabled: false
+                                    SequentialAnimation {
+                                        id: popAnim
+                                        NumberAnimation { target: styleCard; property: "popScale"; to: 1.02; duration: 100; easing.type: Easing.OutQuad }
+                                        NumberAnimation { target: styleCard; property: "popScale"; to: 1.0; duration: 350; easing.type: Easing.OutQuint }
+                                    }
 
-                                            Loader {
-                                                id: facePreviewLoader
-                                                anchors.centerIn: parent
-                                                width: item ? item.implicitWidth : 0
-                                                height: item ? item.implicitHeight : 0
-                                                scale: Math.min(1.0, Math.min((previewBox.width - rootObj.s(16)) / Math.max(1, width), (previewBox.height - rootObj.s(16)) / Math.max(1, height)))
-                                                asynchronous: false
-                                                source: barModulesRoot.getFaceUrl(modelData.faceFile)
-
-                                                onLoaded: {
-                                                    if (item) {
-                                                        item.width = Qt.binding(function() { return item.implicitWidth; });
-                                                        item.height = Qt.binding(function() { return item.implicitHeight; });
-                                                        item.widget = barModulesRoot.previewWidget;
-                                                    }
-                                                }
+                                    MouseArea {
+                                        id: cardMouse
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: {
+                                            popAnim.start();
+                                            styleCard.flashOpacity = 0.15;
+                                            flashAnim.start();
+                                            if (typeof Sounds !== "undefined") {
+                                                Sounds.playSfx("reusables/clickbutton/click.wav");
                                             }
-
-                                            RowLayout {
-                                                anchors.centerIn: parent
-                                                visible: !barModulesRoot.isSideBar && (facePreviewLoader.status === Loader.Error || !facePreviewLoader.item)
-                                                spacing: rootObj.s(6)
-
-                                                Repeater {
-                                                    model: 5
-                                                    delegate: Rectangle {
-                                                        required property int index
-                                                        readonly property bool isActive: index === 1
-                                                        width: modelData.id === "pills"
-                                                            ? (isActive ? rootObj.s(22) : rootObj.s(8))
-                                                            : rootObj.s(18)
-                                                        height: modelData.id === "pills" ? rootObj.s(8) : rootObj.s(18)
-                                                        radius: modelData.id === "pills" ? height / 2 : rootObj.s(4)
-                                                        color: isActive ? ThemeBackend.mauve : Qt.alpha(ThemeBackend.surface2, 0.7)
-
-                                                        Text {
-                                                            anchors.centerIn: parent
-                                                            visible: modelData.id === "numbers"
-                                                            text: String(index + 1)
-                                                            font.family: ThemeBackend.fontFamily
-                                                            font.pixelSize: rootObj.s(10)
-                                                            font.bold: isActive
-                                                            color: isActive ? ThemeBackend.crust : ThemeBackend.text
-                                                        }
-
-                                                        Text {
-                                                            anchors.centerIn: parent
-                                                            visible: modelData.id === "pacman"
-                                                            text: isActive ? "󰮯" : "•"
-                                                            font.family: ThemeBackend.fontFamily
-                                                            font.pixelSize: rootObj.s(14)
-                                                            font.bold: false
-                                                            color: isActive ? ThemeBackend.yellow : ThemeBackend.subtext0
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                            ColumnLayout {
-                                                anchors.centerIn: parent
-                                                visible: barModulesRoot.isSideBar && (facePreviewLoader.status === Loader.Error || !facePreviewLoader.item)
-                                                spacing: rootObj.s(6)
-
-                                                Repeater {
-                                                    model: 5
-                                                    delegate: Rectangle {
-                                                        required property int index
-                                                        readonly property bool isActive: index === 1
-                                                        width: rootObj.s(18)
-                                                        height: modelData.id === "pills"
-                                                            ? (isActive ? rootObj.s(36) : rootObj.s(18))
-                                                            : rootObj.s(18)
-                                                        radius: modelData.id === "pills" ? width / 2 : rootObj.s(4)
-                                                        color: isActive ? ThemeBackend.mauve : Qt.alpha(ThemeBackend.surface2, 0.7)
-
-                                                        Text {
-                                                            anchors.centerIn: parent
-                                                            visible: modelData.id === "numbers"
-                                                            text: String(index + 1)
-                                                            font.family: ThemeBackend.fontFamily
-                                                            font.pixelSize: rootObj.s(10)
-                                                            font.bold: isActive
-                                                            color: isActive ? ThemeBackend.crust : ThemeBackend.text
-                                                        }
-
-                                                        Text {
-                                                            anchors.centerIn: parent
-                                                            visible: modelData.id === "pacman"
-                                                            text: isActive ? "󰮯" : "•"
-                                                            font.family: ThemeBackend.fontFamily
-                                                            font.pixelSize: rootObj.s(14)
-                                                            font.bold: false
-                                                            color: isActive ? ThemeBackend.yellow : ThemeBackend.subtext0
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        Rectangle {
-                                            anchors.fill: parent
-                                            radius: parent.radius
-                                            color: "transparent"
-                                            border.width: 1
-                                            border.color: Qt.alpha(ThemeBackend.surface2, 0.25)
+                                            barModulesRoot.setWorkspacesStyle(modelData.id);
                                         }
                                     }
 
-                                    Text {
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: rootObj.s(2)
-                                        Layout.rightMargin: rootObj.s(2)
-                                        Layout.bottomMargin: rootObj.s(2)
-                                        text: modelData.name
-                                        font.family: ThemeBackend.fontFamily
-                                        font.pixelSize: rootObj.s(13)
-                                        font.weight: Font.Bold
-                                        color: ThemeBackend.text
+                                    ColumnLayout {
+                                        id: styleInnerCol
+                                        anchors.left: parent.left
+                                        anchors.right: parent.right
+                                        anchors.top: parent.top
+                                        anchors.margins: rootObj.s(8)
+                                        spacing: rootObj.s(8)
+
+                                        Rectangle {
+                                            id: previewBox
+                                            Layout.fillWidth: true
+                                            implicitHeight: rootObj.s(barModulesRoot.isSideBar ? 160 : 72)
+                                            radius: ThemeBackend.borderRadius
+                                            color: Qt.darker(ThemeBackend.mantle, 1.1)
+                                            clip: true
+
+                                            Item {
+                                                anchors.fill: parent
+                                                enabled: false
+
+                                                Loader {
+                                                    id: facePreviewLoader
+                                                    anchors.centerIn: parent
+                                                    width: item ? item.implicitWidth : 0
+                                                    height: item ? item.implicitHeight : 0
+                                                    scale: Math.min(1.0, Math.min((previewBox.width - rootObj.s(16)) / Math.max(1, width), (previewBox.height - rootObj.s(16)) / Math.max(1, height)))
+                                                    asynchronous: false
+                                                    source: barModulesRoot.getFaceUrl(modelData.faceFile)
+
+                                                    onLoaded: {
+                                                        if (item) {
+                                                            item.width = Qt.binding(function() { return item.implicitWidth; });
+                                                            item.height = Qt.binding(function() { return item.implicitHeight; });
+                                                            item.widget = barModulesRoot.previewWidget;
+                                                        }
+                                                    }
+                                                }
+
+                                                RowLayout {
+                                                    anchors.centerIn: parent
+                                                    visible: !barModulesRoot.isSideBar && (facePreviewLoader.status === Loader.Error || !facePreviewLoader.item)
+                                                    spacing: rootObj.s(6)
+
+                                                    Repeater {
+                                                        model: 5
+                                                        delegate: Rectangle {
+                                                            required property int index
+                                                            readonly property bool isActive: index === 1
+                                                            width: modelData.id === "pills"
+                                                                ? (isActive ? rootObj.s(22) : rootObj.s(8))
+                                                                : rootObj.s(18)
+                                                            height: modelData.id === "pills" ? rootObj.s(8) : rootObj.s(18)
+                                                            radius: modelData.id === "pills" ? height / 2 : rootObj.s(4)
+                                                            color: isActive ? ThemeBackend.mauve : Qt.alpha(ThemeBackend.surface2, 0.7)
+
+                                                            Text {
+                                                                anchors.centerIn: parent
+                                                                visible: modelData.id === "numbers"
+                                                                text: String(index + 1)
+                                                                font.family: ThemeBackend.fontFamily
+                                                                font.pixelSize: rootObj.s(10)
+                                                                font.bold: isActive
+                                                                color: isActive ? ThemeBackend.crust : ThemeBackend.text
+                                                            }
+
+                                                            Text {
+                                                                anchors.centerIn: parent
+                                                                visible: modelData.id === "pacman"
+                                                                text: isActive ? "󰮯" : "•"
+                                                                font.family: ThemeBackend.fontFamily
+                                                                font.pixelSize: rootObj.s(14)
+                                                                font.bold: false
+                                                                color: isActive ? ThemeBackend.yellow : ThemeBackend.subtext0
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                ColumnLayout {
+                                                    anchors.centerIn: parent
+                                                    visible: barModulesRoot.isSideBar && (facePreviewLoader.status === Loader.Error || !facePreviewLoader.item)
+                                                    spacing: rootObj.s(6)
+
+                                                    Repeater {
+                                                        model: 5
+                                                        delegate: Rectangle {
+                                                            required property int index
+                                                            readonly property bool isActive: index === 1
+                                                            width: rootObj.s(18)
+                                                            height: modelData.id === "pills"
+                                                                ? (isActive ? rootObj.s(36) : rootObj.s(18))
+                                                                : rootObj.s(18)
+                                                            radius: modelData.id === "pills" ? width / 2 : rootObj.s(4)
+                                                            color: isActive ? ThemeBackend.mauve : Qt.alpha(ThemeBackend.surface2, 0.7)
+
+                                                            Text {
+                                                                anchors.centerIn: parent
+                                                                visible: modelData.id === "numbers"
+                                                                text: String(index + 1)
+                                                                font.family: ThemeBackend.fontFamily
+                                                                font.pixelSize: rootObj.s(10)
+                                                                font.bold: isActive
+                                                                color: isActive ? ThemeBackend.crust : ThemeBackend.text
+                                                            }
+
+                                                            Text {
+                                                                anchors.centerIn: parent
+                                                                visible: modelData.id === "pacman"
+                                                                text: isActive ? "󰮯" : "•"
+                                                                font.family: ThemeBackend.fontFamily
+                                                                font.pixelSize: rootObj.s(14)
+                                                                font.bold: false
+                                                                color: isActive ? ThemeBackend.yellow : ThemeBackend.subtext0
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            Rectangle {
+                                                anchors.fill: parent
+                                                radius: parent.radius
+                                                color: "transparent"
+                                                border.width: 1
+                                                border.color: Qt.alpha(ThemeBackend.surface2, 0.25)
+                                            }
+                                        }
+
+                                        Text {
+                                            Layout.fillWidth: true
+                                            Layout.leftMargin: rootObj.s(2)
+                                            Layout.rightMargin: rootObj.s(2)
+                                            Layout.bottomMargin: rootObj.s(2)
+                                            text: modelData.name
+                                            font.family: ThemeBackend.fontFamily
+                                            font.pixelSize: rootObj.s(13)
+                                            font.weight: Font.Bold
+                                            color: ThemeBackend.text
+                                        }
                                     }
                                 }
                             }
@@ -624,339 +645,263 @@ Item {
                         }
                     }
 
-                    Rectangle {
-                        Layout.fillWidth: true
-                        implicitHeight: rowDateLayout.implicitHeight + rootObj.s(24)
-                        radius: ThemeBackend.borderRadius
-                        color: Qt.alpha(ThemeBackend.surface1, 0.35)
-                        border.width: 0
+                    SettingsRow {
+                        rootObj: barModulesRoot.rootObj
+                        baseColor: Qt.alpha(ThemeBackend.surface1, 0.35)
+                        icon: "󰃭"
+                        title: I18n.t("guide.bar.timedate.show_date.title", "Show Date")
+                        description: I18n.t("guide.bar.timedate.show_date.desc", "Display the date text alongside the clock")
 
-                        RowLayout {
-                            id: rowDateLayout
-                            anchors.left: parent.left
-                            anchors.leftMargin: rootObj.s(14)
-                            anchors.right: parent.right
-                            anchors.rightMargin: rootObj.s(14)
-                            anchors.verticalCenter: parent.verticalCenter
-                            spacing: rootObj.s(12)
-
-                            IconButton {
-                                enabled: false
-                                size: rootObj.s(32)
-                                Layout.preferredWidth: rootObj.s(32)
-                                Layout.preferredHeight: rootObj.s(32)
-                                Layout.alignment: Qt.AlignVCenter
-                                cornerRadius: ThemeBackend.borderRadius
-                                buttonIcon: "󰃭"
-                                iconFontSize: rootObj.s(16)
-                                accentColor: ThemeBackend.surface0
-                                textColor: "#ffffff"
-                            }
-
-                            ColumnLayout {
-                                Layout.fillWidth: true
-                                Layout.alignment: Qt.AlignVCenter
-                                spacing: rootObj.s(2)
-                                Text { Layout.fillWidth: true; text: I18n.t("guide.bar.timedate.show_date.title", "Show Date"); font.family: ThemeBackend.fontFamily; font.pixelSize: rootObj.s(13); color: ThemeBackend.text }
-                                Text { Layout.fillWidth: true; text: I18n.t("guide.bar.timedate.show_date.desc", "Display the date text alongside the clock"); font.family: ThemeBackend.fontFamily; font.pixelSize: rootObj.s(11); color: ThemeBackend.subtext0 }
-                            }
-
-                            Rectangle {
-                                id: dateToggleSwitch
-                                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                                implicitWidth: rootObj.s(46)
-                                implicitHeight: rootObj.s(26)
-                                radius: height / 2
-                                color: barModulesRoot.timeShowDate ? ThemeBackend.blue : ThemeBackend.surface0
-                                border.color: barModulesRoot.timeShowDate ? ThemeBackend.blue : Qt.alpha(ThemeBackend.surface2, 0.6)
-                                border.width: 1
-
-                                Behavior on color { ColorAnimation { duration: 200 } }
-                                Behavior on border.color { ColorAnimation { duration: 200 } }
-
-                                Rectangle {
-                                    width: parent.height - rootObj.s(6)
-                                    height: width
-                                    radius: width / 2
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    x: barModulesRoot.timeShowDate ? (parent.width - width - rootObj.s(3)) : rootObj.s(3)
-                                    color: barModulesRoot.timeShowDate ? ThemeBackend.crust : ThemeBackend.text
-
-                                    Behavior on x { NumberAnimation { duration: 200; easing.type: Easing.OutQuint } }
-                                    Behavior on color { ColorAnimation { duration: 200 } }
-                                }
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    cursorShape: Qt.PointingHandCursor
-                                    onClicked: {
-                                        if (typeof Sounds !== "undefined") {
-                                            Sounds.playSfx("reusables/clickbutton/click.wav");
-                                        }
-                                        barModulesRoot.setTimeShowDate(!barModulesRoot.timeShowDate);
-                                    }
-                                }
+                        Toggle {
+                            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                            checked: barModulesRoot.timeShowDate
+                            accentColor: ThemeBackend.mauve
+                            baseColor: ThemeBackend.surface1
+                            handleColor: ThemeBackend.crust
+                            handleOffColor: ThemeBackend.text
+                            onToggled: function(c) {
+                                barModulesRoot.setTimeShowDate(c);
                             }
                         }
                     }
 
-                    Rectangle {
-                        Layout.fillWidth: true
-                        implicitHeight: rowTimeFormatLayout.implicitHeight + rootObj.s(24)
-                        radius: ThemeBackend.borderRadius
-                        color: Qt.alpha(ThemeBackend.surface1, 0.35)
-                        border.width: 0
+                    SettingsRow {
+                        rootObj: barModulesRoot.rootObj
+                        baseColor: Qt.alpha(ThemeBackend.surface1, 0.35)
+                        icon: "󰅐"
+                        title: I18n.t("guide.bar.time.title", "Time Format")
+                        description: I18n.t("guide.bar.time.desc", "Format pattern (e.g. HH:mm:ss)")
 
-                        RowLayout {
-                            id: rowTimeFormatLayout
-                            anchors.left: parent.left
-                            anchors.leftMargin: rootObj.s(14)
-                            anchors.right: parent.right
-                            anchors.rightMargin: rootObj.s(14)
-                            anchors.verticalCenter: parent.verticalCenter
-                            spacing: rootObj.s(12)
-
-                            IconButton {
-                                enabled: false
-                                size: rootObj.s(32)
-                                Layout.preferredWidth: rootObj.s(32)
-                                Layout.preferredHeight: rootObj.s(32)
-                                Layout.alignment: Qt.AlignVCenter
-                                cornerRadius: ThemeBackend.borderRadius
-                                buttonIcon: "󰅐"
-                                iconFontSize: rootObj.s(16)
-                                accentColor: ThemeBackend.surface0
-                                textColor: "#ffffff"
+                        Input {
+                            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                            implicitWidth: rootObj.s(140)
+                            implicitHeight: rootObj.s(32)
+                            text: barModulesRoot.timeFormat
+                            placeholderText: "HH:mm:ss"
+                            baseColor: ThemeBackend.surface0
+                            accentColor: ThemeBackend.mauve
+                            textColor: ThemeBackend.text
+                            subTextColor: ThemeBackend.subtext0
+                            borderColor: Qt.alpha(ThemeBackend.surface2, 0.6)
+                            cornerRadius: ThemeBackend.borderRadius
+                            fontPixelSize: rootObj.s(11)
+                            onTextEdited: function(newText) {
+                                barModulesRoot.setTimeFormat(newText);
                             }
-
-                            ColumnLayout {
-                                Layout.fillWidth: true
-                                Layout.alignment: Qt.AlignVCenter
-                                spacing: rootObj.s(2)
-                                Text { Layout.fillWidth: true; text: I18n.t("guide.bar.time.title", "Time Format"); font.family: ThemeBackend.fontFamily; font.pixelSize: rootObj.s(13); color: ThemeBackend.text }
-                                Text { Layout.fillWidth: true; text: I18n.t("guide.bar.time.desc", "Format pattern (e.g. HH:mm:ss)"); font.family: ThemeBackend.fontFamily; font.pixelSize: rootObj.s(11); color: ThemeBackend.subtext0 }
-                            }
-
-                            Input {
-                                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                                implicitWidth: rootObj.s(140)
-                                implicitHeight: rootObj.s(32)
-                                text: barModulesRoot.timeFormat
-                                placeholderText: "HH:mm:ss"
-                                baseColor: ThemeBackend.surface0
-                                accentColor: ThemeBackend.mauve
-                                textColor: ThemeBackend.text
-                                subTextColor: ThemeBackend.subtext0
-                                borderColor: Qt.alpha(ThemeBackend.surface2, 0.6)
-                                cornerRadius: ThemeBackend.borderRadius
-                                fontPixelSize: rootObj.s(11)
-                                onTextEdited: function(newText) {
-                                    barModulesRoot.setTimeFormat(newText);
-                                }
-                                onAccepted: function(finalText) {
-                                    barModulesRoot.setTimeFormat(finalText);
-                                }
+                            onAccepted: function(finalText) {
+                                barModulesRoot.setTimeFormat(finalText);
                             }
                         }
                     }
 
-                    GridLayout {
-                        id: timeStylesGrid
-                        Layout.fillWidth: true
-                        columns: Math.max(1, Math.min(3, Math.floor(timeDateCardLayout.width / rootObj.s(160))))
-                        rowSpacing: rootObj.s(10)
-                        columnSpacing: rootObj.s(10)
+                    SettingsRow {
+                        id: timeStyleRow
+                        rootObj: barModulesRoot.rootObj
+                        settingId: "bar_timedate_style"
+                        searchKeywords: "classic material badge time date clock style"
+                        baseColor: Qt.alpha(ThemeBackend.surface1, 0.35)
+                        icon: "󰥔"
+                        title: I18n.t("guide.bar.timedate.style.title", "Time & Date Style")
+                        description: I18n.t("guide.bar.timedate.style.desc", "Choose the visual style for the clock and date display")
 
-                        Repeater {
-                            model: barModulesRoot.timeStyles
-                            delegate: Rectangle {
-                                id: timeStyleCard
-                                required property var modelData
-                                required property int index
+                        bottomContent: GridLayout {
+                            id: timeStylesGrid
+                            Layout.fillWidth: true
+                            columns: Math.max(1, Math.min(3, Math.floor(timeDateCardLayout.width / rootObj.s(160))))
+                            rowSpacing: rootObj.s(10)
+                            columnSpacing: rootObj.s(10)
 
-                                readonly property bool isSelected: barModulesRoot.timeStyle === modelData.id
-                                property real popScale: 1.0
-                                property real flashOpacity: 0.0
+                            Repeater {
+                                model: barModulesRoot.timeStyles
+                                delegate: Rectangle {
+                                    id: timeStyleCard
+                                    required property var modelData
+                                    required property int index
 
-                                Layout.fillWidth: true
-                                Layout.preferredWidth: 1
-                                implicitHeight: timeStyleInnerCol.implicitHeight + rootObj.s(16)
-                                radius: ThemeBackend.borderRadius
-                                clip: true
+                                    readonly property bool isSelected: barModulesRoot.timeStyle === modelData.id
+                                    property real popScale: 1.0
+                                    property real flashOpacity: 0.0
 
-                                color: timeCardMouse.pressed
-                                    ? Qt.darker(ThemeBackend.surface0, 1.15)
-                                    : (isSelected
-                                        ? (timeCardHover.hovered ? Qt.lighter(ThemeBackend.surface0, 1.30) : Qt.lighter(ThemeBackend.surface0, 1.24))
-                                        : (timeCardHover.hovered ? Qt.lighter(ThemeBackend.surface0, 1.10) : ThemeBackend.surface0))
+                                    Layout.fillWidth: true
+                                    Layout.preferredWidth: 1
+                                    implicitHeight: timeStyleInnerCol.implicitHeight + rootObj.s(16)
+                                    radius: ThemeBackend.borderRadius
+                                    clip: true
 
-                                border.width: 1
-                                border.color: isSelected
-                                    ? Qt.alpha(ThemeBackend.surface2, 0.75)
-                                    : (timeCardHover.hovered ? Qt.alpha(ThemeBackend.surface2, 0.5) : Qt.alpha(ThemeBackend.surface1, 0.4))
+                                    color: timeCardMouse.pressed
+                                        ? Qt.darker(ThemeBackend.surface0, 1.15)
+                                        : (isSelected
+                                            ? (timeCardHover.hovered ? Qt.lighter(ThemeBackend.surface0, 1.30) : Qt.lighter(ThemeBackend.surface0, 1.24))
+                                            : (timeCardHover.hovered ? Qt.lighter(ThemeBackend.surface0, 1.10) : ThemeBackend.surface0))
 
-                                Behavior on color { ColorAnimation { duration: 180 } }
-                                Behavior on border.color { ColorAnimation { duration: 180 } }
+                                    border.width: 1
+                                    border.color: isSelected
+                                        ? Qt.alpha(ThemeBackend.surface2, 0.75)
+                                        : (timeCardHover.hovered ? Qt.alpha(ThemeBackend.surface2, 0.5) : Qt.alpha(ThemeBackend.surface1, 0.4))
 
-                                scale: (timeCardMouse.pressed ? 0.985 : (timeCardHover.hovered ? 1.015 : 1.0)) * timeStyleCard.popScale
-                                Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutQuint } }
+                                    Behavior on color { ColorAnimation { duration: 180 } }
+                                    Behavior on border.color { ColorAnimation { duration: 180 } }
 
-                                HoverHandler {
-                                    id: timeCardHover
-                                }
+                                    scale: (timeCardMouse.pressed ? 0.985 : (timeCardHover.hovered ? 1.015 : 1.0)) * timeStyleCard.popScale
+                                    Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutQuint } }
 
-                                Rectangle {
-                                    anchors.fill: parent
-                                    radius: parent.radius
-                                    color: "#ffffff"
-                                    opacity: timeStyleCard.flashOpacity
-                                    PropertyAnimation on opacity { id: timeFlashAnim; to: 0; duration: 350; easing.type: Easing.OutExpo }
-                                }
-
-                                SequentialAnimation {
-                                    id: timePopAnim
-                                    NumberAnimation { target: timeStyleCard; property: "popScale"; to: 1.02; duration: 100; easing.type: Easing.OutQuad }
-                                    NumberAnimation { target: timeStyleCard; property: "popScale"; to: 1.0; duration: 350; easing.type: Easing.OutQuint }
-                                }
-
-                                MouseArea {
-                                    id: timeCardMouse
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    cursorShape: Qt.PointingHandCursor
-                                    onClicked: {
-                                        timePopAnim.start();
-                                        timeStyleCard.flashOpacity = 0.15;
-                                        timeFlashAnim.start();
-                                        if (typeof Sounds !== "undefined") {
-                                            Sounds.playSfx("reusables/clickbutton/click.wav");
-                                        }
-                                        barModulesRoot.setTimeStyle(modelData.id);
+                                    HoverHandler {
+                                        id: timeCardHover
                                     }
-                                }
-
-                                ColumnLayout {
-                                    id: timeStyleInnerCol
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.top: parent.top
-                                    anchors.margins: rootObj.s(8)
-                                    spacing: rootObj.s(8)
 
                                     Rectangle {
-                                        id: timePreviewBox
-                                        Layout.fillWidth: true
-                                        implicitHeight: rootObj.s(barModulesRoot.isSideBar ? 140 : 72)
-                                        radius: ThemeBackend.borderRadius
-                                        color: Qt.darker(ThemeBackend.mantle, 1.1)
-                                        clip: true
+                                        anchors.fill: parent
+                                        radius: parent.radius
+                                        color: "#ffffff"
+                                        opacity: timeStyleCard.flashOpacity
+                                        PropertyAnimation on opacity { id: timeFlashAnim; to: 0; duration: 350; easing.type: Easing.OutExpo }
+                                    }
 
-                                        Item {
-                                            anchors.fill: parent
-                                            enabled: false
+                                    SequentialAnimation {
+                                        id: timePopAnim
+                                        NumberAnimation { target: timeStyleCard; property: "popScale"; to: 1.02; duration: 100; easing.type: Easing.OutQuad }
+                                        NumberAnimation { target: timeStyleCard; property: "popScale"; to: 1.0; duration: 350; easing.type: Easing.OutQuint }
+                                    }
 
-                                            Loader {
-                                                id: timeFacePreviewLoader
-                                                anchors.centerIn: parent
-                                                width: item ? item.implicitWidth : 0
-                                                height: item ? item.implicitHeight : 0
-                                                scale: Math.min(1.0, Math.min((timePreviewBox.width - rootObj.s(16)) / Math.max(1, width), (timePreviewBox.height - rootObj.s(16)) / Math.max(1, height)))
-                                                asynchronous: false
-                                                source: barModulesRoot.getFaceUrl(modelData.faceFile)
+                                    MouseArea {
+                                        id: timeCardMouse
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: {
+                                            timePopAnim.start();
+                                            timeStyleCard.flashOpacity = 0.15;
+                                            timeFlashAnim.start();
+                                            if (typeof Sounds !== "undefined") {
+                                                Sounds.playSfx("reusables/clickbutton/click.wav");
+                                            }
+                                            barModulesRoot.setTimeStyle(modelData.id);
+                                        }
+                                    }
 
-                                                onLoaded: {
-                                                    if (item) {
-                                                        item.width = Qt.binding(function() { return item.implicitWidth; });
-                                                        item.height = Qt.binding(function() { return item.implicitHeight; });
-                                                        item.widget = previewTimeWidgetObj;
+                                    ColumnLayout {
+                                        id: timeStyleInnerCol
+                                        anchors.left: parent.left
+                                        anchors.right: parent.right
+                                        anchors.top: parent.top
+                                        anchors.margins: rootObj.s(8)
+                                        spacing: rootObj.s(8)
+
+                                        Rectangle {
+                                            id: timePreviewBox
+                                            Layout.fillWidth: true
+                                            implicitHeight: rootObj.s(barModulesRoot.isSideBar ? 140 : 72)
+                                            radius: ThemeBackend.borderRadius
+                                            color: Qt.darker(ThemeBackend.mantle, 1.1)
+                                            clip: true
+
+                                            Item {
+                                                anchors.fill: parent
+                                                enabled: false
+
+                                                Loader {
+                                                    id: timeFacePreviewLoader
+                                                    anchors.centerIn: parent
+                                                    width: item ? item.implicitWidth : 0
+                                                    height: item ? item.implicitHeight : 0
+                                                    scale: Math.min(1.0, Math.min((timePreviewBox.width - rootObj.s(16)) / Math.max(1, width), (timePreviewBox.height - rootObj.s(16)) / Math.max(1, height)))
+                                                    asynchronous: false
+                                                    source: barModulesRoot.getFaceUrl(modelData.faceFile)
+
+                                                    onLoaded: {
+                                                        if (item) {
+                                                            item.width = Qt.binding(function() { return item.implicitWidth; });
+                                                            item.height = Qt.binding(function() { return item.implicitHeight; });
+                                                            item.widget = previewTimeWidgetObj;
+                                                        }
+                                                    }
+                                                }
+
+                                                RowLayout {
+                                                    anchors.centerIn: parent
+                                                    visible: !barModulesRoot.isSideBar && (timeFacePreviewLoader.status === Loader.Error || !timeFacePreviewLoader.item)
+                                                    spacing: rootObj.s(6)
+
+                                                    Text {
+                                                        text: "14:28:00"
+                                                        font.family: ThemeBackend.fontFamily
+                                                        font.pixelSize: rootObj.s(13)
+                                                        font.bold: true
+                                                        color: ThemeBackend.text
+                                                    }
+                                                }
+
+                                                ColumnLayout {
+                                                    anchors.centerIn: parent
+                                                    visible: barModulesRoot.isSideBar && (timeFacePreviewLoader.status === Loader.Error || !timeFacePreviewLoader.item)
+                                                    spacing: rootObj.s(3)
+
+                                                    Text {
+                                                        Layout.alignment: Qt.AlignHCenter
+                                                        text: "14"
+                                                        font.family: ThemeBackend.fontFamily
+                                                        font.pixelSize: rootObj.s(13)
+                                                        font.bold: true
+                                                        color: ThemeBackend.blue
+                                                    }
+
+                                                    Text {
+                                                        Layout.alignment: Qt.AlignHCenter
+                                                        text: "28"
+                                                        font.family: ThemeBackend.fontFamily
+                                                        font.pixelSize: rootObj.s(13)
+                                                        font.bold: true
+                                                        color: ThemeBackend.sapphire
+                                                    }
+
+                                                    Rectangle {
+                                                        Layout.alignment: Qt.AlignHCenter
+                                                        width: rootObj.s(14)
+                                                        height: 2
+                                                        radius: 1
+                                                        color: ThemeBackend.surface1
+                                                    }
+
+                                                    Text {
+                                                        Layout.alignment: Qt.AlignHCenter
+                                                        text: "18"
+                                                        font.family: ThemeBackend.fontFamily
+                                                        font.pixelSize: rootObj.s(10)
+                                                        font.bold: true
+                                                        color: ThemeBackend.text
+                                                    }
+
+                                                    Text {
+                                                        Layout.alignment: Qt.AlignHCenter
+                                                        text: "Sep"
+                                                        font.family: ThemeBackend.fontFamily
+                                                        font.pixelSize: rootObj.s(8)
+                                                        font.bold: true
+                                                        color: ThemeBackend.subtext0
                                                     }
                                                 }
                                             }
 
-                                            RowLayout {
-                                                anchors.centerIn: parent
-                                                visible: !barModulesRoot.isSideBar && (timeFacePreviewLoader.status === Loader.Error || !timeFacePreviewLoader.item)
-                                                spacing: rootObj.s(6)
-
-                                                Text {
-                                                    text: "14:28:00"
-                                                    font.family: ThemeBackend.fontFamily
-                                                    font.pixelSize: rootObj.s(13)
-                                                    font.bold: true
-                                                    color: ThemeBackend.text
-                                                }
-                                            }
-
-                                            ColumnLayout {
-                                                anchors.centerIn: parent
-                                                visible: barModulesRoot.isSideBar && (timeFacePreviewLoader.status === Loader.Error || !timeFacePreviewLoader.item)
-                                                spacing: rootObj.s(3)
-
-                                                Text {
-                                                    Layout.alignment: Qt.AlignHCenter
-                                                    text: "14"
-                                                    font.family: ThemeBackend.fontFamily
-                                                    font.pixelSize: rootObj.s(13)
-                                                    font.bold: true
-                                                    color: ThemeBackend.blue
-                                                }
-
-                                                Text {
-                                                    Layout.alignment: Qt.AlignHCenter
-                                                    text: "28"
-                                                    font.family: ThemeBackend.fontFamily
-                                                    font.pixelSize: rootObj.s(13)
-                                                    font.bold: true
-                                                    color: ThemeBackend.sapphire
-                                                }
-
-                                                Rectangle {
-                                                    Layout.alignment: Qt.AlignHCenter
-                                                    width: rootObj.s(14)
-                                                    height: 2
-                                                    radius: 1
-                                                    color: ThemeBackend.surface1
-                                                }
-
-                                                Text {
-                                                    Layout.alignment: Qt.AlignHCenter
-                                                    text: "18"
-                                                    font.family: ThemeBackend.fontFamily
-                                                    font.pixelSize: rootObj.s(10)
-                                                    font.bold: true
-                                                    color: ThemeBackend.text
-                                                }
-
-                                                Text {
-                                                    Layout.alignment: Qt.AlignHCenter
-                                                    text: "Sep"
-                                                    font.family: ThemeBackend.fontFamily
-                                                    font.pixelSize: rootObj.s(8)
-                                                    font.bold: true
-                                                    color: ThemeBackend.subtext0
-                                                }
+                                            Rectangle {
+                                                anchors.fill: parent
+                                                radius: parent.radius
+                                                color: "transparent"
+                                                border.width: 1
+                                                border.color: Qt.alpha(ThemeBackend.surface2, 0.25)
                                             }
                                         }
 
-                                        Rectangle {
-                                            anchors.fill: parent
-                                            radius: parent.radius
-                                            color: "transparent"
-                                            border.width: 1
-                                            border.color: Qt.alpha(ThemeBackend.surface2, 0.25)
+                                        Text {
+                                            Layout.fillWidth: true
+                                            Layout.leftMargin: rootObj.s(2)
+                                            Layout.rightMargin: rootObj.s(2)
+                                            Layout.bottomMargin: rootObj.s(2)
+                                            text: modelData.name
+                                            font.family: ThemeBackend.fontFamily
+                                            font.pixelSize: rootObj.s(13)
+                                            font.weight: Font.Bold
+                                            color: ThemeBackend.text
                                         }
-                                    }
-
-                                    Text {
-                                        Layout.fillWidth: true
-                                        Layout.leftMargin: rootObj.s(2)
-                                        Layout.rightMargin: rootObj.s(2)
-                                        Layout.bottomMargin: rootObj.s(2)
-                                        text: modelData.name
-                                        font.family: ThemeBackend.fontFamily
-                                        font.pixelSize: rootObj.s(13)
-                                        font.weight: Font.Bold
-                                        color: ThemeBackend.text
                                     }
                                 }
                             }

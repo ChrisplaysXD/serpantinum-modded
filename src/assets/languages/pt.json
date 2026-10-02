@@ -148,23 +148,24 @@
       },
       "dim": {
         "title": "Escurecer tela",
-        "desc": "Tempo antes de escurecer a saída"
+        "desc": "Reduzir o brilho da tela antes de bloquear"
       },
       "dpms": {
         "title": "Desligar tela (DPMS)",
-        "desc": "Tempo antes de apagar a tela por completo"
+        "desc": "Desligar o sinal de vídeo do monitor"
       },
       "lock": {
         "title": "Bloquear sessão",
-        "desc": "Tempo antes de exigir senha"
+        "desc": "Bloquear a sessão após um período de inatividade"
       },
       "suspend": {
         "title": "Suspender sistema",
-        "desc": "Tempo antes de colocar a máquina pra dormir"
+        "desc": "Suspender o sistema para o modo de suspensão"
       },
       "hooks": {
         "title": "Hooks (comandos shell)"
-      }
+      },
+      "custom_action_desc": "Ação e comando personalizados por tempo limite"
     },
     "welcome": {
       "by_author": "por @{author}",
@@ -271,7 +272,8 @@
         "save_preset": {
           "title": "Salvar predefinição"
         },
-        "preset_name_placeholder": "Digite o nome da predefinição..."
+        "preset_name_placeholder": "Digite o nome da predefinição...",
+        "screen_desc": "Configurar e editar widgets da área de trabalho"
       }
     },
     "bar": {
@@ -325,7 +327,15 @@
       "workspaces": {
         "title": "Quantidade de workspaces a exibir",
         "disc": "Nota: isto não afeta a quantidade real de workspaces no compositor",
-        "desc": "Número de workspaces a exibir"
+        "desc": "Número de workspaces a exibir",
+        "hide_empty": {
+          "title": "Ocultar áreas de trabalho vazias",
+          "desc": "Mostrar apenas as áreas ocupadas e a ativa"
+        },
+        "style": {
+          "title": "Estilo",
+          "desc": "Escolha o estilo visual para os indicadores de áreas de trabalho"
+        }
       },
       "opacity": {
         "title": "Opacidade da barra",
@@ -371,6 +381,10 @@
         "show_date": {
           "title": "Mostrar data",
           "desc": "Exibir o texto da data ao lado do relógio"
+        },
+        "style": {
+          "title": "Estilo",
+          "desc": "Escolha o estilo visual para o relógio e a data"
         }
       }
     },
@@ -395,7 +409,8 @@
         "desc": "Pasta onde buscar papéis de parede",
         "select_dir": "Selecionar pasta...",
         "select_wallpaper": "Selecionar papel de parede",
-        "no_wallpaper_selected": "Nenhum papel de parede selecionado"
+        "no_wallpaper_selected": "Nenhum papel de parede selecionado",
+        "select": "Papel de parede"
       }
     },
     "file_picker": {
@@ -643,6 +658,12 @@
     "lyrics_picker": {
       "title": "Selecionar arquivo de letras",
       "no_lyrics_selected": "Nenhum arquivo de letras selecionado"
+    },
+    "settings": "Configurações",
+    "search": {
+      "placeholder": "Pesquisar configurações...",
+      "prompt": "Digite para pesquisar configurações...",
+      "no_results": "Nenhuma configuração encontrada"
     }
   },
   "sysnotif": {
@@ -748,7 +769,8 @@
     },
     "searching_lyrics": "Procurando letra...",
     "no_lyrics": "Nenhuma letra encontrada",
-    "select_local_file": "Selecionar um arquivo local"
+    "select_local_file": "Selecionar um arquivo local",
+    "lyrics": "Letra"
   },
   "network": {
     "tabs": {
@@ -1032,7 +1054,9 @@
       "visualizer": "Visualizador",
       "user": "Usuário",
       "usage": "Uso",
-      "battery": "Bateria"
+      "battery": "Bateria",
+      "github": "Github",
+      "time": "Hora"
     },
     "variants": {
       "digital": "Digital",
@@ -1049,7 +1073,8 @@
       "material": "Material",
       "materialAnalog": "Material analógico",
       "lumen": "Lúmen",
-      "lyrics": "Letra"
+      "lyrics": "Letra",
+      "simpleLyrics": "Letra simples"
     },
     "presets": {
       "minimal": {
@@ -1064,6 +1089,26 @@
         "name": "Painel",
         "desc": "Monitor de sistema completo com relógio digital, uso de hardware e nível de bateria."
       }
+    },
+    "github": {
+      "set_user": "Definir usuário",
+      "error": "Erro",
+      "commit": "commit",
+      "commits": "commits",
+      "no_day_selected": "Nenhum dia selecionado",
+      "fetching": "Buscando contribuições do GitHub...",
+      "fetch_error": "Não foi possível carregar o usuário @{user}",
+      "enter_username": "Digite um nome de usuário do GitHub",
+      "no_contributions": "Nenhuma contribuição encontrada"
+    },
+    "settings": {
+      "lyricsLines": "Linhas",
+      "lyricsAlignment": "Alinhamento"
+    },
+    "align": {
+      "left": "Esquerda",
+      "center": "Centro",
+      "right": "Direita"
     }
   },
   "cli": {

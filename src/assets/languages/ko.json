@@ -152,19 +152,20 @@
       },
       "dpms": {
         "title": "화면 끄기 (DPMS)",
-        "desc": "화면을 완전히 끄기까지의 시간"
+        "desc": "모니터 디스플레이 신호 끄기"
       },
       "lock": {
         "title": "세션 잠금",
-        "desc": "비밀번호를 요구하기까지의 시간"
+        "desc": "일정 시간 비활성 후 세션 잠금"
       },
       "suspend": {
         "title": "시스템 절전",
-        "desc": "시스템을 절전 모드로 전환하기까지의 시간"
+        "desc": "시스템을 절전 모드로 전환"
       },
       "hooks": {
         "title": "훅 (셸 명령)"
-      }
+      },
+      "custom_action_desc": "사용자 정의 시간 초과 동작 및 명령"
     },
     "welcome": {
       "by_author": "@{author} 제작",
@@ -271,7 +272,8 @@
         "save_preset": {
           "title": "프리셋 저장"
         },
-        "preset_name_placeholder": "프리셋 이름 입력..."
+        "preset_name_placeholder": "프리셋 이름 입력...",
+        "screen_desc": "바탕화면 위젯 설정 및 편집"
       }
     },
     "bar": {
@@ -325,7 +327,15 @@
       "workspaces": {
         "title": "표시할 작업 공간 개수를 선택하세요",
         "disc": "참고: 이 설정은 컴포지터의 실제 작업 공간 개수에는 영향을 주지 않습니다",
-        "desc": "표시할 작업 공간 개수"
+        "desc": "표시할 작업 공간 개수",
+        "hide_empty": {
+          "title": "빈 작업 공간 숨기기",
+          "desc": "사용 중인 작업 공간과 현재 작업 공간만 표시"
+        },
+        "style": {
+          "title": "스타일",
+          "desc": "워크스페이스 표시기의 시각적 스타일을 선택합니다"
+        }
       },
       "opacity": {
         "title": "바 불투명도",
@@ -371,6 +381,10 @@
         "show_date": {
           "title": "날짜 표시",
           "desc": "시계 옆에 날짜 텍스트를 표시합니다"
+        },
+        "style": {
+          "title": "스타일",
+          "desc": "시계 및 날짜 표시의 시각적 스타일을 선택합니다"
         }
       }
     },
@@ -395,7 +409,8 @@
         "desc": "배경화면을 검색할 디렉터리",
         "select_dir": "디렉터리 선택...",
         "select_wallpaper": "배경화면 선택",
-        "no_wallpaper_selected": "선택된 배경화면 없음"
+        "no_wallpaper_selected": "선택된 배경화면 없음",
+        "select": "배경화면"
       }
     },
     "file_picker": {
@@ -643,6 +658,12 @@
     "lyrics_picker": {
       "title": "가사 파일 선택",
       "no_lyrics_selected": "선택된 가사 없음"
+    },
+    "settings": "설정",
+    "search": {
+      "placeholder": "설정 검색...",
+      "prompt": "설정을 검색하려면 입력하세요...",
+      "no_results": "설정을 찾을 수 없습니다"
     }
   },
   "sysnotif": {
@@ -748,7 +769,8 @@
     },
     "searching_lyrics": "가사 검색 중...",
     "no_lyrics": "가사를 찾을 수 없음",
-    "select_local_file": "로컬 파일 선택"
+    "select_local_file": "로컬 파일 선택",
+    "lyrics": "가사"
   },
   "network": {
     "tabs": {
@@ -1032,7 +1054,9 @@
       "visualizer": "시각화 도구",
       "user": "사용자",
       "usage": "사용량",
-      "battery": "배터리"
+      "battery": "배터리",
+      "github": "Github",
+      "time": "시간"
     },
     "variants": {
       "digital": "디지털",
@@ -1049,7 +1073,8 @@
       "material": "머티리얼",
       "materialAnalog": "머티리얼 아날로그",
       "lumen": "루멘",
-      "lyrics": "가사"
+      "lyrics": "가사",
+      "simpleLyrics": "단순 가사"
     },
     "presets": {
       "minimal": {
@@ -1064,6 +1089,26 @@
         "name": "대시보드",
         "desc": "디지털 시계, 하드웨어 리소스 사용량 및 배터리 상태를 보여주는 대시보드입니다."
       }
+    },
+    "github": {
+      "set_user": "사용자 설정",
+      "error": "오류",
+      "commit": "커밋",
+      "commits": "커밋",
+      "no_day_selected": "선택된 날짜 없음",
+      "fetching": "GitHub 기여 내역 가져오는 중...",
+      "fetch_error": "@{user} 사용자를 가져올 수 없습니다",
+      "enter_username": "GitHub 사용자명을 입력하세요",
+      "no_contributions": "기여 내역이 없습니다"
+    },
+    "settings": {
+      "lyricsLines": "줄 수",
+      "lyricsAlignment": "정렬"
+    },
+    "align": {
+      "left": "왼쪽",
+      "center": "가운데",
+      "right": "오른쪽"
     }
   },
   "cli": {

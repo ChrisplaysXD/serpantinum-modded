@@ -65,6 +65,7 @@ PanelWindow {
         } else {
             executeFileSearch(searchInput.text);
         }
+        launcherWindow.grabInputFocus();
     }
 
     FileView {
@@ -1371,6 +1372,12 @@ PanelWindow {
                     }
                     showClearButton: true
 
+                    onHasFocusChanged: {
+                        if (!searchInput.hasFocus && launcherWindow.isVisible) {
+                            appList.forceActiveFocus();
+                        }
+                    }
+
                     onTextEdited: function(newText) {
                         if (launcherWindow.currentTabIndex === 0) {
                             filterApps(newText);
@@ -1479,8 +1486,17 @@ PanelWindow {
                         currentIndex: 0
                         boundsBehavior: Flickable.StopAtBounds
                         cacheBuffer: launcherWindow.s(500)
-
                         highlightFollowsCurrentItem: false
+
+                        Keys.forwardTo: [searchInput]
+
+                        Keys.onPressed: function(event) {
+                            if (event.text && event.text.length > 0 && event.key !== Qt.Key_Return && event.key !== Qt.Key_Enter && event.key !== Qt.Key_Escape && event.key !== Qt.Key_Tab && event.key !== Qt.Key_Backtab) {
+                                launcherWindow.grabInputFocus();
+                                searchInput.text += event.text;
+                                event.accepted = true;
+                            }
+                        }
 
                         function getItemY(idx) {
                             return idx * (launcherWindow.s(44) + spacing);

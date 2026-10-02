@@ -1,3 +1,65 @@
+### 2.2.3
+
+- feat: add arrow navigation to the guidepopup search
+- fix: don't unregister setting rows from other tabs
+- fix: add a themetab non setting row settings into the search in the guidepopup
+- fix: add translations for the search
+- fix: fix the icon on the about tab
+- fix: improve the search bar
+- fix: add a nothing is playing string to the musicface lyrics simple
+- fix: fix the issue with the numberanimation paused property not being set when not running
+- Merge remote-tracking branch 'origin/master'
+- feat(i18n): fall back to the system language when none is set (#343)
+- feat: add search for settings in the guide popup, implement settingsgroups in bargeneraltab, docktab
+
+### 2.2.2
+
+- fix: ensure easyeffects isn't dying with the ssystem restart
+- fix: update the missing properties in the widgetsync
+- chore: update qmldir file
+- perf: replace the hardcoded lyrics with a lyricsview in the musicpopup
+- feat: add support for custom propertes to the widget redactor
+- feat: new face lyrics simple widget for music, with configurable size and layout
+- fix: make sure lyrics don't stale and update properly on lyrics change
+- fix: make input.qml lose focus when clicked outside
+- refactor: separate the wavy seek bar and the lyrics view into reusables
+- fix: make the hashes for song previews unique to prevent different players to cache wrong thumbnails to a song
+- fix(equalizer): write the preset where EasyEffects 8 reads it, atomically (#338)
+- perf: optimize the canvas animation in the musicpopup
+- style: make sure the handle doesn't faint in the musicpopup
+
+### 2.2.1
+
+- feat: add a on-hover caffein duration in the systempanel
+- feat: add lyrics singleton, add lyrics to the music popup, rework the progress bar style
+- fix: fix the path for refactor of the notificationbox
+- fix: fix a path bug after the refactor of notificationbox
+- chore: change file permittions after a merge
+- feat: add option to hide empty workspace indicators (#333)
+- refactor: replace all hardcoded settings in the guide popup tabs with the settingsrow reusable
+- refactor: separate all reusables into folders for proper structure, add a new settingsrow reusable
+- fix: fix a typo in the math for widget redactor
+- style: remove the border from the github face widget
+
+### 2.2.0
+
+- fix: add a debounce timer for a reload action in the desktopmenu
+- feat: add a redactor opening script
+- fix: replace the widget redactor ipc calls with a script call
+- feat: add a desktop menu popup to get activated on a right click on desktop and widgets for quick access to functionality
+- fix: make sure widgetredactor doesn't talk over ipc calls with the loader but uses widgetsync singleton instead
+- style: redesign the pacman face for the workspaceswidget
+- feat: make the widget redactor a separate scope window to activate on an ipc call to speed up and improve the redactor
+- feat: add a new github face widget
+- fix: fixes #328
+- fix: improve the readability of the lyrics
+- style: add lyrics caching to the lyrics widget
+- style: improve the animations and the visuals of the lyrics widget
+- fix: remove the black background box that reduced performance from the lockscreen
+- style: instead of truncating a lyric, move it to the next line in the music lyric widget
+- style: make the font size of lyrics change with widget scale
+- style: increase the dimming in the clockview in the lockscreen
+
 ### 2.1.10
 
 - fix: switch the power performance profile position in the systempanel with the power saver profile for a more logical positioning from left to right
