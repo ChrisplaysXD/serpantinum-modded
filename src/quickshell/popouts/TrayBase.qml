@@ -330,196 +330,58 @@ PanelWindow {
                 return trayMenuWindow.alignBottom ? Item.Bottom : Item.Top;
             }
 
-            Shape {
-                visible: trayMenuWindow.isSolid && !trayMenuWindow.isSideBar && !trayMenuWindow.alignBottom && menuContainer.dynamicCornerRadius > 0.5
-                x: -menuContainer.dynamicCornerRadius
-                y: 0
+            ShaderEffect {
+                visible: trayMenuWindow.isSolid && menuContainer.dynamicCornerRadius > 0.5
+                x: {
+                    if (trayMenuWindow.isSideBar) {
+                        return trayMenuWindow.alignRight ? (parent.width - menuContainer.dynamicCornerRadius) : 0;
+                    }
+                    return -menuContainer.dynamicCornerRadius;
+                }
+                y: {
+                    if (trayMenuWindow.isSideBar) {
+                        return -menuContainer.dynamicCornerRadius;
+                    }
+                    return trayMenuWindow.alignBottom ? (parent.height - menuContainer.dynamicCornerRadius) : 0;
+                }
                 width: menuContainer.dynamicCornerRadius
                 height: menuContainer.dynamicCornerRadius
-                preferredRendererType: Shape.CurveRenderer
-                ShapePath {
-                    fillColor: ThemeBackend.base
-                    strokeColor: "transparent"
-                    startX: 0
-                    startY: 0
-                    PathLine { x: menuContainer.dynamicCornerRadius; y: 0 }
-                    PathLine { x: menuContainer.dynamicCornerRadius; y: menuContainer.dynamicCornerRadius }
-                    PathArc {
-                        x: 0
-                        y: 0
-                        radiusX: menuContainer.dynamicCornerRadius
-                        radiusY: menuContainer.dynamicCornerRadius
-                        direction: PathArc.Counterclockwise
+                property vector2d itemSize: Qt.vector2d(width, height)
+                property real cornerIndex: {
+                    if (trayMenuWindow.isSideBar) {
+                        return trayMenuWindow.alignRight ? 3.0 : 2.0;
                     }
+                    return trayMenuWindow.alignBottom ? 3.0 : 1.0;
                 }
+                property color color: ThemeBackend.base
+                fragmentShader: "file://" + Caching.serpantinumDir + "/assets/shaders/ui/corner_cutout.frag.qsb"
             }
 
-            Shape {
-                visible: trayMenuWindow.isSolid && !trayMenuWindow.isSideBar && !trayMenuWindow.alignBottom && menuContainer.dynamicCornerRadius > 0.5
-                x: parent.width
-                y: 0
+            ShaderEffect {
+                visible: trayMenuWindow.isSolid && menuContainer.dynamicCornerRadius > 0.5
+                x: {
+                    if (trayMenuWindow.isSideBar) {
+                        return trayMenuWindow.alignRight ? (parent.width - menuContainer.dynamicCornerRadius) : 0;
+                    }
+                    return parent.width;
+                }
+                y: {
+                    if (trayMenuWindow.isSideBar) {
+                        return parent.height;
+                    }
+                    return trayMenuWindow.alignBottom ? (parent.height - menuContainer.dynamicCornerRadius) : 0;
+                }
                 width: menuContainer.dynamicCornerRadius
                 height: menuContainer.dynamicCornerRadius
-                preferredRendererType: Shape.CurveRenderer
-                ShapePath {
-                    fillColor: ThemeBackend.base
-                    strokeColor: "transparent"
-                    startX: menuContainer.dynamicCornerRadius
-                    startY: 0
-                    PathLine { x: 0; y: 0 }
-                    PathLine { x: 0; y: menuContainer.dynamicCornerRadius }
-                    PathArc {
-                        x: menuContainer.dynamicCornerRadius
-                        y: 0
-                        radiusX: menuContainer.dynamicCornerRadius
-                        radiusY: menuContainer.dynamicCornerRadius
-                        direction: PathArc.Clockwise
+                property vector2d itemSize: Qt.vector2d(width, height)
+                property real cornerIndex: {
+                    if (trayMenuWindow.isSideBar) {
+                        return trayMenuWindow.alignRight ? 1.0 : 0.0;
                     }
+                    return trayMenuWindow.alignBottom ? 2.0 : 0.0;
                 }
-            }
-
-            Shape {
-                visible: trayMenuWindow.isSolid && !trayMenuWindow.isSideBar && trayMenuWindow.alignBottom && menuContainer.dynamicCornerRadius > 0.5
-                x: -menuContainer.dynamicCornerRadius
-                y: parent.height - menuContainer.dynamicCornerRadius
-                width: menuContainer.dynamicCornerRadius
-                height: menuContainer.dynamicCornerRadius
-                preferredRendererType: Shape.CurveRenderer
-                ShapePath {
-                    fillColor: ThemeBackend.base
-                    strokeColor: "transparent"
-                    startX: 0
-                    startY: menuContainer.dynamicCornerRadius
-                    PathLine { x: menuContainer.dynamicCornerRadius; y: menuContainer.dynamicCornerRadius }
-                    PathLine { x: menuContainer.dynamicCornerRadius; y: 0 }
-                    PathArc {
-                        x: 0
-                        y: menuContainer.dynamicCornerRadius
-                        radiusX: menuContainer.dynamicCornerRadius
-                        radiusY: menuContainer.dynamicCornerRadius
-                        direction: PathArc.Clockwise
-                    }
-                }
-            }
-
-            Shape {
-                visible: trayMenuWindow.isSolid && !trayMenuWindow.isSideBar && trayMenuWindow.alignBottom && menuContainer.dynamicCornerRadius > 0.5
-                x: parent.width
-                y: parent.height - menuContainer.dynamicCornerRadius
-                width: menuContainer.dynamicCornerRadius
-                height: menuContainer.dynamicCornerRadius
-                preferredRendererType: Shape.CurveRenderer
-                ShapePath {
-                    fillColor: ThemeBackend.base
-                    strokeColor: "transparent"
-                    startX: menuContainer.dynamicCornerRadius
-                    startY: menuContainer.dynamicCornerRadius
-                    PathLine { x: 0; y: menuContainer.dynamicCornerRadius }
-                    PathLine { x: 0; y: 0 }
-                    PathArc {
-                        x: menuContainer.dynamicCornerRadius
-                        y: menuContainer.dynamicCornerRadius
-                        radiusX: menuContainer.dynamicCornerRadius
-                        radiusY: menuContainer.dynamicCornerRadius
-                        direction: PathArc.Counterclockwise
-                    }
-                }
-            }
-
-            Shape {
-                visible: trayMenuWindow.isSolid && trayMenuWindow.isSideBar && !trayMenuWindow.alignRight && menuContainer.dynamicCornerRadius > 0.5
-                x: 0
-                y: -menuContainer.dynamicCornerRadius
-                width: menuContainer.dynamicCornerRadius
-                height: menuContainer.dynamicCornerRadius
-                preferredRendererType: Shape.CurveRenderer
-                ShapePath {
-                    fillColor: ThemeBackend.base
-                    strokeColor: "transparent"
-                    startX: 0
-                    startY: 0
-                    PathLine { x: 0; y: menuContainer.dynamicCornerRadius }
-                    PathLine { x: menuContainer.dynamicCornerRadius; y: menuContainer.dynamicCornerRadius }
-                    PathArc {
-                        x: 0
-                        y: 0
-                        radiusX: menuContainer.dynamicCornerRadius
-                        radiusY: menuContainer.dynamicCornerRadius
-                        direction: PathArc.Clockwise
-                    }
-                }
-            }
-
-            Shape {
-                visible: trayMenuWindow.isSolid && trayMenuWindow.isSideBar && !trayMenuWindow.alignRight && menuContainer.dynamicCornerRadius > 0.5
-                x: 0
-                y: parent.height
-                width: menuContainer.dynamicCornerRadius
-                height: menuContainer.dynamicCornerRadius
-                preferredRendererType: Shape.CurveRenderer
-                ShapePath {
-                    fillColor: ThemeBackend.base
-                    strokeColor: "transparent"
-                    startX: 0
-                    startY: menuContainer.dynamicCornerRadius
-                    PathLine { x: 0; y: 0 }
-                    PathLine { x: menuContainer.dynamicCornerRadius; y: 0 }
-                    PathArc {
-                        x: 0
-                        y: menuContainer.dynamicCornerRadius
-                        radiusX: menuContainer.dynamicCornerRadius
-                        radiusY: menuContainer.dynamicCornerRadius
-                        direction: PathArc.Counterclockwise
-                    }
-                }
-            }
-
-            Shape {
-                visible: trayMenuWindow.isSolid && trayMenuWindow.isSideBar && trayMenuWindow.alignRight && menuContainer.dynamicCornerRadius > 0.5
-                x: parent.width - menuContainer.dynamicCornerRadius
-                y: -menuContainer.dynamicCornerRadius
-                width: menuContainer.dynamicCornerRadius
-                height: menuContainer.dynamicCornerRadius
-                preferredRendererType: Shape.CurveRenderer
-                ShapePath {
-                    fillColor: ThemeBackend.base
-                    strokeColor: "transparent"
-                    startX: menuContainer.dynamicCornerRadius
-                    startY: 0
-                    PathLine { x: menuContainer.dynamicCornerRadius; y: menuContainer.dynamicCornerRadius }
-                    PathLine { x: 0; y: menuContainer.dynamicCornerRadius }
-                    PathArc {
-                        x: menuContainer.dynamicCornerRadius
-                        y: 0
-                        radiusX: menuContainer.dynamicCornerRadius
-                        radiusY: menuContainer.dynamicCornerRadius
-                        direction: PathArc.Counterclockwise
-                    }
-                }
-            }
-
-            Shape {
-                visible: trayMenuWindow.isSolid && trayMenuWindow.isSideBar && trayMenuWindow.alignRight && menuContainer.dynamicCornerRadius > 0.5
-                x: parent.width - menuContainer.dynamicCornerRadius
-                y: parent.height
-                width: menuContainer.dynamicCornerRadius
-                height: menuContainer.dynamicCornerRadius
-                preferredRendererType: Shape.CurveRenderer
-                ShapePath {
-                    fillColor: ThemeBackend.base
-                    strokeColor: "transparent"
-                    startX: menuContainer.dynamicCornerRadius
-                    startY: menuContainer.dynamicCornerRadius
-                    PathLine { x: menuContainer.dynamicCornerRadius; y: 0 }
-                    PathLine { x: 0; y: 0 }
-                    PathArc {
-                        x: menuContainer.dynamicCornerRadius
-                        y: menuContainer.dynamicCornerRadius
-                        radiusX: menuContainer.dynamicCornerRadius
-                        radiusY: menuContainer.dynamicCornerRadius
-                        direction: PathArc.Clockwise
-                    }
-                }
+                property color color: ThemeBackend.base
+                fragmentShader: "file://" + Caching.serpantinumDir + "/assets/shaders/ui/corner_cutout.frag.qsb"
             }
 
             Rectangle {
@@ -812,100 +674,28 @@ PanelWindow {
                 scale: 0.94 + (0.06 * popoutProgress)
                 transformOrigin: expandRight ? Item.Left : Item.Right
 
-                Shape {
-                    visible: submenuPopout.expandRight && submenuPopout.subCornerRadius > 0.5
-                    x: 0
+                ShaderEffect {
+                    visible: submenuPopout.subCornerRadius > 0.5
+                    x: submenuPopout.expandRight ? 0 : (parent.width - submenuPopout.subCornerRadius)
                     y: -submenuPopout.subCornerRadius
                     width: submenuPopout.subCornerRadius
                     height: submenuPopout.subCornerRadius
-                    preferredRendererType: Shape.CurveRenderer
-                    ShapePath {
-                        fillColor: ThemeBackend.base
-                        strokeColor: "transparent"
-                        startX: 0
-                        startY: 0
-                        PathLine { x: 0; y: submenuPopout.subCornerRadius }
-                        PathLine { x: submenuPopout.subCornerRadius; y: submenuPopout.subCornerRadius }
-                        PathArc {
-                            x: 0
-                            y: 0
-                            radiusX: submenuPopout.subCornerRadius
-                            radiusY: submenuPopout.subCornerRadius
-                            direction: PathArc.Clockwise
-                        }
-                    }
+                    property vector2d itemSize: Qt.vector2d(width, height)
+                    property real cornerIndex: submenuPopout.expandRight ? 2.0 : 3.0
+                    property color color: ThemeBackend.base
+                    fragmentShader: "file://" + Caching.serpantinumDir + "/assets/shaders/ui/corner_cutout.frag.qsb"
                 }
 
-                Shape {
-                    visible: submenuPopout.expandRight && submenuPopout.subCornerRadius > 0.5
-                    x: 0
+                ShaderEffect {
+                    visible: submenuPopout.subCornerRadius > 0.5
+                    x: submenuPopout.expandRight ? 0 : (parent.width - submenuPopout.subCornerRadius)
                     y: parent.height
                     width: submenuPopout.subCornerRadius
                     height: submenuPopout.subCornerRadius
-                    preferredRendererType: Shape.CurveRenderer
-                    ShapePath {
-                        fillColor: ThemeBackend.base
-                        strokeColor: "transparent"
-                        startX: 0
-                        startY: submenuPopout.subCornerRadius
-                        PathLine { x: 0; y: 0 }
-                        PathLine { x: submenuPopout.subCornerRadius; y: 0 }
-                        PathArc {
-                            x: 0
-                            y: submenuPopout.subCornerRadius
-                            radiusX: submenuPopout.subCornerRadius
-                            radiusY: submenuPopout.subCornerRadius
-                            direction: PathArc.Counterclockwise
-                        }
-                    }
-                }
-
-                Shape {
-                    visible: !submenuPopout.expandRight && submenuPopout.subCornerRadius > 0.5
-                    x: parent.width - submenuPopout.subCornerRadius
-                    y: -submenuPopout.subCornerRadius
-                    width: submenuPopout.subCornerRadius
-                    height: submenuPopout.subCornerRadius
-                    preferredRendererType: Shape.CurveRenderer
-                    ShapePath {
-                        fillColor: ThemeBackend.base
-                        strokeColor: "transparent"
-                        startX: submenuPopout.subCornerRadius
-                        startY: 0
-                        PathLine { x: submenuPopout.subCornerRadius; y: submenuPopout.subCornerRadius }
-                        PathLine { x: 0; y: submenuPopout.subCornerRadius }
-                        PathArc {
-                            x: submenuPopout.subCornerRadius
-                            y: 0
-                            radiusX: submenuPopout.subCornerRadius
-                            radiusY: submenuPopout.subCornerRadius
-                            direction: PathArc.Counterclockwise
-                        }
-                    }
-                }
-
-                Shape {
-                    visible: !submenuPopout.expandRight && submenuPopout.subCornerRadius > 0.5
-                    x: parent.width - submenuPopout.subCornerRadius
-                    y: parent.height
-                    width: submenuPopout.subCornerRadius
-                    height: submenuPopout.subCornerRadius
-                    preferredRendererType: Shape.CurveRenderer
-                    ShapePath {
-                        fillColor: ThemeBackend.base
-                        strokeColor: "transparent"
-                        startX: submenuPopout.subCornerRadius
-                        startY: submenuPopout.subCornerRadius
-                        PathLine { x: submenuPopout.subCornerRadius; y: 0 }
-                        PathLine { x: 0; y: 0 }
-                        PathArc {
-                            x: submenuPopout.subCornerRadius
-                            y: submenuPopout.subCornerRadius
-                            radiusX: submenuPopout.subCornerRadius
-                            radiusY: submenuPopout.subCornerRadius
-                            direction: PathArc.Clockwise
-                        }
-                    }
+                    property vector2d itemSize: Qt.vector2d(width, height)
+                    property real cornerIndex: submenuPopout.expandRight ? 0.0 : 1.0
+                    property color color: ThemeBackend.base
+                    fragmentShader: "file://" + Caching.serpantinumDir + "/assets/shaders/ui/corner_cutout.frag.qsb"
                 }
 
                 Rectangle {

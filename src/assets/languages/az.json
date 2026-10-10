@@ -384,6 +384,149 @@
           "title": "Stil",
           "desc": "Saat və tarix ekranının vizual stilini seçin"
         }
+      },
+      "vis": {
+        "bars": {
+          "title": "Zolaqların sayı",
+          "desc": "Göstəriləcək tezlik zolaqlarının sayı"
+        },
+        "alignment": {
+          "title": "Düzləndirmə",
+          "desc": "Vizualizatoru mərkəzə, yuxarı və ya aşağı düzləndirin"
+        },
+        "align": {
+          "center": "Mərkəz",
+          "top": "Yuxarı",
+          "bottom": "Aşağı",
+          "left": "Sol",
+          "right": "Sağ"
+        },
+        "continuous": {
+          "title": "Davamlı dalğa",
+          "desc": "Ayrı-ayrı zolaqlar əvəzinə hamar dalğa göstərin"
+        }
+      },
+      "sysmon": {
+        "style": {
+          "title": "Dairə tərzi",
+          "desc": "Gedişat dairələrinin görünüşü",
+          "wave": "Dalğa",
+          "circle": "Dairə"
+        },
+        "cpu": {
+          "title": "CPU istifadəsi",
+          "desc": "Prosessor istifadəsi halqasını göstər"
+        },
+        "ram": {
+          "title": "Yaddaş istifadəsi",
+          "desc": "Operativ yaddaş (RAM) halqasını göstər"
+        },
+        "temp": {
+          "title": "Temperatur",
+          "desc": "Sistem temperaturu halqasını göstər"
+        },
+        "disk": {
+          "title": "Disk istifadəsi",
+          "desc": "Yaddaş diski istifadəsi halqasını göstər"
+        }
+      },
+      "bat": {
+        "show_percent": {
+          "title": "Faizi göstər",
+          "desc": "Batareya enerjisinin faizini rəqəmlə göstər"
+        },
+        "show_icon": {
+          "title": "İkonu göstər",
+          "desc": "Batareya ikonunu və ya qrafik göstəricini göstər"
+        },
+        "style": {
+          "title": "Batareya tərzi",
+          "desc": "Batareya göstəricisinin vizual görünüşünü seçin",
+          "name": {
+            "classic": "Klassik",
+            "minimal": "Minimal",
+            "text": "Mətn"
+          },
+          "classic": "Qradiyent dalğalı kapsul",
+          "minimal": "iOS/Android tərzində qapaqlı kapsul",
+          "text": "Arxa plansız sadə mətn və ikon"
+        }
+      },
+      "wifi": {
+        "show_icon": {
+          "title": "İkonu göstər",
+          "desc": "Şəbəkə ikonunu və ya siqnal göstəricisini göstər"
+        },
+        "show_name": {
+          "title": "Adı göstər",
+          "desc": "Şəbəkə SSID və ya qoşulma statusunu göstər"
+        },
+        "style": {
+          "title": "Stil",
+          "desc": "Şəbəkə modulunun vizual görünüşünü seçin",
+          "name": {
+            "button": "Düymə",
+            "text": "Mətn"
+          },
+          "button": "Arxa planlı interaktiv düymə",
+          "text": "Arxa plansız sadə mətn və ikon"
+        }
+      },
+      "bt": {
+        "show_icon": {
+          "title": "İkonu göstər",
+          "desc": "Bluetooth status ikonunu göstər"
+        },
+        "show_name": {
+          "title": "Adı göstər",
+          "desc": "Qoşulmuş Bluetooth cihazının adını göstər"
+        },
+        "style": {
+          "title": "Stil",
+          "desc": "Bluetooth modulunun vizual görünüşünü seçin",
+          "name": {
+            "button": "Düymə",
+            "text": "Mətn"
+          },
+          "button": "Arxa planlı interaktiv düymə",
+          "text": "Arxa plansız sadə mətn və ikon"
+        }
+      },
+      "vol": {
+        "show_icon": {
+          "title": "İkonu göstər",
+          "desc": "Səs dinamiki ikonunu göstər"
+        },
+        "show_percent": {
+          "title": "Faizi göstər",
+          "desc": "Səs səviyyəsinin faizini rəqəmlə göstər"
+        },
+        "style": {
+          "title": "Stil",
+          "desc": "Səs modulunun vizual görünüşünü seçin",
+          "name": {
+            "button": "Düymə",
+            "text": "Mətn"
+          },
+          "button": "Arxa planlı interaktiv düymə",
+          "text": "Arxa plansız sadə mətn və ikon"
+        }
+      },
+      "kb": {
+        "show_icon": {
+          "title": "İkonu göstər",
+          "desc": "Klaviatura düzümü ikonunu göstər"
+        },
+        "style": {
+          "title": "Stil",
+          "desc": "Klaviatura modulunun vizual görünüşünü seçin",
+          "name": {
+            "button": "Düymə",
+            "text": "Mətn"
+          },
+          "button": "Arxa planlı interaktiv düymə",
+          "text": "Arxa plansız sadə mətn və ikon"
+        }
       }
     },
     "theme": {
@@ -691,7 +834,9 @@
     "placeholder": "Əmr üçün > ilə başlayın...",
     "tab_applications": "Tətbiqlər",
     "tab_files": "Fayllar",
-    "placeholder_files": "Faylları axtarın və ya yol daxil edin..."
+    "placeholder_files": "Faylları axtarın və ya yol daxil edin...",
+    "tab_emojis": "Emojilər",
+    "placeholder_emojis": "Emojiləri axtarın və ya açar söz daxil edin..."
   },
   "calendar": {
     "loading": "Yüklənir...",
@@ -853,6 +998,46 @@
         "pomo_skipped_focus_body": "Diqqət seansı ötürüldü. Fasiləyə keçilir.",
         "pomo_skipped_break_body": "Fasilə ötürüldü. Yenidən diqqət seansına keçilir."
       }
+    },
+    "draw": {
+      "notification": {
+        "app_name": "DrawAction",
+        "saved_title": "Drawing saved",
+        "copied_title": "Drawing copied",
+        "copied_body": "Drawing copied to clipboard",
+        "failed_title": "Export failed",
+        "failed_body": "Could not save drawing"
+      }
+    },
+    "notes": {
+      "title": "Qeydlər",
+      "add_note": "Qeyd əlavə et",
+      "new_note_title": "Yeni qeyd",
+      "edit_note": "Redaktə et",
+      "preview_note": "Markdown baxışı",
+      "delete_selected": "Seçilənləri sil ({count})",
+      "no_notes": "Hələ qeyd yoxdur. «Qeyd əlavə et» düyməsinə basın.",
+      "search_placeholder": "Qeydləri axtarın...",
+      "title_placeholder": "Qeydin başlığı...",
+      "content_placeholder": "Qeydin məzmununu markdown ilə yazın...",
+      "back": "Geri",
+      "save": "Hazırdır",
+      "cancel": "Ləğv et",
+      "delete": "Sil",
+      "select_all": "Hamısını seç",
+      "deselect_all": "Seçimi ləğv et",
+      "selected_count": "{count} seçildi",
+      "pinned": "Bərkidilmiş",
+      "recent": "Son istifadə olunanlar",
+      "pin": "Bərkit",
+      "unpin": "Bərkitməni sil"
+    },
+    "tabs": {
+      "draw": "Rəsm",
+      "system": "Sistem",
+      "timer": "Taymer",
+      "notes": "Qeydlər",
+      "tab": "Vərəq"
     }
   },
   "screenshot": {

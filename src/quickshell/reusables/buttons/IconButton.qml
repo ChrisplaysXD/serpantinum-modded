@@ -13,6 +13,7 @@ Item {
     property int cornerRadius: 12
 
     property string buttonIcon: ""
+    property string iconFont: ThemeBackend.iconFont
     property int iconFontSize: 18
     property int iconOffsetX: 0
     property int iconOffsetY: 0
@@ -22,8 +23,10 @@ Item {
 
     property bool action_highlight: false
     property string clickSound: "reusables/iconbutton/click.wav"
+    property int acceptedButtons: Qt.LeftButton
 
     signal clicked()
+    signal rightClicked()
     signal triggered()
 
     property real flashOpacity: 0.0
@@ -56,7 +59,7 @@ Item {
             anchors.horizontalCenterOffset: root.iconOffsetX
             anchors.verticalCenterOffset: root.iconOffsetY
             text: root.buttonIcon
-            font.family: "Iosevka Nerd Font"
+            font.family: root.iconFont
             font.pixelSize: root.iconFontSize
             color: root.textColor
             horizontalAlignment: Text.AlignHCenter
@@ -76,10 +79,15 @@ Item {
             anchors.fill: parent
             hoverEnabled: root.enabled
             enabled: root.enabled
+            acceptedButtons: root.acceptedButtons
             cursorShape: root.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
 
-            onClicked: {
+            onClicked: (mouse) => {
                 if (!root.enabled) return;
+                if (mouse.button === Qt.RightButton) {
+                    root.rightClicked();
+                    return;
+                }
                 btnPopAnim.start();
                 root.flashOpacity = 0.4;
                 btnFlashAnim.start();

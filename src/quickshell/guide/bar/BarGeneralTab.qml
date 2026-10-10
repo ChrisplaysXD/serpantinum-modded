@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import "../../"
+import "../../bar"
 import "../../reusables"
 import "../../reusables/guide"
 
@@ -246,10 +247,11 @@ Item {
             "vol": ThemeBackend.peach,
             "bat": ThemeBackend.green
         };
+        let mType = BarModuleRegistry.types ? BarModuleRegistry.types[id] : null;
         return {
             "moduleId": id,
-            "moduleLabel": labels[id] || id,
-            "moduleIcon": icons[id] || "󰅂",
+            "moduleLabel": labels[id] || (mType ? mType.name : id),
+            "moduleIcon": icons[id] || (mType ? mType.icon : "󰅂"),
             "moduleColor": colorToString(colors[id] || ThemeBackend.text),
             "isPlaceholder": false,
             "placeholderWidth": 0,
@@ -356,7 +358,7 @@ Item {
         add(c, centerModel);
         add(r, rightModel);
 
-        let allKeys = ["left", "workspaces", "focus", "timedate", "info", "weather", "media", "vis", "tray", "sysmon", "kb", "wifi", "bt", "vol", "bat"];
+        let allKeys = BarModuleRegistry.moduleIds();
         for (let i = 0; i < allKeys.length; i++) {
             if (!used[allKeys[i]]) availableModel.append(getModuleInfo(allKeys[i]));
         }

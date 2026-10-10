@@ -2,6 +2,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Services.UPower
 import "../../"
 
 Item {
@@ -19,20 +20,38 @@ Item {
 
     property int subscribers: 0
     property bool isScanningNet: false
+    readonly property bool onBattery: UPower.displayDevice.ready && UPower.displayDevice.state === UPowerDeviceState.Discharging
 
     function subscribe() {
         subscribers++;
-        if (subscribers === 1) {
-            fetchTimer.restart();
-            fetchProc.running = true;
-        }
+        if (subscribers === 1) streamProc.running = true;
     }
 
     function unsubscribe() {
         subscribers = Math.max(0, subscribers - 1);
-        if (subscribers === 0) {
-            fetchTimer.stop();
-            fetchProc.running = false;
+        if (subscribers === 0) streamProc.running = false;
+    }
+
+    // Parses one cpu|ram%|ramGB|temp|rx|tx|disk%|diskUsedGB|diskTotalGB line.
+    function applyUsage(text, withNet) {
+        text = text ? text.trim() : "";
+        if (!text) return;
+
+        let p = text.split("|");
+        if (p.length >= 4) {
+            root.cpu = parseInt(p[0]);
+            root.ramPercent = parseInt(p[1]);
+            root.ramGb = parseFloat(p[2]);
+            root.temp = parseInt(p[3]);
+        }
+        if (withNet && p.length >= 6) {
+            root.netRx = parseFloat(p[4]);
+            root.netTx = parseFloat(p[5]);
+        }
+        if (p.length >= 9) {
+            root.diskPercent = parseInt(p[6]);
+            root.diskGb = parseFloat(p[7]);
+            root.diskTotalGb = parseFloat(p[8]);
         }
     }
 
@@ -49,65 +68,46 @@ Item {
         netScanProc.running = true;
     }
 
-    Timer {
-        id: fetchTimer
-        interval: 2000
-        repeat: true
+    // Samples are rewritten every tick, so they live on tmpfs rather than in ~/.cache.
+    readonly property string stateDir: Caching.getRunDir("sysdata")
+
+    // One long-running fetcher while anything is subscribed, printing a line per tick.
+    property int streamInterval: root.onBattery ? 4 : 2
+    onStreamIntervalChanged: {
+        if (streamProc.running) {
+            streamProc.running = false;
+            streamProc.running = true;
+        }
+    }
+
+    Process {
+        id: streamProc
         running: false
-        onTriggered: {
-            fetchProc.running = false;
-            fetchProc.running = true;
+        command: ["bash", Caching.qsDir + "/watchers/sys_fetcher.sh", "--stream", String(root.streamInterval)]
+        environment: ({ QS_RUN_SYSDATA: root.stateDir })
+        stdout: SplitParser {
+            onRead: data => root.applyUsage(data, false)
         }
     }
 
     Process {
         id: fetchProc
         running: false
-        command: ["bash", "-c", "export QS_CACHE_SYSDATA='" + Caching.getCacheDir("sysdata") + "'; export QS_SCAN_NET=0; bash '" + Caching.qsDir + "/watchers/sys_fetcher.sh'"]
+        command: ["bash", Caching.qsDir + "/watchers/sys_fetcher.sh"]
+        environment: ({ QS_RUN_SYSDATA: root.stateDir })
         stdout: StdioCollector {
-            onStreamFinished: {
-                let text = this.text ? this.text.trim() : "";
-                if (!text) return;
-
-                let p = text.split("|");
-                if (p.length >= 4) {
-                    root.cpu = parseInt(p[0]);
-                    root.ramPercent = parseInt(p[1]);
-                    root.ramGb = parseFloat(p[2]);
-                    root.temp = parseInt(p[3]);
-                }
-                if (p.length >= 9) {
-                    root.diskPercent = parseInt(p[6]);
-                    root.diskGb = parseFloat(p[7]);
-                    root.diskTotalGb = parseFloat(p[8]);
-                }
-            }
+            onStreamFinished: root.applyUsage(this.text, false)
         }
     }
 
     Process {
         id: netScanProc
         running: false
-        command: ["bash", "-c", "export QS_CACHE_SYSDATA='" + Caching.getCacheDir("sysdata") + "'; export QS_SCAN_NET=1; bash '" + Caching.qsDir + "/watchers/sys_fetcher.sh'"]
+        command: ["bash", Caching.qsDir + "/watchers/sys_fetcher.sh"]
+        environment: ({ QS_RUN_SYSDATA: root.stateDir })
         stdout: StdioCollector {
             onStreamFinished: {
-                let text = this.text ? this.text.trim() : "";
-                if (text) {
-                    let p = text.split("|");
-                    if (p.length >= 6) {
-                        root.cpu = parseInt(p[0]);
-                        root.ramPercent = parseInt(p[1]);
-                        root.ramGb = parseFloat(p[2]);
-                        root.temp = parseInt(p[3]);
-                        root.netRx = parseFloat(p[4]);
-                        root.netTx = parseFloat(p[5]);
-                    }
-                    if (p.length >= 9) {
-                        root.diskPercent = parseInt(p[6]);
-                        root.diskGb = parseFloat(p[7]);
-                        root.diskTotalGb = parseFloat(p[8]);
-                    }
-                }
+                root.applyUsage(this.text, true);
                 root.isScanningNet = false;
             }
         }

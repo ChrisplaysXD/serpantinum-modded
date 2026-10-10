@@ -60,7 +60,7 @@
         "timeout": 150,
         "enabled": true,
         "respectInhibitors": true,
-        "mprisInhibit": false,
+        "mprisInhibit": true,
         "command": "",
         "resumeCommand": "",
         "isCustom": false
@@ -70,7 +70,7 @@
         "timeout": 450,
         "enabled": true,
         "respectInhibitors": true,
-        "mprisInhibit": false,
+        "mprisInhibit": true,
         "command": "",
         "resumeCommand": "",
         "isCustom": false
@@ -80,7 +80,7 @@
         "timeout": 300,
         "enabled": true,
         "respectInhibitors": true,
-        "mprisInhibit": false,
+        "mprisInhibit": true,
         "command": "",
         "resumeCommand": "",
         "isCustom": false
@@ -90,7 +90,7 @@
         "timeout": 600,
         "enabled": true,
         "respectInhibitors": true,
-        "mprisInhibit": false,
+        "mprisInhibit": true,
         "command": "",
         "resumeCommand": "",
         "isCustom": false

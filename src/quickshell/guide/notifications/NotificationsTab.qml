@@ -320,16 +320,26 @@ Item {
         }
     }
 
+    Timer {
+        id: reloadSoundsDebounceTimer
+        interval: 220
+        repeat: false
+        onTriggered: reloadSounds()
+    }
+
     Component.onCompleted: {
         syncSettings();
-        reloadSounds();
+        if (visible) {
+            reloadSoundsDebounceTimer.restart();
+        }
     }
 
     onVisibleChanged: {
         if (visible) {
             syncSettings();
-            reloadSounds();
+            reloadSoundsDebounceTimer.restart();
         } else {
+            reloadSoundsDebounceTimer.stop();
             selectorOpen = false;
             soundPickerPopup.close();
             if (posDropdown.isOpen) posDropdown.closePopup();

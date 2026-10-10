@@ -37,15 +37,6 @@ Item {
         }
     }
 
-    property real wavePhase: 0.0
-    NumberAnimation on wavePhase {
-        from: 0
-        to: Math.PI * 2
-        duration: 1800
-        loops: Animation.Infinite
-        running: root.visible
-    }
-
     property real rawTemp: isNaN(SysData.temp) ? 0.0 : SysData.temp
     property real tempC: rawTemp
     Behavior on tempC { enabled: root.visible; NumberAnimation { duration: 800; easing.type: Easing.OutQuint } }
@@ -58,7 +49,6 @@ Item {
         icon: "\uF2C9"
         title: I18n.t("quickactions.systemusage.temp")
         valueText: Math.round(root.tempC) + "°"
-        wavePhase: root.wavePhase
         isLive: root.visible
         compact: root.compactMode
         scaleFunc: Scaler.s

@@ -350,198 +350,59 @@ PanelWindow {
             return Item.Center;
         }
 
-        Shape {
-            visible: osdWindow.isAttached && !osdWindow.isSideBar && !osdWindow.isBottomBar && osdContainer.dynamicCornerRadius > 0.5
-            x: -osdContainer.dynamicCornerRadius
-            y: 0
+        ShaderEffect {
+            visible: osdWindow.isAttached && osdContainer.dynamicCornerRadius > 0.5
+            x: {
+                if (osdWindow.isSideBar) {
+                    return osdWindow.isRightBar ? (parent.width - osdContainer.dynamicCornerRadius) : 0;
+                }
+                return -osdContainer.dynamicCornerRadius;
+            }
+            y: {
+                if (osdWindow.isSideBar) {
+                    return -osdContainer.dynamicCornerRadius;
+                }
+                return osdWindow.isBottomBar ? (parent.height - osdContainer.dynamicCornerRadius) : 0;
+            }
             width: osdContainer.dynamicCornerRadius
             height: osdContainer.dynamicCornerRadius
-            preferredRendererType: Shape.CurveRenderer
-            ShapePath {
-                fillColor: ThemeBackend.base
-                strokeColor: "transparent"
-                startX: 0
-                startY: 0
-                PathLine { x: osdContainer.dynamicCornerRadius; y: 0 }
-                PathLine { x: osdContainer.dynamicCornerRadius; y: osdContainer.dynamicCornerRadius }
-                PathArc {
-                    x: 0
-                    y: 0
-                    radiusX: osdContainer.dynamicCornerRadius
-                    radiusY: osdContainer.dynamicCornerRadius
-                    direction: PathArc.Counterclockwise
+            property vector2d itemSize: Qt.vector2d(width, height)
+            property real cornerIndex: {
+                if (osdWindow.isSideBar) {
+                    return osdWindow.isRightBar ? 3.0 : 2.0;
                 }
+                return osdWindow.isBottomBar ? 3.0 : 1.0;
             }
+            property color color: ThemeBackend.base
+            fragmentShader: "file://" + Caching.serpantinumDir + "/assets/shaders/ui/corner_cutout.frag.qsb"
         }
 
-        Shape {
-            visible: osdWindow.isAttached && !osdWindow.isSideBar && !osdWindow.isBottomBar && osdContainer.dynamicCornerRadius > 0.5
-            x: parent.width
-            y: 0
+        ShaderEffect {
+            visible: osdWindow.isAttached && osdContainer.dynamicCornerRadius > 0.5
+            x: {
+                if (osdWindow.isSideBar) {
+                    return osdWindow.isRightBar ? (parent.width - osdContainer.dynamicCornerRadius) : 0;
+                }
+                return parent.width;
+            }
+            y: {
+                if (osdWindow.isSideBar) {
+                    return parent.height;
+                }
+                return osdWindow.isBottomBar ? (parent.height - osdContainer.dynamicCornerRadius) : 0;
+            }
             width: osdContainer.dynamicCornerRadius
             height: osdContainer.dynamicCornerRadius
-            preferredRendererType: Shape.CurveRenderer
-            ShapePath {
-                fillColor: ThemeBackend.base
-                strokeColor: "transparent"
-                startX: osdContainer.dynamicCornerRadius
-                startY: 0
-                PathLine { x: 0; y: 0 }
-                PathLine { x: 0; y: osdContainer.dynamicCornerRadius }
-                PathArc {
-                    x: osdContainer.dynamicCornerRadius
-                    y: 0
-                    radiusX: osdContainer.dynamicCornerRadius
-                    radiusY: osdContainer.dynamicCornerRadius
-                    direction: PathArc.Clockwise
+            property vector2d itemSize: Qt.vector2d(width, height)
+            property real cornerIndex: {
+                if (osdWindow.isSideBar) {
+                    return osdWindow.isRightBar ? 1.0 : 0.0;
                 }
+                return osdWindow.isBottomBar ? 2.0 : 0.0;
             }
+            property color color: ThemeBackend.base
+            fragmentShader: "file://" + Caching.serpantinumDir + "/assets/shaders/ui/corner_cutout.frag.qsb"
         }
-
-        Shape {
-            visible: osdWindow.isAttached && !osdWindow.isSideBar && osdWindow.isBottomBar && osdContainer.dynamicCornerRadius > 0.5
-            x: -osdContainer.dynamicCornerRadius
-            y: parent.height - osdContainer.dynamicCornerRadius
-            width: osdContainer.dynamicCornerRadius
-            height: osdContainer.dynamicCornerRadius
-            preferredRendererType: Shape.CurveRenderer
-            ShapePath {
-                fillColor: ThemeBackend.base
-                strokeColor: "transparent"
-                startX: 0
-                startY: osdContainer.dynamicCornerRadius
-                PathLine { x: osdContainer.dynamicCornerRadius; y: osdContainer.dynamicCornerRadius }
-                PathLine { x: osdContainer.dynamicCornerRadius; y: 0 }
-                PathArc {
-                    x: 0
-                    y: osdContainer.dynamicCornerRadius
-                    radiusX: osdContainer.dynamicCornerRadius
-                    radiusY: osdContainer.dynamicCornerRadius
-                    direction: PathArc.Clockwise
-                }
-            }
-        }
-
-        Shape {
-            visible: osdWindow.isAttached && !osdWindow.isSideBar && osdWindow.isBottomBar && osdContainer.dynamicCornerRadius > 0.5
-            x: parent.width
-            y: parent.height - osdContainer.dynamicCornerRadius
-            width: osdContainer.dynamicCornerRadius
-            height: osdContainer.dynamicCornerRadius
-            preferredRendererType: Shape.CurveRenderer
-            ShapePath {
-                fillColor: ThemeBackend.base
-                strokeColor: "transparent"
-                startX: osdContainer.dynamicCornerRadius
-                startY: osdContainer.dynamicCornerRadius
-                PathLine { x: 0; y: osdContainer.dynamicCornerRadius }
-                PathLine { x: 0; y: 0 }
-                PathArc {
-                    x: osdContainer.dynamicCornerRadius
-                    y: osdContainer.dynamicCornerRadius
-                    radiusX: osdContainer.dynamicCornerRadius
-                    radiusY: osdContainer.dynamicCornerRadius
-                    direction: PathArc.Counterclockwise
-                }
-            }
-        }
-
-        Shape {
-            visible: osdWindow.isAttached && osdWindow.isSideBar && !osdWindow.isRightBar && osdContainer.dynamicCornerRadius > 0.5
-            x: 0
-            y: -osdContainer.dynamicCornerRadius
-            width: osdContainer.dynamicCornerRadius
-            height: osdContainer.dynamicCornerRadius
-            preferredRendererType: Shape.CurveRenderer
-            ShapePath {
-                fillColor: ThemeBackend.base
-                strokeColor: "transparent"
-                startX: 0
-                startY: 0
-                PathLine { x: 0; y: osdContainer.dynamicCornerRadius }
-                PathLine { x: osdContainer.dynamicCornerRadius; y: osdContainer.dynamicCornerRadius }
-                PathArc {
-                    x: 0
-                    y: 0
-                    radiusX: osdContainer.dynamicCornerRadius
-                    radiusY: osdContainer.dynamicCornerRadius
-                    direction: PathArc.Clockwise
-                }
-            }
-        }
-
-        Shape {
-            visible: osdWindow.isAttached && osdWindow.isSideBar && !osdWindow.isRightBar && osdContainer.dynamicCornerRadius > 0.5
-            x: 0
-            y: parent.height
-            width: osdContainer.dynamicCornerRadius
-            height: osdContainer.dynamicCornerRadius
-            preferredRendererType: Shape.CurveRenderer
-            ShapePath {
-                fillColor: ThemeBackend.base
-                strokeColor: "transparent"
-                startX: 0
-                startY: osdContainer.dynamicCornerRadius
-                PathLine { x: 0; y: 0 }
-                PathLine { x: osdContainer.dynamicCornerRadius; y: 0 }
-                PathArc {
-                    x: 0
-                    y: osdContainer.dynamicCornerRadius
-                    radiusX: osdContainer.dynamicCornerRadius
-                    radiusY: osdContainer.dynamicCornerRadius
-                    direction: PathArc.Counterclockwise
-                }
-            }
-        }
-
-        Shape {
-            visible: osdWindow.isAttached && osdWindow.isSideBar && osdWindow.isRightBar && osdContainer.dynamicCornerRadius > 0.5
-            x: parent.width - osdContainer.dynamicCornerRadius
-            y: -osdContainer.dynamicCornerRadius
-            width: osdContainer.dynamicCornerRadius
-            height: osdContainer.dynamicCornerRadius
-            preferredRendererType: Shape.CurveRenderer
-            ShapePath {
-                fillColor: ThemeBackend.base
-                strokeColor: "transparent"
-                startX: osdContainer.dynamicCornerRadius
-                startY: 0
-                PathLine { x: osdContainer.dynamicCornerRadius; y: osdContainer.dynamicCornerRadius }
-                PathLine { x: 0; y: osdContainer.dynamicCornerRadius }
-                PathArc {
-                    x: osdContainer.dynamicCornerRadius
-                    y: 0
-                    radiusX: osdContainer.dynamicCornerRadius
-                    radiusY: osdContainer.dynamicCornerRadius
-                    direction: PathArc.Counterclockwise
-                }
-            }
-        }
-
-        Shape {
-            visible: osdWindow.isAttached && osdWindow.isSideBar && osdWindow.isRightBar && osdContainer.dynamicCornerRadius > 0.5
-            x: parent.width - osdContainer.dynamicCornerRadius
-            y: parent.height
-            width: osdContainer.dynamicCornerRadius
-            height: osdContainer.dynamicCornerRadius
-            preferredRendererType: Shape.CurveRenderer
-            ShapePath {
-                fillColor: ThemeBackend.base
-                strokeColor: "transparent"
-                startX: osdContainer.dynamicCornerRadius
-                startY: osdContainer.dynamicCornerRadius
-                PathLine { x: osdContainer.dynamicCornerRadius; y: 0 }
-                PathLine { x: 0; y: 0 }
-                PathArc {
-                    x: osdContainer.dynamicCornerRadius
-                    y: osdContainer.dynamicCornerRadius
-                    radiusX: osdContainer.dynamicCornerRadius
-                    radiusY: osdContainer.dynamicCornerRadius
-                    direction: PathArc.Clockwise
-                }
-            }
-        }
-
         Rectangle {
             id: osdBox
             anchors.fill: parent
@@ -759,6 +620,7 @@ PanelWindow {
                     gradColor3: Qt.lighter(activeColor, 1.10)
                     cornerRadius: osdWindow.s(5)
                     handleSize: osdWindow.s(22)
+                    showValueBubble: false
 
                     handleColor: (osdWindow.isMutedState) ? ThemeBackend.overlay0 : Qt.lighter(activeColor, 1.15)
                     handleHoverColor: (osdWindow.isMutedState) ? ThemeBackend.subtext0 : Qt.lighter(activeColor, 1.5)
@@ -788,6 +650,23 @@ PanelWindow {
                             micThrottle.targetPct = pct;
                             if (!micThrottle.running) micThrottle.start();
                         }
+                    }
+                }
+
+                Item {
+                    id: verticalValueContainer
+                    visible: !osdWindow.isToggleKind
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.preferredWidth: osdWindow.s(26)
+                    Layout.preferredHeight: osdWindow.s(26)
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: Math.round(verticalSlider.effectiveValue).toString()
+                        font.family: ThemeBackend.fontFamily
+                        font.pixelSize: osdWindow.s(13)
+                        font.bold: true
+                        color: osdWindow.isMutedState ? ThemeBackend.overlay0 : ThemeBackend.text
                     }
                 }
             }
@@ -920,15 +799,16 @@ PanelWindow {
 
                 Draggable {
                     id: horizontalSlider
-                    width: Math.max(0, osdContainer.width - osdWindow.s(80))
+                    width: Math.max(0, osdContainer.width - osdWindow.s(116))
                     height: osdWindow.s(18)
                     anchors.left: parent.left
                     anchors.leftMargin: osdWindow.s(58)
                     anchors.right: parent.right
-                    anchors.rightMargin: osdWindow.s(16)
+                    anchors.rightMargin: osdWindow.s(58)
                     anchors.verticalCenter: parent.verticalCenter
                     opacity: Math.max(0.0, Math.min(1.0, (osdContainer.animProgress - 0.2) / 0.8))
                     visible: !osdWindow.isToggleKind && opacity > 0.01
+                    showValueBubble: false
 
                     from: 0.0
                     to: 100.0
@@ -980,6 +860,25 @@ PanelWindow {
                             micThrottle.targetPct = pct;
                             if (!micThrottle.running) micThrottle.start();
                         }
+                    }
+                }
+
+                Item {
+                    id: horizontalValueContainer
+                    width: osdWindow.s(58)
+                    height: parent.height
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    opacity: Math.max(0.0, Math.min(1.0, (osdContainer.animProgress - 0.2) / 0.8))
+                    visible: !osdWindow.isToggleKind && opacity > 0.01
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: Math.round(horizontalSlider.effectiveValue).toString()
+                        font.family: ThemeBackend.fontFamily
+                        font.pixelSize: osdWindow.s(13)
+                        font.bold: true
+                        color: osdWindow.isMutedState ? ThemeBackend.overlay0 : ThemeBackend.text
                     }
                 }
             }

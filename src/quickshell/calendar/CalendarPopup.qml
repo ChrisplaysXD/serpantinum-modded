@@ -10,6 +10,7 @@ import "../reusables"
 
 Item {
     id: window
+    visible: false
     focus: true
 
     function s(val) {
@@ -104,7 +105,16 @@ Item {
     property real introCalendar: 0
     property real introWeather: 0
 
+    property var exitCallback: null
+
+    function startExit(onFinished) {
+        introAnim.stop();
+        exitCallback = onFinished;
+        exitAnim.restart();
+    }
+
     function resetAndPlayIntro() {
+        exitAnim.stop();
         startupComplete = false;
         introMain = 0;
         introAmbient = 0;
@@ -180,13 +190,31 @@ Item {
         ScriptAction { script: window.startupComplete = true }
     }
 
-    ParallelAnimation {
+    SequentialAnimation {
         id: exitAnim
-        NumberAnimation { target: window; property: "introMain"; to: 0; duration: 400; easing.type: Easing.InQuart }
-        NumberAnimation { target: window; property: "introAmbient"; to: 0; duration: 250; easing.type: Easing.InQuart }
-        NumberAnimation { target: window; property: "introClock"; to: 0; duration: 300; easing.type: Easing.InQuart }
-        NumberAnimation { target: window; property: "introCalendar"; to: 0; duration: 350; easing.type: Easing.InQuart }
-        NumberAnimation { target: window; property: "introWeather"; to: 0; duration: 350; easing.type: Easing.InQuart }
+        running: false
+        ParallelAnimation {
+            NumberAnimation { target: window; property: "introWeather"; to: 0; duration: 150; easing.type: Easing.InCubic }
+            NumberAnimation { target: window; property: "introCalendar"; to: 0; duration: 150; easing.type: Easing.InCubic }
+            SequentialAnimation {
+                PauseAnimation { duration: 30 }
+                NumberAnimation { target: window; property: "introClock"; to: 0; duration: 160; easing.type: Easing.InBack }
+                NumberAnimation { target: window; property: "introAmbient"; to: 0; duration: 140; easing.type: Easing.InQuad }
+            }
+            SequentialAnimation {
+                PauseAnimation { duration: 50 }
+                NumberAnimation { target: window; property: "introMain"; to: 0; duration: 180; easing.type: Easing.InQuart }
+            }
+        }
+        ScriptAction {
+            script: {
+                if (window.exitCallback) {
+                    let cb = window.exitCallback;
+                    window.exitCallback = null;
+                    cb();
+                }
+            }
+        }
     }
 
     property real globalOrbitOffset: 0
@@ -239,7 +267,7 @@ Item {
     property real transitionScale: 1.0
 
     property real targetTemp: {
-        if (!window.weatherData) return 0;
+        if (!window.weatherData || window.weatherData.offline) return 0;
         if (window.targetWeatherView === 0 && window.weatherData.current_temp !== undefined) {
             return Number(window.weatherData.current_temp);
         }
@@ -954,7 +982,7 @@ Item {
 
                         Text {
                             Layout.alignment: Qt.AlignRight
-                            text: window.displayedTemp.toFixed(1) + (Weather.unitSym || "°")
+                            text: (window.weatherData && window.weatherData.offline ? "--" : window.displayedTemp.toFixed(1)) + (Weather.unitSym || "°")
                             font.family: ThemeBackend.fontFamily
                             font.weight: Font.Black
                             font.pixelSize: window.s(68)
@@ -1017,7 +1045,7 @@ Item {
                                 property var forecast: window.weatherData && window.weatherData.forecast[window.targetWeatherView] ? window.weatherData.forecast[window.targetWeatherView] : null
 
                                 buttonIcon: index === 0 ? "" : index === 1 ? "" : index === 2 ? "" : ""
-                                buttonText: forecast ? (
+                                buttonText: window.weatherData && window.weatherData.offline ? "--" : forecast ? (
                                     index === 0 ? forecast.wind + (Weather.unit === "imperial" ? "mph" : "m/s") :
                                     index === 1 ? forecast.humidity + "%" :
                                     index === 2 ? forecast.pop + "%" :

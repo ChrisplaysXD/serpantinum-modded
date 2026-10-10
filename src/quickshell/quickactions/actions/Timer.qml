@@ -215,30 +215,19 @@ Item {
     }
 
     function updateExportedState() {
-        let icon = "\uF017";
-        let timeStr = "";
-        let colorType = "mauve";
+        let list = [];
 
-        if (root.anyTimerActive) {
-            if (stateCache.timerTargetEpoch > 0) {
-                icon = "\uF017";
-                timeStr = root.formatTime(stateCache.timerRemainingMs, false);
-                colorType = "mauve";
-            } else if (stateCache.swStartEpoch > 0) {
-                icon = "\uF2F2";
-                timeStr = root.formatTime(stopwatchView.currentDisplayMs, false);
-                colorType = "mauve";
-            } else if (stateCache.pomoTargetEpoch > 0) {
-                icon = "\uF085";
-                timeStr = root.formatTime(stateCache.pomoRemainingMs, false);
-                colorType = stateCache.pomoState !== 0 ? "green" : "mauve";
-            }
+        if (stateCache.timerTargetEpoch > 0) {
+            list.push({ icon: "\uF017", time: root.formatTime(stateCache.timerRemainingMs, false), colorType: "mauve" });
+        }
+        if (stateCache.swStartEpoch > 0) {
+            list.push({ icon: "\uF2F2", time: root.formatTime(stopwatchView.currentDisplayMs, false), colorType: "mauve" });
+        }
+        if (stateCache.pomoTargetEpoch > 0) {
+            list.push({ icon: "\uF085", time: root.formatTime(stateCache.pomoRemainingMs, false), colorType: stateCache.pomoState !== 0 ? "green" : "mauve" });
         }
 
-        TimerState.isActive = root.anyTimerActive;
-        TimerState.timeFormatted = timeStr;
-        TimerState.icon = icon;
-        TimerState.colorType = colorType;
+        TimerState.entries = list;
     }
 
     function notify(title, message, icon) {

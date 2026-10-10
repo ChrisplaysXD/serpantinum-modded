@@ -12,9 +12,11 @@ ImageBox 1.0 display/ImageBox.qml
 LoaderIcon 1.0 display/LoaderIcon.qml
 NotificationBox 1.0 display/NotificationBox.qml
 SystemUsageCard 1.0 display/SystemUsageCard.qml
+FluidWave 1.0 display/FluidWave.qml
 
 LyricsView 1.0 media/LyricsView.qml
 WavySeekBar 1.0 media/WavySeekBar.qml
+Visualizer 1.0 media/Visualizer.qml
 
 Reserved 1.0 layout/Reserved.qml
 

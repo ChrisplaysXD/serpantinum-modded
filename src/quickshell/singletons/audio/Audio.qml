@@ -3,6 +3,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Services.Pipewire
 
+import "AudioCache.js" as AudioCache
+
 Singleton {
     id: root
 
@@ -10,12 +12,24 @@ Singleton {
         objects: Pipewire.nodes.values
     }
 
+    function isSerpantinumStream(node) {
+        if (!node || !node.properties) return false;
+        let p = node.properties;
+        let appId = p["application.id"] || "";
+        let appName = p["application.name"] || "";
+        if (appId === "serpantinum-sfx" || appId === "serpantinum" || appId === "org.serpantinum.sfx") return true;
+        if (appName === "serpantinum-sfx" || appName === "serpantinum") return true;
+        let mediaFile = p["media.filename"] || p["media.name"] || "";
+        if (mediaFile.indexOf("assets/sounds/") !== -1) return true;
+        return false;
+    }
+
     readonly property var outputs: {
         let arr = [];
         for (const n of Pipewire.nodes.values) {
             if (!n.isStream && n.isSink && n.audio) arr.push(n);
         }
-        return arr;
+        return AudioCache.updateOutputs(arr);
     }
 
     readonly property var inputs: {
@@ -27,18 +41,19 @@ Singleton {
                 arr.push(n);
             }
         }
-        return arr;
+        return AudioCache.updateInputs(arr);
     }
 
     readonly property var apps: {
         let arr = [];
         for (const n of Pipewire.nodes.values) {
             if (n.isStream && n.audio
-                && n.properties?.["application.id"] !== "org.PulseAudio.pavucontrol") {
+                && n.properties?.["application.id"] !== "org.PulseAudio.pavucontrol"
+                && !isSerpantinumStream(n)) {
                 arr.push(n);
             }
         }
-        return arr;
+        return AudioCache.updateApps(arr);
     }
 
     readonly property PwNode defaultSink: Pipewire.defaultAudioSink

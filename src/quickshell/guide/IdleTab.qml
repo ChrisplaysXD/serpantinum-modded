@@ -40,7 +40,7 @@ Item {
                 "timeout": 120,
                 "enabled": true,
                 "respectInhibitors": true,
-                "mprisInhibit": false,
+                "mprisInhibit": true,
                 "warningTimeout": 0,
                 "warningCommand": "",
                 "beforeCommand": "",
@@ -53,7 +53,7 @@ Item {
                 "timeout": 300,
                 "enabled": true,
                 "respectInhibitors": true,
-                "mprisInhibit": false,
+                "mprisInhibit": true,
                 "warningTimeout": 10,
                 "warningCommand": "",
                 "beforeCommand": "",
@@ -66,7 +66,7 @@ Item {
                 "timeout": 360,
                 "enabled": true,
                 "respectInhibitors": true,
-                "mprisInhibit": false,
+                "mprisInhibit": true,
                 "warningTimeout": 0,
                 "warningCommand": "",
                 "beforeCommand": "",
@@ -79,7 +79,7 @@ Item {
                 "timeout": 600,
                 "enabled": true,
                 "respectInhibitors": true,
-                "mprisInhibit": false,
+                "mprisInhibit": true,
                 "warningTimeout": 30,
                 "warningCommand": "",
                 "isCustom": false
@@ -329,7 +329,7 @@ Item {
             property int actTimeout: idleTabRoot.getActionTimeout(actData)
             property int actWarningTimeout: actData && actData.warningTimeout !== undefined && actData.warningTimeout !== null ? Math.max(0, Number(actData.warningTimeout)) : 0
             property bool actRespectInhibitors: actData && actData.respectInhibitors !== undefined ? actData.respectInhibitors : true
-            property bool actMprisInhibit: actData && actData.mprisInhibit !== undefined ? actData.mprisInhibit : false
+            property bool actMprisInhibit: actData && actData.mprisInhibit !== undefined ? actData.mprisInhibit : true
             property string actCmd: actData ? (actData.command || "") : ""
             property string actWarningCmd: actData ? (actData.warningCommand || "") : ""
             property string actBeforeCmd: actData ? (actData.beforeCommand || "") : ""
@@ -363,7 +363,8 @@ Item {
             horizontalPadding: rootObj.s(12)
             verticalPadding: rootObj.s(10)
             spacing: rootObj.s(12)
-            innerSpacing: actionCard.isCardOpen ? rootObj.s(6) : 0
+            innerSpacing: actionCard.isCardOpen ? rootObj.s(12) : 0
+            Behavior on innerSpacing { NumberAnimation { duration: 300; easing.type: Easing.OutCubic } }
             bottomSpacing: 0
 
             customLeftContent: actionCard.isCustomAct ? customLeftRowComponent : null

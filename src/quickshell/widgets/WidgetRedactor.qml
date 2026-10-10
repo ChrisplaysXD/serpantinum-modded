@@ -293,6 +293,28 @@ Scope {
                         toolbarCheckTimer.restart();
                     }
 
+                    function removeWidget(widgetId) {
+                        let rmId = String(widgetId);
+                        if (!rmId) return;
+                        if (redactorMode.selectedId === rmId) {
+                            redactorMode.selectedId = "";
+                            root.targetSelectedWidgetId = "";
+                        }
+                        WidgetSync.removeWidget(redactorWindow.safeMonitorName, rmId);
+                        if (activeWidgetsModel) {
+                            for (let i = activeWidgetsModel.count - 1; i >= 0; i--) {
+                                if (String(activeWidgetsModel.get(i).wId) === rmId) {
+                                    activeWidgetsModel.remove(i, 1);
+                                }
+                            }
+                            if (activeWidgetsModel.count === 0) {
+                                redactorMode.selectedId = "";
+                                root.targetSelectedWidgetId = "";
+                            }
+                        }
+                        redactorMode.updateToolbarObscured();
+                    }
+
                     function removeAllWidgets() {
                         redactorMode.selectedId = "";
                         root.targetSelectedWidgetId = "";
@@ -775,34 +797,15 @@ Scope {
                         Loader {
                             anchors.fill: parent
                             active: redactorMode.gridEnabled
-                            sourceComponent: Canvas {
-                                id: gridCanvas
+                            sourceComponent: ShaderEffect {
+                                id: gridShader
                                 anchors.fill: parent
+                                property vector2d itemSize: Qt.vector2d(width, height)
                                 property real stepSize: s(20)
+                                property real lineWidth: 1.0
+                                property color lineColor: Qt.rgba(ThemeBackend.text.r, ThemeBackend.text.g, ThemeBackend.text.b, 0.1)
 
-                                Connections {
-                                    target: redactorMode
-                                    function onWidthChanged() { gridCanvas.requestPaint() }
-                                    function onHeightChanged() { gridCanvas.requestPaint() }
-                                }
-
-                                onPaint: {
-                                    var ctx = getContext("2d");
-                                    ctx.clearRect(0, 0, width, height);
-                                    ctx.strokeStyle = Qt.rgba(ThemeBackend.text.r, ThemeBackend.text.g, ThemeBackend.text.b, 0.1);
-                                    ctx.lineWidth = 1;
-                                    ctx.beginPath();
-
-                                    for (let x = 0; x <= width; x += stepSize) {
-                                        ctx.moveTo(x, 0);
-                                        ctx.lineTo(x, height);
-                                    }
-                                    for (let y = 0; y <= height; y += stepSize) {
-                                        ctx.moveTo(0, y);
-                                        ctx.lineTo(width, y);
-                                    }
-                                    ctx.stroke();
-                                }
+                                fragmentShader: "file://" + Caching.serpantinumDir + "/assets/shaders/ui/grid_pattern.frag.qsb"
                             }
                         }
 
@@ -828,6 +831,11 @@ Scope {
                                         redactorMode.topZ += 1;
                                         widgetProxy.currentZ = redactorMode.topZ;
                                     }
+                                }
+
+                                Component.onDestruction: {
+                                    preview.active = false;
+                                    preview.source = "";
                                 }
 
                                 function bringToFront() {
@@ -1194,6 +1202,7 @@ Scope {
                                         onLoaded: {
                                             if (item) {
                                                 try {
+                                                    item.visible = Qt.binding(() => redactorWindow.visible);
                                                     if (item.imagePath !== undefined) {
                                                         item.imagePath = Qt.binding(() => widgetProxy.wImagePath);
                                                     }
@@ -1265,153 +1274,9 @@ Scope {
                                         property bool isAspectLocked: preview.item && preview.item.minAspect !== undefined && preview.item.maxAspect !== undefined && preview.item.minAspect === preview.item.maxAspect && preview.item.minAspect > 0
                                         readonly property bool isRotated90: Math.abs(Math.round(widgetProxy.wRotation || 0)) % 180 !== 0
 
-                                        Canvas {
-                                            id: auraCanvas
+                                        SelectionOutline {
                                             anchors.fill: parent
-                                            antialiasing: true
-
-                                            property real phase: 0.0
-
-                                            NumberAnimation on phase {
-                                                running: widgetProxy.isSelected && selectionUI.opacity > 0.001
-                                                from: 0.0
-                                                to: Math.PI * 2
-                                                duration: 3200
-                                                loops: Animation.Infinite
-                                            }
-
-                                            onPhaseChanged: {
-                                                if (selectionUI.opacity > 0.001) requestPaint();
-                                            }
-
-                                            onWidthChanged: requestPaint()
-                                            onHeightChanged: requestPaint()
-
-                                            Connections {
-                                                target: widgetProxy
-                                                function onIsSelectedChanged() {
-                                                    auraCanvas.requestPaint();
-                                                }
-                                            }
-
-                                            Connections {
-                                                target: selectionUI
-                                                function onOpacityChanged() {
-                                                    if (selectionUI.opacity > 0.001) auraCanvas.requestPaint();
-                                                }
-                                            }
-
-                                            onPaint: {
-                                                let ctx = getContext("2d");
-                                                ctx.clearRect(0, 0, width, height);
-                                                if (selectionUI.opacity <= 0.001) return;
-
-                                                let w = width;
-                                                let h = height;
-                                                if (w <= 0 || h <= 0) return;
-
-                                                let baseR = 12;
-                                                if (typeof ThemeBackend !== "undefined" && ThemeBackend.borderRadius !== undefined && ThemeBackend.borderRadius !== null) {
-                                                    baseR = ThemeBackend.borderRadius;
-                                                }
-                                                let strokePad = 2.5;
-                                                let r = Math.max(2, Math.min(baseR + 4, (w - 2 * strokePad) / 2, (h - 2 * strokePad) / 2));
-
-                                                let x0 = strokePad;
-                                                let y0 = strokePad;
-                                                let x1 = w - strokePad;
-                                                let y1 = h - strokePad;
-
-                                                let straightX = (x1 - r) - (x0 + r);
-                                                let straightY = (y1 - r) - (y0 + r);
-                                                let arcLen = 0.5 * Math.PI * r;
-                                                let totalP = 2 * (straightX + straightY) + 4 * arcLen;
-                                                if (totalP <= 0) return;
-
-                                                let cycles = Math.max(4, Math.round(totalP / 28));
-                                                let freq = (2 * Math.PI * cycles) / totalP;
-                                                let amp = 0.9;
-                                                let step = 4.0;
-                                                let ph = auraCanvas.phase;
-
-                                                let dist = 0;
-                                                ctx.beginPath();
-                                                let started = false;
-
-                                                function addPoint(x, y, nx, ny) {
-                                                    let wOff = amp * Math.sin(freq * dist + ph);
-                                                    let px = x + wOff * nx;
-                                                    let py = y + wOff * ny;
-                                                    if (!started) {
-                                                        ctx.moveTo(px, py);
-                                                        started = true;
-                                                    } else {
-                                                        ctx.lineTo(px, py);
-                                                    }
-                                                }
-
-                                                for (let d = 0; d < straightX; d += step) {
-                                                    dist += (d === 0 ? 0 : step);
-                                                    addPoint(x0 + r + d, y0, 0, -1);
-                                                }
-                                                dist += (straightX % step === 0 ? 0 : (straightX % step));
-
-                                                let arcSteps = Math.max(3, Math.ceil(arcLen / step));
-                                                for (let i = 0; i <= arcSteps; i++) {
-                                                    let a = -0.5 * Math.PI + (i / arcSteps) * (0.5 * Math.PI);
-                                                    if (i > 0) dist += arcLen / arcSteps;
-                                                    addPoint((x1 - r) + r * Math.cos(a), (y0 + r) + r * Math.sin(a), Math.cos(a), Math.sin(a));
-                                                }
-
-                                                for (let d = 0; d < straightY; d += step) {
-                                                    dist += (d === 0 ? 0 : step);
-                                                    addPoint(x1, y0 + r + d, 1, 0);
-                                                }
-                                                dist += (straightY % step === 0 ? 0 : (straightY % step));
-
-                                                for (let i = 0; i <= arcSteps; i++) {
-                                                    let a = (i / arcSteps) * (0.5 * Math.PI);
-                                                    if (i > 0) dist += arcLen / arcSteps;
-                                                    addPoint((x1 - r) + r * Math.cos(a), (y1 - r) + r * Math.sin(a), Math.cos(a), Math.sin(a));
-                                                }
-
-                                                for (let d = 0; d < straightX; d += step) {
-                                                    dist += (d === 0 ? 0 : step);
-                                                    addPoint(x1 - r - d, y1, 0, 1);
-                                                }
-                                                dist += (straightX % step === 0 ? 0 : (straightX % step));
-
-                                                for (let i = 0; i <= arcSteps; i++) {
-                                                    let a = 0.5 * Math.PI + (i / arcSteps) * (0.5 * Math.PI);
-                                                    if (i > 0) dist += arcLen / arcSteps;
-                                                    addPoint((x0 + r) + r * Math.cos(a), (y1 - r) + r * Math.sin(a), Math.cos(a), Math.sin(a));
-                                                }
-
-                                                for (let d = 0; d < straightY; d += step) {
-                                                    dist += (d === 0 ? 0 : step);
-                                                    addPoint(x0, y1 - r - d, -1, 0);
-                                                }
-                                                dist += (straightY % step === 0 ? 0 : (straightY % step));
-
-                                                for (let i = 0; i <= arcSteps; i++) {
-                                                    let a = Math.PI + (i / arcSteps) * (0.5 * Math.PI);
-                                                    if (i > 0) dist += arcLen / arcSteps;
-                                                    addPoint((x0 + r) + r * Math.cos(a), (y0 + r) + r * Math.sin(a), Math.cos(a), Math.sin(a));
-                                                }
-
-                                                ctx.closePath();
-
-                                                let rawCol = "#89b4fa";
-                                                if (typeof ThemeBackend !== "undefined") {
-                                                    if (ThemeBackend.primary) rawCol = ThemeBackend.primary;
-                                                    else if (ThemeBackend.blue) rawCol = ThemeBackend.blue;
-                                                }
-                                                let c = Qt.color(rawCol);
-
-                                                ctx.strokeStyle = c;
-                                                ctx.lineWidth = 2;
-                                                ctx.stroke();
-                                            }
+                                            running: widgetProxy.isSelected && selectionUI.opacity > 0.001
                                         }
 
                                         MouseArea {
@@ -2007,27 +1872,7 @@ Scope {
                                             cornerRadius: ThemeBackend.borderRadius
                                             iconFontSize: s(18)
 
-                                            onClicked: {
-                                                let rmId = String(widgetProxy.wId);
-                                                if (redactorMode.selectedId === rmId) {
-                                                    redactorMode.selectedId = "";
-                                                    root.targetSelectedWidgetId = "";
-                                                }
-                                                WidgetSync.removeWidget(redactorWindow.safeMonitorName, rmId);
-                                                let activeModel = redactorMode.activeWidgetsModel;
-                                                if (activeModel) {
-                                                    for (let i = activeModel.count - 1; i >= 0; i--) {
-                                                        if (String(activeModel.get(i).wId) === rmId) {
-                                                            activeModel.remove(i, 1);
-                                                        }
-                                                    }
-                                                    if (activeModel.count === 0) {
-                                                        redactorMode.selectedId = "";
-                                                        root.targetSelectedWidgetId = "";
-                                                    }
-                                                }
-                                                redactorMode.updateToolbarObscured();
-                                            }
+                                            onClicked: redactorMode.removeWidget(widgetProxy.wId)
                                         }
                                     }
 
@@ -2373,7 +2218,7 @@ Scope {
                                     size: s(40)
                                     cornerRadius: ThemeBackend.borderRadius
                                     buttonIcon: "󰕰"
-                                    iconOffsetX: -2
+                                    iconOffsetX: 0
                                     iconFontSize: s(20)
                                     accentColor: redactorMode.gridEnabled ? ThemeBackend.mauve : ThemeBackend.surface0
                                     textColor: redactorMode.gridEnabled ? ThemeBackend.crust : ThemeBackend.text

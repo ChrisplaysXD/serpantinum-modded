@@ -24,7 +24,7 @@ PanelWindow {
     Shortcut {
         sequence: "Escape"
         context: Qt.WindowShortcut
-        enabled: masterWindow.isVisible
+        enabled: masterWindow.isVisible && !masterWindow.isClosing
         onActivated: switchWidget("hidden", "")
     }
 
@@ -304,7 +304,7 @@ PanelWindow {
 
     MouseArea {
         anchors.fill: parent
-        enabled: masterWindow.isVisible && !masterWindow.isCurrentDraggable
+        enabled: masterWindow.isVisible && !masterWindow.isCurrentDraggable && !masterWindow.isClosing
         onClicked: switchWidget("hidden", "")
     }
 
@@ -315,8 +315,6 @@ PanelWindow {
 
     property var widgetCache: ({})
     property var componentCache: ({})
-    property var _allWidgetNames: ["battery", "network", "volume", "guide", "calendar", "wallpaper", "music", "movies", "notifications", "system"]
-    property int _preloadIndex: 0
 
     function widgetNameForItem(item) {
         for (let name in widgetCache) {
@@ -343,41 +341,27 @@ PanelWindow {
         }
 
         let item = comp.createObject(preloaderContainer);
-        if (item) widgetCache[name] = item;
+        if (item) {
+            item.visible = false;
+            widgetCache[name] = item;
+        }
         return item;
     }
 
-    function preloadWidget(name) {
-        let t = getLayout(name);
-        if (!t || !t.comp) return;
-        ensureWidgetItem(name, t);
-    }
-
     Component.onCompleted: {
+        applyConfigSettings();
         reportWidgetState();
-        preloadStaggerTimer.start();
+        Qt.callLater(function() {
+            if (masterWindow.currentActive === "hidden") {
+                let t = masterWindow.getLayout("guide");
+                if (t) masterWindow.ensureWidgetItem("guide", t);
+            }
+        });
     }
 
     Component.onDestruction: {
         if (typeof Caching !== "undefined" && Caching.runDir) {
             Quickshell.execDetached(["bash", "-c", "echo '{\"widget\":\"hidden\",\"screen\":\"\"}' > " + Caching.runDir + "/current_widget"]);
-        }
-    }
-
-    Timer {
-        id: preloadStaggerTimer
-        interval: 150
-        repeat: true
-        onTriggered: {
-            if (masterWindow._preloadIndex >= masterWindow._allWidgetNames.length) {
-                preloadStaggerTimer.stop();
-                return;
-            }
-            if (masterWindow.currentActive !== "hidden") {
-                return;
-            }
-            preloadWidget(masterWindow._allWidgetNames[masterWindow._preloadIndex]);
-            masterWindow._preloadIndex++;
         }
     }
 
@@ -389,12 +373,14 @@ PanelWindow {
     }
 
     onScreenChanged: {
+        applyConfigSettings();
         if (currentActive !== "hidden") {
             reportWidgetState();
         }
     }
 
     property bool isVisible: false
+    property bool isClosing: false
     property string activeArg: ""
     property bool disableMorph: true
     property int switchGeneration: 0
@@ -418,63 +404,31 @@ PanelWindow {
         id: osdPopups
     }
 
-    Process {
-        id: settingsReader
-        command: ["bash", "-c", `cat "${Config.settingsJsonPath}" 2>/devnull || echo '{}'`]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                try {
-                    if (this.text && this.text.trim().length > 0 && this.text.trim() !== "{}") {
-                        let parsed = JSON.parse(this.text);
-                        let sName = masterWindow.screen ? masterWindow.screen.name : "";
-                        let sVal = undefined;
+    function applyConfigSettings() {
+        let parsed = (typeof Config !== "undefined" && Config.rawSettings) ? Config.rawSettings : {};
+        let sVal = undefined;
 
-                        if (sName !== "" && parsed.display && parsed.display.monitors && parsed.display.monitors[sName] && parsed.display.monitors[sName].scale !== undefined) {
-                            sVal = parsed.display.monitors[sName].scale;
-                        } else if (parsed.general && parsed.general.uiScale !== undefined) {
-                            sVal = parsed.general.uiScale;
-                        } else if (parsed.uiScale !== undefined) {
-                            sVal = parsed.uiScale;
-                        }
-
-                        if (sVal !== undefined && masterWindow.globalUiScale !== sVal) {
-                            masterWindow.globalUiScale = sVal;
-                        }
-
-                        if (parsed.bar) {
-                            masterWindow.rawBarSettings = parsed.bar;
-                            if (parsed.bar.position !== undefined) masterWindow.barPosition = parsed.bar.position;
-                            if (parsed.bar.autohide !== undefined) masterWindow.barAutohide = Boolean(parsed.bar.autohide);
-                        }
-                    }
-                } catch (e) {
-                }
-            }
+        if (parsed.general && parsed.general.uiScale !== undefined) {
+            sVal = parsed.general.uiScale;
+        } else if (parsed.uiScale !== undefined) {
+            sVal = parsed.uiScale;
         }
-    }
 
-    Process {
-        id: settingsWatcher
-        command: ["bash", "-c", `while [ ! -f "${Config.settingsJsonPath}" ]; do sleep 1; done; inotifywait -qq -e modify,close_write "${Config.settingsJsonPath}"`]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                settingsReader.running = false;
-                settingsReader.running = true;
-                settingsWatcher.running = false;
-                settingsWatcher.running = true;
-            }
+        let targetScale = (sVal !== undefined && typeof sVal === "number" && !isNaN(sVal) && sVal > 0) ? sVal : 1.0;
+        if (masterWindow.globalUiScale !== targetScale) {
+            masterWindow.globalUiScale = targetScale;
         }
+
+        let b = parsed.bar || {};
+        masterWindow.rawBarSettings = b;
+        if (b.position !== undefined) masterWindow.barPosition = b.position;
+        if (b.autohide !== undefined) masterWindow.barAutohide = Boolean(b.autohide);
     }
 
     Connections {
         target: (typeof Config !== "undefined") ? Config : null
         function onSettingsLoaded() {
-            let b = (Config.rawSettings && Config.rawSettings.bar) ? Config.rawSettings.bar : {};
-            masterWindow.rawBarSettings = b;
-            masterWindow.barPosition = (b && b.position !== undefined) ? b.position : "top";
-            masterWindow.barAutohide = (b && b.autohide !== undefined) ? Boolean(b.autohide) : false;
+            masterWindow.applyConfigSettings();
         }
     }
 
@@ -562,7 +516,14 @@ PanelWindow {
     }
 
     onIsVisibleChanged: {
-        if (isVisible) widgetStack.forceActiveFocus();
+        if (isVisible) {
+            widgetStack.forceActiveFocus();
+        } else if (currentActive === "hidden" && !delayedClear.running) {
+            for (let k in widgetCache) {
+                let it = widgetCache[k];
+                if (it) it.visible = false;
+            }
+        }
     }
 
     Item {
@@ -618,6 +579,7 @@ PanelWindow {
             }
 
             opacity: masterWindow.isVisible ? 1.0 : 0.0
+            visible: masterWindow.isVisible || opacity > 0
             Behavior on opacity {
                 NumberAnimation {
                     duration: masterWindow.isVisible ? 200 : 140
@@ -680,18 +642,43 @@ PanelWindow {
         if (delayedClear.running) {
             delayedClear.stop();
         }
+        if (exitSafetyTimer.running) {
+            exitSafetyTimer.stop();
+        }
 
         if (newWidget === "hidden") {
-            if (currentActive !== "hidden") {
-                masterWindow.currentActive = "hidden";
-                masterWindow.morphDuration = masterWindow.exitDuration;
-                masterWindow.disableMorph = true;
-                masterWindow.isVisible = false;
+            if (currentActive !== "hidden" && !masterWindow.isClosing) {
+                let closingGen = gen;
+                masterWindow.isClosing = true;
+                masterWindow.targetActive = "hidden";
 
-                delayedClear.scheduledGeneration = gen;
-                delayedClear.restart();
+                let activeItem = widgetCache[currentActive] || widgetStack.currentItem;
+
+                let finalizeClose = function() {
+                    if (closingGen !== masterWindow.switchGeneration) return;
+                    masterWindow.isClosing = false;
+                    masterWindow.currentActive = "hidden";
+                    masterWindow.morphDuration = masterWindow.exitDuration;
+                    masterWindow.disableMorph = true;
+                    masterWindow.isVisible = false;
+
+                    for (let k in widgetCache) {
+                        let it = widgetCache[k];
+                        if (it) it.visible = false;
+                    }
+                    reportWidgetState();
+                };
+
+                if (activeItem && typeof activeItem.startExit === "function") {
+                    exitSafetyTimer.scheduledGeneration = closingGen;
+                    exitSafetyTimer.restart();
+                    activeItem.startExit(finalizeClose);
+                } else {
+                    finalizeClose();
+                }
             }
         } else {
+            masterWindow.isClosing = false;
             let targetScreen = resolveTargetScreen();
             if (targetScreen && masterWindow.screen !== targetScreen) {
                 masterWindow.screen = targetScreen;
@@ -768,6 +755,14 @@ PanelWindow {
             widgetStack.replace(cachedItem, {}, StackView.Immediate);
         }
 
+        for (let k in widgetCache) {
+            let it = widgetCache[k];
+            if (it && it !== cachedItem) {
+                it.visible = false;
+            }
+        }
+        cachedItem.visible = true;
+
         masterWindow.isVisible = true;
 
         if (isComingFromHidden) {
@@ -780,12 +775,36 @@ PanelWindow {
     }
 
     Timer {
+        id: exitSafetyTimer
+        interval: 450
+        property int scheduledGeneration: -1
+        onTriggered: {
+            if (scheduledGeneration === masterWindow.switchGeneration && masterWindow.isClosing) {
+                masterWindow.isClosing = false;
+                masterWindow.currentActive = "hidden";
+                masterWindow.morphDuration = masterWindow.exitDuration;
+                masterWindow.disableMorph = true;
+                masterWindow.isVisible = false;
+                for (let k in widgetCache) {
+                    let it = widgetCache[k];
+                    if (it) it.visible = false;
+                }
+                reportWidgetState();
+            }
+        }
+    }
+
+    Timer {
         id: delayedClear
         interval: 200
         property int scheduledGeneration: -1
         onTriggered: {
             if (masterWindow.currentActive === "hidden" && scheduledGeneration === masterWindow.switchGeneration) {
                 masterWindow.disableMorph = true;
+                for (let k in widgetCache) {
+                    let it = widgetCache[k];
+                    if (it) it.visible = false;
+                }
             }
         }
     }

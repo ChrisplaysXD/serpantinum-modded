@@ -386,6 +386,149 @@
           "title": "Kiểu",
           "desc": "Chọn kiểu hiển thị cho đồng hồ và ngày"
         }
+      },
+      "vis": {
+        "bars": {
+          "title": "Số lượng thanh",
+          "desc": "Số lượng thanh tần số hiển thị"
+        },
+        "alignment": {
+          "title": "Căn chỉnh",
+          "desc": "Căn giữa bộ trực quan hoặc căn theo phía trên hoặc dưới"
+        },
+        "align": {
+          "center": "Giữa",
+          "top": "Trên",
+          "bottom": "Dưới",
+          "left": "Trái",
+          "right": "Phải"
+        },
+        "continuous": {
+          "title": "Sóng liên tục",
+          "desc": "Hiển thị dạng sóng mượt mà thay vì các thanh riêng biệt"
+        }
+      },
+      "sysmon": {
+        "style": {
+          "title": "Kiểu vòng tròn",
+          "desc": "Giao diện vòng tiến trình",
+          "wave": "Sóng",
+          "circle": "Vòng tròn"
+        },
+        "cpu": {
+          "title": "Sử dụng CPU",
+          "desc": "Hiển thị vòng mức sử dụng bộ vi xử lý"
+        },
+        "ram": {
+          "title": "Sử dụng bộ nhớ",
+          "desc": "Hiển thị vòng mức sử dụng RAM"
+        },
+        "temp": {
+          "title": "Nhiệt độ",
+          "desc": "Hiển thị vòng nhiệt độ hệ thống"
+        },
+        "disk": {
+          "title": "Sử dụng ổ đĩa",
+          "desc": "Hiển thị vòng mức sử dụng bộ nhớ lưu trữ"
+        }
+      },
+      "bat": {
+        "show_percent": {
+          "title": "Hiển thị phần trăm",
+          "desc": "Hiển thị phần trăm pin dạng số"
+        },
+        "show_icon": {
+          "title": "Hiển thị biểu tượng",
+          "desc": "Hiển thị biểu tượng pin hoặc chỉ báo đồ họa"
+        },
+        "style": {
+          "title": "Kiểu pin",
+          "desc": "Chọn giao diện hiển thị của chỉ báo pin",
+          "name": {
+            "classic": "Cổ điển",
+            "minimal": "Tối giản",
+            "text": "Văn bản"
+          },
+          "classic": "Dạng viên thuốc với sóng chuyển màu",
+          "minimal": "Dạng thỏi iOS/Android có nắp",
+          "text": "Biểu tượng và văn bản không có nền"
+        }
+      },
+      "wifi": {
+        "show_icon": {
+          "title": "Hiển thị biểu tượng",
+          "desc": "Hiển thị biểu tượng mạng hoặc chỉ báo tín hiệu"
+        },
+        "show_name": {
+          "title": "Hiển thị tên",
+          "desc": "Hiển thị SSID mạng hoặc trạng thái kết nối"
+        },
+        "style": {
+          "title": "Kiểu dáng",
+          "desc": "Chọn giao diện trực quan của mô-đun mạng",
+          "name": {
+            "button": "Nút bấm",
+            "text": "Văn bản"
+          },
+          "button": "Nút tương tác có nền",
+          "text": "Biểu tượng và văn bản không có nền"
+        }
+      },
+      "bt": {
+        "show_icon": {
+          "title": "Hiển thị biểu tượng",
+          "desc": "Hiển thị biểu tượng trạng thái Bluetooth"
+        },
+        "show_name": {
+          "title": "Hiển thị tên",
+          "desc": "Hiển thị tên thiết bị Bluetooth đã kết nối"
+        },
+        "style": {
+          "title": "Kiểu dáng",
+          "desc": "Chọn giao diện trực quan của mô-đun Bluetooth",
+          "name": {
+            "button": "Nút bấm",
+            "text": "Văn bản"
+          },
+          "button": "Nút tương tác có nền",
+          "text": "Biểu tượng và văn bản không có nền"
+        }
+      },
+      "vol": {
+        "show_icon": {
+          "title": "Hiển thị biểu tượng",
+          "desc": "Hiển thị biểu tượng loa âm lượng"
+        },
+        "show_percent": {
+          "title": "Hiển thị phần trăm",
+          "desc": "Hiển thị phần trăm âm lượng dạng số"
+        },
+        "style": {
+          "title": "Kiểu dáng",
+          "desc": "Chọn giao diện trực quan của mô-đun âm lượng",
+          "name": {
+            "button": "Nút bấm",
+            "text": "Văn bản"
+          },
+          "button": "Nút tương tác có nền",
+          "text": "Biểu tượng và văn bản không có nền"
+        }
+      },
+      "kb": {
+        "show_icon": {
+          "title": "Hiển thị biểu tượng",
+          "desc": "Hiển thị biểu tượng bố cục bàn phím"
+        },
+        "style": {
+          "title": "Kiểu dáng",
+          "desc": "Chọn giao diện trực quan của mô-đun bàn phím",
+          "name": {
+            "button": "Nút bấm",
+            "text": "Văn bản"
+          },
+          "button": "Nút tương tác có nền",
+          "text": "Biểu tượng và văn bản không có nền"
+        }
       }
     },
     "theme": {
@@ -697,7 +840,9 @@
     "placeholder": "Bắt đầu bằng dấu > để nhập lệnh...",
     "tab_applications": "Ứng dụng",
     "tab_files": "Tệp",
-    "placeholder_files": "Tìm kiếm tệp hoặc nhập đường dẫn..."
+    "placeholder_files": "Tìm kiếm tệp hoặc nhập đường dẫn...",
+    "tab_emojis": "Biểu tượng cảm xúc",
+    "placeholder_emojis": "Tìm kiếm biểu tượng cảm xúc hoặc nhập từ khóa..."
   },
   "calendar": {
     "loading": "Đang tải...",
@@ -859,6 +1004,46 @@
         "pomo_skipped_focus_body": "Đã bỏ qua phiên tập trung. Chuyển sang giờ nghỉ.",
         "pomo_skipped_break_body": "Đã bỏ qua giờ nghỉ. Quay lại phiên tập trung."
       }
+    },
+    "draw": {
+      "notification": {
+        "app_name": "DrawAction",
+        "saved_title": "Drawing saved",
+        "copied_title": "Drawing copied",
+        "copied_body": "Drawing copied to clipboard",
+        "failed_title": "Export failed",
+        "failed_body": "Could not save drawing"
+      }
+    },
+    "notes": {
+      "title": "Ghi chú",
+      "add_note": "Thêm ghi chú",
+      "new_note_title": "Ghi chú mới",
+      "edit_note": "Chỉnh sửa",
+      "preview_note": "Xem trước markdown",
+      "delete_selected": "Xóa đã chọn ({count})",
+      "no_notes": "Chưa có ghi chú nào. Nhấn «Thêm ghi chú».",
+      "search_placeholder": "Tìm kiếm ghi chú...",
+      "title_placeholder": "Tiêu đề ghi chú...",
+      "content_placeholder": "Nội dung ghi chú dạng markdown...",
+      "back": "Quay lại",
+      "save": "Xong",
+      "cancel": "Hủy",
+      "delete": "Xóa",
+      "select_all": "Chọn tất cả",
+      "deselect_all": "Bỏ chọn",
+      "selected_count": "Đã chọn {count}",
+      "pinned": "Đã ghim",
+      "recent": "Gần đây",
+      "pin": "Ghim",
+      "unpin": "Bỏ ghim"
+    },
+    "tabs": {
+      "draw": "Vẽ",
+      "system": "Hệ thống",
+      "timer": "Hẹn giờ",
+      "notes": "Ghi chú",
+      "tab": "Tab"
     }
   },
   "screenshot": {

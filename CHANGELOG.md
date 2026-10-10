@@ -1,3 +1,160 @@
+### 2.2.6
+
+- fix(bar): stop the battery wave when no charge is flowing (#416)
+- feat(quickactions): add pinned notes sections and wrap note editor in card
+- fix(sysnotif): prevent reload and duplicate full battery notifications
+- fix(quickactions): manage keyboard focus and shortcut isolation during input editing
+- feat(i18n): add translations for notes pinning and selection
+- feat(inputs): add releaseFocus method to Input component
+- fix: align topbar modules dynamically next to system panel edge
+- feat: enhance notes expanding animations and floating quickaction tab pills
+- fix(widgets): resolve ReferenceError when removing widget in WidgetRedactor
+- fix: correct filled content box height in SystemUsageCard
+- fix(audio): resolve binding loops in audio device and stream cache
+- fix(audio): tag and filter out serpantinum sfx streams from volume stream list
+- fix(workspaces): fix active and occupied state tracking on niri dynamic workspaces
+- fix(bar): show all running timers in info faces simultaneously
+- feat(bar): add text style for battery module
+- feat(bar): add style and icon toggle settings for keyboard module
+- fix(main): prevent monitor scale from double scaling popup dimensions
+- fix(clock): use mod() in lumen dial shader to fix GLSL ES memory leak
+- feat(bar): add style and visibility settings for network, bluetooth, and volume modules
+- perf(guide): optimize popup loading, tab transitions, and background initialization
+- perf(sysdata): stream system stats from one long-running fetcher (#414)
+- perf(lock): eliminate redundant clock timer and bind directly to DateTime
+- fix(lock): keep lockscreen clock synchronized and updating
+
+### 2.2.5-1
+
+- fix: ensure i18n translation readiness before notification dispatch
+- fix: resolve missing isCharging property and wave animation scope in battery faces
+- fix: manage popup visibility lifecycle to eliminate background render loops
+- perf: replace bar battery pill 2D canvas with FluidWave shader
+- perf: eliminate redundant shell process forks on startup and settings reload
+- fix: remove redundant pause logic on volume wave animation
+- perf: pause volume wave animation and unpause on hover
+- fix: eliminate lumen clock periodic stall with continuous sweep tracking
+- perf: pause system usage and battery waves in idle and animate on value change
+- perf: throttle keyboard lock polling fallback and fix watcher path
+- perf: eliminate sys_fetcher blocking sleep and optimize sensor parsing
+- perf: implement lazy instantiation on first open for popup widgets
+- perf: optimize lumen clock with smooth sweep animation and visibility guard
+- refactor: replace Shape corners with corner_cutout shader in SideMusicPopout
+- refactor: replace figure-stacked Shape corners with corner_cutout shader across popouts and overlays
+
+### 2.2.5
+
+- fix(bar): preserve module text opacity when adjusting bar opacity
+- fix(musicpopup): remove the unused offsetY for the music play button
+- perf(wallpaper): replace CPU mask geometry transitions with shader math
+- fix(idle): serve org.freedesktop.ScreenSaver so games can keep the screen from locking (#409)
+- fix(kb): stop restarting a running waiter to break the respawn loop (fixes #411) (#412)
+- fix(qml): remove invalid method calls in SystemPanel and ThemeTab
+- perf: replace canvas animations with compiled shaders
+- perf(music): draw the wavy seek bar with a shader (#410)
+- perf(widgets): draw the selection outline with a shader (#408)
+- fix(draw): resolve canvas image export and clipboard copy (fixes #406)
+- perf: eliminate wallpaper animation lag during on-the-fly matugen generation
+- fix(sysnotif): deduplicate battery notifications and eliminate redundant startup check
+- perf(music): draw the cover ring visualizers with the shared bars shader (#400)
+- perf(visualizer): draw bar, music and lock visualizers with the shared shaders (#399)
+- docs: add contributors wall to credits in README
+- fix(widgets): use int helpers for min/max/clamp in visualizer shaders (NVIDIA) (#398)
+- perf(widgets): draw the visualizer widgets with shaders (#396)
+- fix(install): change the telegram channel link
+- fix(music): prevent assigning undefined to currentLivePosition double
+- fix(focus): ignore unfocused window title events in sway (fixing the same issue for Sway as in #390)
+- perf(focus): eliminate reload lag and optimize active window tracking
+- perf(bar): skip visualizer level processing in hidden or unused modes (#395)
+- fix(wallpaper): persist search state in cache json instead of QSettings serpantinum.conf
+- fix(inputs): persist password reveal via Config singleton
+- fix(widgets): properly remove deleted widgets from model and tear down faces
+- fix(inputs): restore persistent reveal state with explicit settings location
+- fix(lock): fix non-bindable transform warning and use onVisibleChanged on surface
+- fix(widgets): subscribe music visualizer faces to Cava only once (#393)
+- fix(sysnotif): ensure i18n is ready when sysnotif dispatches battery check notifications on laptops
+- fix(focus): track WindowOpenedOrChanged events for focused windows in niri
+- fix(nix): fix version.txt file not being deleted
+- fix(wallpaper): add ffmpeg fallback to convert WebP images to JPEG in ddg_search
+- fix(wellbeing): prevent invalid image request when selectedAppIcon is empty
+- fix(guide/display): guard wallpaper source and monitor name in SavePresetPopup
+- fix(caching): initialize state files and symlink version.txt to prevent FileView read errors
+- fix(bar/vis): guard barWindow connections in Vis face to avoid assigning JS object to QObject
+- fix(screenshot): call text() in audioPrefsFile onLoaded handler
+- fix(bar/sysmon): prevent undefined assignment to boolean property in SysMon face
+- fix(launcher): remove invalid onCountChanged handler in DesktopEntries connections
+- fix(settings): replace uninitialized QSettings with QtObject and regular properties
+- fix(widgets): use QtObject in WidgetSync to avoid duplicate signal overrides
+- perf(focus): deduplicate title change events and bound tmpfs log growth
+- perf(wellbeing): use zero-fork lockfile check and cache config mtime
+- perf(datetime): optimize clock timer and decouple date string re-evaluations
+- perf(clipboard): optimize image memory with bounded size and lazy loading
+- fix(install): add lsp-plugins-lv2 so the easyeffects equalizer works (#388)
+- fix(lyrics): fix word spacing for non-Latin characters in karaoke mode (#387)
+- fix(weather): show offline instead of a stale forecast when updates keep failing (#386)
+- perf(osd): keep lock LED files open in the kb_locks polling fallback (#384)
+- fix(imagebox): don't play GIFs while hidden (#382)
+- fix(notifications): instantiate SysNotif so battery notifications work (#379)
+- fix(bluetooth): track async adapter initialization in NetworkPopup and SystemPanel (#376)
+- fix(lyrics): support compound artist-title formats and audio extensions in lyrics search (#375)
+- fix(main): hide popup stage after the close animation (#371)
+- perf(media): optimize marquee in MediaFace and stop when not playing
+- fix(guide): keep bar module previews inactive while hidden (#369)
+- perf(lock): eliminate high-frequency timers, remove 60fps animations, and optimize focus retention
+- fix(bar): subscribe sysmon to SysData only once (#366)
+- fix(media): constrain WavySeekBar mouse area height to prevent accidental seeking
+- fix(syspanel): use ThemeBackend.iconFont and refine action icon sizes
+- fix(bar): the bat face widgets not adapting to a desktop variant
+- style(systemusagecard): return wave animations
+- feat(bar): add battery module styles and visibility settings
+- fix(i18n): proofread German translation (capitalization, spelling, terminology) (#360)
+- feat(launcher): use itemCount setting to configure emoji view rows
+- feat(launcher): add emoji picker with navigatable grid
+- style(media): reduce the blur for art thumbnails in the musicpopup
+- fix(widgets): fix misaligned buttons
+- feat(bar): add configurable settings for the sysmon face module
+
+### 2.2.4
+
+- feat(bar): add configurable visualizer widget
+- fix(bar): fix spacing and overlay of grouped modules in sidebar
+- chore: remove a comment
+- style: change the theme icon in the desktopmenu
+- refactor: migrate bar modules to face-based BarModule with central registry
+- fix: fix the icon alignment in the sidetopwidget
+- fix: fix icon alignment for widgets
+- fix: add a global iconfont to fix icon discrepancy
+- refactor: reorginize widget faces into specific folders
+- perf/fix: fixes #350, redisign of the sysmon widget
+- perf: remove a continous wave animation from the system usage card to improve performance. Animate only on change
+- fix: scale wallpaper and lock screen sourceSize by devicePixelRatio (#351)
+- chore: update the lockfile
+- feat: add a lockscreen icon button to the desktop menu when clicked on desktop
+- chore: remove a console log of the search indexes in the guidepopup
+- fix: remove duplication by ensuring DEduplication in the setting row in the search bar in the guide popup
+- fix/feat: fix a misalignment of the corner, fixes #349, add an animation for the hidden -> collapsed state for the floating bar, add animation for moving across the same side of the screen on cursor position change
+- style: add a shadow to the seek bar handle
+- style: improve the wavy seek bar style by decreasing the peaks and smoothing out the curves
+- fix: fix the alignment drift in the music face widget and make sure all of the elements are equally spaced out for readability and style
+- fix: whenever Input would loose focus, launcher and clipboard would loose arrow and mouse control. Add focus regaining mechanism and fix the input.qml
+- fix: prevent lyrics view from a long scroll animation on creation
+- style: improve the visuals of the wavyseekbar in the musicpopup and musicface widget
+- perf: optimize the current focus script
+- style: change the highlight selection in the redactor a sine-wave shape
+- feat: make widgets on the desktop have a selection highlight when using the desktopmenu to select them
+- style: add hover and click effects for batwidget and sidebatwidget
+- fix: fix redundant flag in the equalizer
+- feat: add osd and notifications into the search
+- fix: fix themetab elements collapsing into a column
+- fix: fix equalizer not executing
+- fix: #348. Remove the wave animation from the battery to prevent power drain
+- feat: add the idle tab to the search
+- style: add a shadow to the clock minimal widget
+- fix: force focus on the input when the search is open in the settings
+- fix: fixes #346 when input takes focus
+- feat: add barmodulestab modules to the search
+- i18n: add missing translation for the search in the guidepopup
+
 ### 2.2.3
 
 - feat: add arrow navigation to the guidepopup search

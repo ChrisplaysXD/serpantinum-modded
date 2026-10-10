@@ -386,6 +386,149 @@
           "title": "Style",
           "desc": "Choose the visual style for the clock and date display"
         }
+      },
+      "vis": {
+        "bars": {
+          "title": "Amount of Bars",
+          "desc": "Number of frequency bars to display"
+        },
+        "alignment": {
+          "title": "Alignment",
+          "desc": "Center the visualizer or align to top or bottom"
+        },
+        "align": {
+          "center": "Center",
+          "top": "Top",
+          "bottom": "Bottom",
+          "left": "Left",
+          "right": "Right"
+        },
+        "continuous": {
+          "title": "Continuous Wave",
+          "desc": "Render a smooth fluid wave instead of discrete bars"
+        }
+      },
+      "sysmon": {
+        "style": {
+          "title": "Circle Style",
+          "desc": "Visual appearance of the progress rings",
+          "wave": "Wave",
+          "circle": "Circle"
+        },
+        "cpu": {
+          "title": "CPU Usage",
+          "desc": "Display processor utilization ring"
+        },
+        "ram": {
+          "title": "Memory Usage",
+          "desc": "Display memory (RAM) utilization ring"
+        },
+        "temp": {
+          "title": "Temperature",
+          "desc": "Display system temperature ring"
+        },
+        "disk": {
+          "title": "Disk Usage",
+          "desc": "Display storage disk utilization ring"
+        }
+      },
+      "bat": {
+        "show_percent": {
+          "title": "Show Percentage",
+          "desc": "Display the numeric battery charge percentage"
+        },
+        "show_icon": {
+          "title": "Show Icon",
+          "desc": "Display the battery icon or graphic indicator"
+        },
+        "style": {
+          "title": "Battery Style",
+          "desc": "Choose the visual appearance of the battery indicator",
+          "name": {
+            "classic": "Classic",
+            "minimal": "Minimal",
+            "text": "Text"
+          },
+          "classic": "Pill with gradient wave fill",
+          "minimal": "iOS/Android capsule with cap",
+          "text": "Clean text and icon without background"
+        }
+      },
+      "wifi": {
+        "show_icon": {
+          "title": "Show Icon",
+          "desc": "Display the network icon or signal indicator"
+        },
+        "show_name": {
+          "title": "Show Name",
+          "desc": "Display the network SSID or connection status text"
+        },
+        "style": {
+          "title": "Style",
+          "desc": "Choose the visual appearance of the network module",
+          "name": {
+            "button": "Button",
+            "text": "Text"
+          },
+          "button": "Interactive button pill with background",
+          "text": "Clean text and icon without background"
+        }
+      },
+      "bt": {
+        "show_icon": {
+          "title": "Show Icon",
+          "desc": "Display the bluetooth status icon"
+        },
+        "show_name": {
+          "title": "Show Name",
+          "desc": "Display the connected bluetooth device name"
+        },
+        "style": {
+          "title": "Style",
+          "desc": "Choose the visual appearance of the bluetooth module",
+          "name": {
+            "button": "Button",
+            "text": "Text"
+          },
+          "button": "Interactive button pill with background",
+          "text": "Clean text and icon without background"
+        }
+      },
+      "vol": {
+        "show_icon": {
+          "title": "Show Icon",
+          "desc": "Display the volume speaker icon"
+        },
+        "show_percent": {
+          "title": "Show Percentage",
+          "desc": "Display the numeric audio volume percentage"
+        },
+        "style": {
+          "title": "Style",
+          "desc": "Choose the visual appearance of the volume module",
+          "name": {
+            "button": "Button",
+            "text": "Text"
+          },
+          "button": "Interactive button pill with background",
+          "text": "Clean text and icon without background"
+        }
+      },
+      "kb": {
+        "show_icon": {
+          "title": "Show Icon",
+          "desc": "Display the keyboard layout icon"
+        },
+        "style": {
+          "title": "Style",
+          "desc": "Choose the visual appearance of the keyboard module",
+          "name": {
+            "button": "Button",
+            "text": "Text"
+          },
+          "button": "Interactive button pill with background",
+          "text": "Clean text and icon without background"
+        }
       }
     },
     "theme": {
@@ -697,7 +840,9 @@
     "placeholder": "Start with > for a command...",
     "tab_applications": "Applications",
     "tab_files": "Files",
-    "placeholder_files": "Search files or enter path..."
+    "placeholder_files": "Search files or enter path...",
+    "tab_emojis": "Emojis",
+    "placeholder_emojis": "Search emojis by name or keyword..."
   },
   "calendar": {
     "loading": "Loading...",
@@ -859,6 +1004,46 @@
         "pomo_skipped_focus_body": "Focus session skipped. Moving to break.",
         "pomo_skipped_break_body": "Break skipped. Moving back to focus."
       }
+    },
+    "draw": {
+      "notification": {
+        "app_name": "DrawAction",
+        "saved_title": "Drawing saved",
+        "copied_title": "Drawing copied",
+        "copied_body": "Drawing copied to clipboard",
+        "failed_title": "Export failed",
+        "failed_body": "Could not save drawing"
+      }
+    },
+    "notes": {
+      "title": "Notes",
+      "add_note": "Add note",
+      "new_note_title": "New note",
+      "edit_note": "Edit note",
+      "preview_note": "Preview markdown",
+      "delete_selected": "Delete selected ({count})",
+      "no_notes": "No notes yet. Click \"Add note\" to create one.",
+      "search_placeholder": "Search notes...",
+      "title_placeholder": "Note title...",
+      "content_placeholder": "Write your note here in markdown...",
+      "back": "Back",
+      "save": "Done",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "select_all": "Select all",
+      "deselect_all": "Deselect",
+      "selected_count": "{count} selected",
+      "pinned": "Pinned",
+      "recent": "Recent",
+      "pin": "Pin",
+      "unpin": "Unpin"
+    },
+    "tabs": {
+      "draw": "Draw",
+      "system": "System",
+      "timer": "Timer",
+      "notes": "Notes",
+      "tab": "Tab"
     }
   },
   "screenshot": {

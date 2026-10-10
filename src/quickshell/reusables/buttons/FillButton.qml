@@ -279,7 +279,7 @@ Item {
             NumberAnimation { target: root; property: "popScale"; to: 1.0; duration: 400; easing.type: Easing.OutQuint }
         }
 
-        Canvas {
+        FluidWave {
             id: waveCanvas
             anchors.fill: parent
             property real wavePhase: 0.0
@@ -289,57 +289,14 @@ Item {
                 from: 0; to: Math.PI * 2; duration: 800
             }
 
-            onWavePhaseChanged: requestPaint()
-            Connections { target: root; function onFillLevelChanged() { waveCanvas.requestPaint() } }
-
-            onPaint: {
-                var ctx = getContext("2d");
-                ctx.clearRect(0, 0, width, height);
-                if (root.fillLevel <= 0.001) return;
-
-                var r = Math.max(0, Math.min(root.cornerRadius, Math.min(width, height) / 2));
-                var currentW = width * root.fillLevel;
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.moveTo(0, 0);
-
-                if (root.fillLevel < 0.99) {
-                    var maxAmp = Math.min(10, Math.min(currentW, width - currentW));
-                    var waveAmp = maxAmp * Math.sin(root.fillLevel * Math.PI);
-                    var cp1x = Math.max(0, Math.min(width, currentW + Math.sin(wavePhase) * waveAmp));
-                    var cp2x = Math.max(0, Math.min(width, currentW + Math.cos(wavePhase + Math.PI) * waveAmp));
-
-                    ctx.lineTo(currentW, 0);
-                    ctx.bezierCurveTo(cp2x, height * 0.33, cp1x, height * 0.66, currentW, height);
-                    ctx.lineTo(0, height);
-                } else {
-                    ctx.lineTo(width, 0);
-                    ctx.lineTo(width, height);
-                    ctx.lineTo(0, height);
-                }
-                ctx.closePath();
-                ctx.clip();
-
-                ctx.beginPath();
-                ctx.moveTo(r, 0);
-                ctx.lineTo(width - r, 0);
-                ctx.arcTo(width, 0, width, r, r);
-                ctx.lineTo(width, height - r);
-                ctx.arcTo(width, height, width - r, height, r);
-                ctx.lineTo(r, height);
-                ctx.arcTo(0, height, 0, height - r, r);
-                ctx.lineTo(0, r);
-                ctx.arcTo(0, 0, r, 0, r);
-                ctx.closePath();
-
-                var grad = ctx.createLinearGradient(0, 0, currentW, 0);
-                grad.addColorStop(0, Qt.darker(root.accentColor, 1.15).toString());
-                grad.addColorStop(1, root.accentColor.toString());
-                ctx.fillStyle = grad;
-                ctx.fill();
-                ctx.restore();
-            }
+            radius: root.cornerRadius
+            fillLevel: root.fillLevel
+            waveAmp: root.fillLevel < 0.99 ? (Math.min(10, Math.min(width * root.fillLevel, width - width * root.fillLevel)) * Math.sin(root.fillLevel * Math.PI)) : 0
+            phase: wavePhase
+            vertical: 0.0
+            color1: Qt.darker(root.accentColor, 1.15)
+            color2: root.accentColor
+            visible: root.fillLevel > 0.001
         }
 
         Rectangle {

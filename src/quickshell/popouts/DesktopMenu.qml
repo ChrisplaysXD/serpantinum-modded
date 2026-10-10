@@ -650,7 +650,7 @@ PanelWindow {
                             cornerRadius: desktopMenuWindow.s(8)
                             contentAlignment: Qt.AlignLeft
                             horizontalPadding: desktopMenuWindow.s(10)
-                            buttonIcon: "✦"
+                            buttonIcon: "󰏘"
                             iconFontSize: desktopMenuWindow.s(15)
                             textFontSize: desktopMenuWindow.s(12)
                             buttonText: {

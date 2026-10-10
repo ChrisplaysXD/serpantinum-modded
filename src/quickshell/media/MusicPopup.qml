@@ -13,10 +13,10 @@ import "../reusables/media"
 
 Item {
     id: root
-
+    visible: false
     focus: true
 
-    readonly property bool active: root.visible && (!Window.window || Window.window.visible)
+    readonly property bool active: root.visible
 
     property bool cavaRegistered: false
 
@@ -44,7 +44,17 @@ Item {
         return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
     }
 
+    property var exitCallback: null
+
+    function startExit(onFinished) {
+        introAnim.stop();
+        chargeAnim.stop();
+        exitCallback = onFinished;
+        exitAnim.restart();
+    }
+
     function resetAndPlayIntro() {
+        exitAnim.stop();
         introMain = 0;
         introCover = 0;
         introText = 0;
@@ -100,12 +110,12 @@ Item {
             resetAndPlayIntro();
             registerCava();
             triggerLocalArtFetch();
-            if (!eqProc.running) eqProc.running = true;
             if (titleTextMain.implicitWidth > titleClipRect.width) {
                 marqueeContainer.x = 0;
                 titleAnim.restart();
             }
         } else {
+            exitAnim.stop();
             unregisterCava();
             titleAnim.stop();
             marqueeContainer.x = 0;
@@ -212,15 +222,10 @@ Item {
         when: root.active
     }
 
-    property var processedBars: {
+    // Sub-bass and kick strength for the glow and the disc bounce
+    property var beat: {
         let source = rawBarLevels;
-        let count = barCount;
-        let out = [];
-
-        if (!source || source.length === 0) {
-            for (let i = 0; i < count; i++) out.push(0.0);
-            return { levels: out, bass: 0.0, kick: 0.0 };
-        }
+        if (!source || source.length === 0) return { bass: 0.0, kick: 0.0 };
 
         let subBass = (source[0] || 0.0) * 0.50 + (source[1] || 0.0) * 0.35 + (source[2] || 0.0) * 0.15;
         let kickPunch = (source[1] || 0.0) * 0.30 + (source[2] || 0.0) * 0.45 + (source[3] || 0.0) * 0.25;
@@ -229,30 +234,11 @@ Item {
         let kick = rawKick > 0.10 ? Math.min(1.0, Math.pow((rawKick - 0.10) / 0.90, 1.8) * 1.4) : 0.0;
         let bass = Math.max(0.0, Math.min(1.0, subBass * 0.6 + kickPunch * 0.4));
 
-        let srcLen = source.length;
-        for (let i = 0; i < count; i++) {
-            let norm = i / (count - 1);
-            let pos = Math.pow(norm, 1.15) * (srcLen - 1);
-            let idx0 = Math.floor(pos);
-            let idx1 = Math.min(srcLen - 1, idx0 + 1);
-            let frac = pos - idx0;
-
-            let v0 = source[idx0] || 0.0;
-            let v1 = source[idx1] || 0.0;
-            let val = v0 + (v1 - v0) * frac;
-
-            val = Math.max(0.0, Math.min(1.0, val));
-            val = Math.pow(val, 1.08);
-
-            out.push(val);
-        }
-
-        return { levels: out, bass: bass, kick: kick };
+        return { bass: bass, kick: kick };
     }
 
-    property var barLevels: processedBars.levels
-    property real bassLevel: processedBars.bass
-    property real kickLevel: processedBars.kick
+    property real bassLevel: beat.bass
+    property real kickLevel: beat.kick
 
     property var playerList: {
         if (!Mpris.players || !Mpris.players.values) return [];
@@ -539,6 +525,39 @@ Item {
         }
     }
 
+    SequentialAnimation {
+        id: exitAnim
+        running: false
+        ParallelAnimation {
+            NumberAnimation { target: root; property: "introPresets"; to: 0.0; duration: 130; easing.type: Easing.InBack }
+            NumberAnimation { target: root; property: "introEqSliders"; to: 0.0; duration: 140; easing.type: Easing.InExpo }
+            SequentialAnimation {
+                PauseAnimation { duration: 30 }
+                NumberAnimation { target: root; property: "introEqHeader"; to: 0.0; duration: 130; easing.type: Easing.InCubic }
+                NumberAnimation { target: root; property: "introSeparator"; to: 0.0; duration: 130; easing.type: Easing.InCubic }
+            }
+            SequentialAnimation {
+                PauseAnimation { duration: 50 }
+                NumberAnimation { target: root; property: "introControls"; to: 0.0; duration: 140; easing.type: Easing.InBack }
+                NumberAnimation { target: root; property: "introText"; to: 0.0; duration: 140; easing.type: Easing.InCubic }
+                NumberAnimation { target: root; property: "introCover"; to: 0.0; duration: 150; easing.type: Easing.InBack }
+            }
+            SequentialAnimation {
+                PauseAnimation { duration: 70 }
+                NumberAnimation { target: root; property: "introMain"; to: 0.0; duration: 170; easing.type: Easing.InQuart }
+            }
+        }
+        ScriptAction {
+            script: {
+                if (root.exitCallback) {
+                    let cb = root.exitCallback;
+                    root.exitCallback = null;
+                    cb();
+                }
+            }
+        }
+    }
+
     property var borderColors: {
         var defaultColors = [ThemeBackend.mauve || "#cba6f7", ThemeBackend.blue || "#89b4fa", ThemeBackend.red || "#f38ba8", ThemeBackend.mauve || "#cba6f7"];
         var gradSource = root.activeGrad || (typeof MprisController !== "undefined" ? MprisController.grad : "");
@@ -608,38 +627,57 @@ Item {
         }
     }
 
-    Timer {
-        interval: 1000
-        running: root.active
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: {
-            if (!eqProc.running) eqProc.running = true;
+    property bool eqInitDone: false
+
+    function applyEqState(text) {
+        var outStr = text ? text.trim() : "";
+        if (outStr.length === 0) return;
+
+        // Our own writes land here too; skip them for a moment and re-read once they settle.
+        var sinceLocal = Date.now() - root.lastEqUpdate;
+        if (sinceLocal < 2000) {
+            eqResyncTimer.interval = 2000 - sinceLocal;
+            eqResyncTimer.restart();
+            return;
+        }
+
+        try {
+            var parsed = JSON.parse(outStr);
+            root.eqData = parsed;
+            if (!parsed.pending) {
+                root.savedEqData = Object.assign({}, parsed);
+            }
+        } catch(e) {}
+    }
+
+    // equalizer.sh keeps its state in this file; watch it instead of polling the script.
+    FileView {
+        id: eqStateFile
+        path: Caching.runDir + "/music/eq_state.json"
+        watchChanges: true
+        printErrors: false
+        onFileChanged: reload()
+        onLoaded: root.applyEqState(text())
+        // The script creates the file with defaults on first use.
+        onLoadFailed: {
+            if (!root.eqInitDone && !eqInitProc.running) {
+                root.eqInitDone = true;
+                eqInitProc.running = true;
+            }
         }
     }
 
-    Process {
-        id: eqProc
-        running: true
-        command: ["bash", "-c", Caching.qsDir + "/media/equalizer.sh get"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                if (this.text) {
-                    if (Date.now() - root.lastEqUpdate < 2000) return;
+    Timer {
+        id: eqResyncTimer
+        repeat: false
+        onTriggered: eqStateFile.reload()
+    }
 
-                    var outStr = this.text.trim();
-                    if (outStr.length > 0) {
-                        try {
-                            var parsed = JSON.parse(outStr);
-                            root.eqData = parsed;
-                            if (!parsed.pending) {
-                                root.savedEqData = Object.assign({}, parsed);
-                            }
-                        } catch(e) {}
-                    }
-                }
-            }
-        }
+    Process {
+        id: eqInitProc
+        running: false
+        command: ["bash", "-c", Caching.qsDir + "/media/equalizer.sh get"]
+        onExited: eqStateFile.reload()
     }
 
     LyricsPicker {
@@ -973,45 +1011,26 @@ Item {
                                 }
                             }
 
-                            Repeater {
-                                model: root.barCount
-                                delegate: Item {
-                                    anchors.centerIn: parent
-                                    width: 0
-                                    height: 0
-                                    rotation: index * (360 / root.barCount)
-
-                                    property real level: {
-                                        if (!root.barLevels || root.barLevels.length === 0) return 0.0;
-                                        return root.barLevels[index] || 0.0;
-                                    }
-
-                                    Rectangle {
-                                        anchors.bottom: parent.top
-                                        anchors.bottomMargin: coverHost.artRadius
-                                        anchors.horizontalCenter: parent.horizontalCenter
-                                        width: coverHost.barWidth
-                                        height: Math.max(root.s(2), parent.level * coverHost.maxBarHeight * 1.4)
-                                        topLeftRadius: width / 2
-                                        topRightRadius: width / 2
-                                        bottomLeftRadius: 0
-                                        bottomRightRadius: 0
-                                        antialiasing: true
-                                        color: {
-                                            let mixRatio = (index / root.barCount) * 0.4 + (parent.level * 0.6);
-                                            let baseColor = ThemeBackend.mauve || "#cba6f7";
-                                            return Qt.tint(baseColor, Qt.rgba(1, 1, 1, mixRatio * 0.45));
-                                        }
-                                        opacity: 0.40 + (parent.level * 0.60)
-
-                                        Behavior on height {
-                                            NumberAnimation {
-                                                duration: 70
-                                                easing.type: Easing.OutCubic
-                                            }
-                                        }
-                                    }
-                                }
+                            Visualizer {
+                                anchors.centerIn: parent
+                                width: (coverHost.artRadius + coverHost.maxBarHeight * 1.4) * 2 + 2
+                                height: width
+                                active: root.cavaRegistered
+                                count: root.barCount
+                                color: ThemeBackend.mauve || "#cba6f7"
+                                mirrored: false
+                                curve: 1.15
+                                threshold: 0.0
+                                gamma: 1.08
+                                rise: 0.55
+                                fall: 0.55
+                                ringRadius: coverHost.artRadius
+                                ringBarWidth: coverHost.barWidth
+                                maxLength: coverHost.maxBarHeight * 1.4
+                                minLength: root.s(2)
+                                opacityBase: 0.4
+                                opacityRange: 0.6
+                                tintStrength: 0.45
                             }
 
                             Item {
@@ -1216,6 +1235,7 @@ Item {
                         spacing: root.s(12)
 
                         ColumnLayout {
+                            z: 1
                             spacing: root.s(6)
                             opacity: root.introText
                             transform: Translate { x: root.s(25) * (1 - root.introText) }
@@ -1422,7 +1442,7 @@ Item {
                                 Layout.preferredHeight: root.s(32)
                                 cornerRadius: ThemeBackend.borderRadius
                                 buttonIcon: "󰒮"
-                                iconFontSize: root.s(21)
+                                iconFontSize: root.s(11)
                                 accentColor: ThemeBackend.surface0 || "#313244"
                                 textColor: isHoveredOrHighlighted ? (ThemeBackend.text || "#cdd6f4") : (ThemeBackend.subtext0 || "#a6adc8")
                                 Layout.alignment: Qt.AlignVCenter
@@ -1431,12 +1451,11 @@ Item {
 
                             IconButton {
                                 id: playPauseBtn
-                                iconOffsetY: -2
                                 Layout.preferredWidth: root.s(43)
                                 Layout.preferredHeight: root.s(43)
                                 cornerRadius: ThemeBackend.borderRadius
                                 buttonIcon: (root.targetPlayer && root.targetPlayer.isPlaying) ? "󰏤" : "󰐊"
-                                iconFontSize: root.s(32)
+                                iconFontSize: root.s(15)
                                 accentColor: ThemeBackend.surface0 || "#313244"
                                 textColor: isHoveredOrHighlighted ? (ThemeBackend.mauve || "#cba6f7") : (ThemeBackend.text || "#cdd6f4")
                                 Layout.alignment: Qt.AlignVCenter
@@ -1449,7 +1468,7 @@ Item {
                                 Layout.preferredHeight: root.s(32)
                                 cornerRadius: ThemeBackend.borderRadius
                                 buttonIcon: "󰒭"
-                                iconFontSize: root.s(21)
+                                iconFontSize: root.s(11)
                                 accentColor: ThemeBackend.surface0 || "#313244"
                                 textColor: isHoveredOrHighlighted ? (ThemeBackend.text || "#cdd6f4") : (ThemeBackend.subtext0 || "#a6adc8")
                                 Layout.alignment: Qt.AlignVCenter
@@ -1900,115 +1919,47 @@ Item {
                                         }
                                     }
 
-                                    Canvas {
+                                    ShaderEffect {
                                         id: lightningCanvas
                                         anchors.fill: parent
                                         opacity: 1.0 - root.eqLightningFade
                                         z: 0
 
-                                        renderTarget: Canvas.FramebufferObject
-
-                                        layer.enabled: true
-                                        layer.effect: MultiEffect {
-                                            shadowEnabled: true
-                                            shadowColor: root.eqAccentColor
-                                            shadowBlur: 1.0
-                                            shadowOpacity: 0.8
-                                            shadowVerticalOffset: 0
-                                            shadowHorizontalOffset: 0
+                                        property real animTime: 0.0
+                                        NumberAnimation on animTime {
+                                            running: root.active
+                                            loops: Animation.Infinite
+                                            from: 0; to: 1000
+                                            duration: 1000000
                                         }
 
-                                        Timer {
-                                            interval: 16
-                                            running: root.active && root.eqLightningFade < 1.0 && root.eqLightningProgress > 0.0
-                                            repeat: true
-                                            onTriggered: lightningCanvas.requestPaint()
-                                        }
+                                        property vector2d itemSize: Qt.vector2d(width, height)
+                                        property real time: animTime
+                                        property real progress: root.eqLightningProgress
+                                        property real fade: root.eqLightningFade
+                                        property real scale: root.s(1.0)
+                                        property color accentColor: root.eqAccentColor
 
-                                        onPaint: {
-                                            if (!root.active) return;
-                                            var ctx = getContext("2d");
-                                            ctx.clearRect(0, 0, width, height);
+                                        property vector4d bands0: Qt.vector4d(
+                                            root.eqData.b1 !== undefined ? Number(root.eqData.b1) : 0,
+                                            root.eqData.b2 !== undefined ? Number(root.eqData.b2) : 0,
+                                            root.eqData.b3 !== undefined ? Number(root.eqData.b3) : 0,
+                                            root.eqData.b4 !== undefined ? Number(root.eqData.b4) : 0
+                                        )
+                                        property vector4d bands1: Qt.vector4d(
+                                            root.eqData.b5 !== undefined ? Number(root.eqData.b5) : 0,
+                                            root.eqData.b6 !== undefined ? Number(root.eqData.b6) : 0,
+                                            root.eqData.b7 !== undefined ? Number(root.eqData.b7) : 0,
+                                            root.eqData.b8 !== undefined ? Number(root.eqData.b8) : 0
+                                        )
+                                        property vector4d bands2: Qt.vector4d(
+                                            root.eqData.b9 !== undefined ? Number(root.eqData.b9) : 0,
+                                            root.eqData.b10 !== undefined ? Number(root.eqData.b10) : 0,
+                                            root.s(10),
+                                            root.s(30)
+                                        )
 
-                                            if (root.eqLightningProgress <= 0.0 || root.eqLightningFade >= 1.0) return;
-
-                                            var time = Date.now() / 1000;
-                                            var maxIdx = root.eqLightningProgress;
-
-                                            ctx.lineJoin = "round";
-                                            ctx.lineCap = "round";
-
-                                            var pts = [];
-                                            for (var i = 1; i <= 10; i++) {
-                                                var val = root.eqData["b" + i] !== undefined ? Number(root.eqData["b" + i]) : 0;
-                                                var norm = 1.0 - ((val + 12) / 24);
-                                                
-                                                var py = root.s(10) + norm * (height - root.s(30));
-                                                var px = (i - 0.5) * (width / 10);
-                                                pts.push({ x: px, y: py });
-                                            }
-
-                                            for (var s = 0; s < 4; s++) {
-                                                ctx.beginPath();
-                                                ctx.moveTo(pts[0].x, pts[0].y);
-
-                                                for (var i = 0; i < pts.length - 1; i++) {
-                                                    if (i > maxIdx) break;
-
-                                                    var p1 = pts[i];
-                                                    var p2 = pts[i+1];
-
-                                                    var fraction = 1.0;
-                                                    if (maxIdx < i + 1) {
-                                                        fraction = maxIdx - i;
-                                                    }
-
-                                                    var steps = s === 3 ? 6 : 8;
-                                                    for (var j = 1; j <= steps; j++) {
-                                                        var t = j / steps;
-                                                        if (t > fraction) t = fraction;
-
-                                                        var cx = p1.x + (p2.x - p1.x) * t;
-                                                        var cy = p1.y + (p2.y - p1.y) * t;
-
-                                                        var envelope = Math.sin(t * Math.PI);
-
-                                                        var noiseAmpX = s === 3 ? 1.0 : (4 - s) * 4;
-                                                        var noiseAmpY = s === 3 ? 1.0 : (4 - s) * 5;
-                                                        
-                                                        var sepWaveX = (s < 2) ? Math.sin(time * 3 + i + j + s) * root.s(9) * envelope : 0;
-                                                        var sepWaveY = (s < 2) ? Math.cos(time * 2.5 + i - j - s) * root.s(13.5) * envelope : 0;
-
-                                                        var noiseX = Math.sin(time * (10+s) + i + j) * Math.cos(time * 8 - i + j) * noiseAmpX * envelope * (1 - root.eqLightningFade);
-                                                        var noiseY = Math.cos(time * (9-s) + i - j) * Math.sin(time * 7 + i - j) * noiseAmpY * envelope * (1 - root.eqLightningFade);
-
-                                                        ctx.lineTo(cx + sepWaveX + noiseX, cy + sepWaveY + noiseY);
-
-                                                        if (t === fraction) break;
-                                                    }
-                                                }
-
-                                                if (s === 0) {
-                                                    ctx.lineWidth = root.s(18);
-                                                    ctx.strokeStyle = root.eqAccentColor;
-                                                    ctx.globalAlpha = 0.35;
-                                                } else if (s === 1) {
-                                                    ctx.lineWidth = root.s(9);
-                                                    ctx.strokeStyle = Qt.lighter(root.eqAccentColor, 1.25);
-                                                    ctx.globalAlpha = 0.65;
-                                                } else if (s === 2) {
-                                                    ctx.lineWidth = root.s(4.5);
-                                                    ctx.strokeStyle = Qt.lighter(root.eqAccentColor, 1.5);
-                                                    ctx.globalAlpha = 0.9;
-                                                } else if (s === 3) {
-                                                    ctx.lineWidth = root.s(2.2);
-                                                    ctx.strokeStyle = "#ffffff";
-                                                    ctx.globalAlpha = 1.0;
-                                                }
-
-                                                ctx.stroke();
-                                            }
-                                        }
+                                        fragmentShader: "file://" + Caching.serpantinumDir + "/assets/shaders/vfx/eq_lightning.frag.qsb"
                                     }
                                 }
 

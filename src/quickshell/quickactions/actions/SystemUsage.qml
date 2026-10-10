@@ -89,10 +89,6 @@ Item {
         }
     }
 
-    property real globalWavePhase: 0.0
-    NumberAnimation on globalWavePhase {
-        from: 0; to: Math.PI * 2; duration: 1800; loops: Animation.Infinite; running: root.widgetVisible
-    }
 
     property real rawCpu: isNaN(SysData.cpu) ? 0.0 : SysData.cpu / 100.0
     property real cpuUsage: rawCpu
@@ -149,7 +145,6 @@ Item {
             icon: "\uF2DB"
             title: I18n.t("quickactions.systemusage.cpu")
             valueText: Math.round(root.cpuUsage * 100) + "%"
-            wavePhase: root.globalWavePhase
             isLive: root.widgetVisible
             scaleFunc: root.s
         }
@@ -165,7 +160,6 @@ Item {
             icon: "\uF538"
             title: I18n.t("quickactions.systemusage.ram")
             valueText: root.ramUsedGb.toFixed(1) + "G"
-            wavePhase: root.globalWavePhase
             isLive: root.widgetVisible
             scaleFunc: root.s
         }
@@ -181,7 +175,6 @@ Item {
             icon: "\uF2C9"
             title: I18n.t("quickactions.systemusage.temp")
             valueText: Math.round(root.tempC) + "°"
-            wavePhase: root.globalWavePhase
             isLive: root.widgetVisible
             scaleFunc: root.s
         }
@@ -199,7 +192,6 @@ Item {
             midText: ""
             subText: root.diskUsedText
             valueText: Math.round(root.diskUsagePercent * 100) + "%"
-            wavePhase: root.globalWavePhase
             isLive: root.widgetVisible
             scaleFunc: root.s
         }
@@ -215,7 +207,6 @@ Item {
             icon: "󰤨"
             title: I18n.t("quickactions.systemusage.net")
             valueText: ""
-            wavePhase: root.globalWavePhase
             isLive: root.widgetVisible
             scaleFunc: root.s
 

@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Window
-import QtCore
 import Qt.labs.folderlistmodel
 import QtMultimedia
 import QtQuick.Effects
@@ -12,6 +11,7 @@ import "../reusables"
 
 Item {
     id: window
+    visible: false
     width: Screen.width
     focus: true
 
@@ -102,7 +102,37 @@ Item {
     }
 
     property bool isStartup: srcModel.status === FolderListModel.Loading && localProxyModel.count === 0 && videoProxyModel.count === 0
-    property bool isReady: visible
+    property bool isExiting: false
+    property bool isReady: visible && !isExiting
+
+    property var exitCallback: null
+
+    function startExit(onFinished) {
+        if (isExiting) return;
+        isExiting = true;
+        exitCallback = onFinished;
+        exitAnim.restart();
+    }
+
+    SequentialAnimation {
+        id: exitAnim
+        running: false
+        ParallelAnimation {
+            NumberAnimation { target: filterBarBackground; property: "anchors.topMargin"; to: window.s(-75); duration: 180; easing.type: Easing.InCubic }
+            NumberAnimation { target: filterBarBackground; property: "opacity"; to: 0.0; duration: 160; easing.type: Easing.InQuad }
+            NumberAnimation { target: view; property: "opacity"; to: 0.0; duration: 200; easing.type: Easing.InQuad }
+            NumberAnimation { target: view; property: "anchors.margins"; to: window.s(45); duration: 200; easing.type: Easing.InCubic }
+        }
+        ScriptAction {
+            script: {
+                if (window.exitCallback) {
+                    let cb = window.exitCallback;
+                    window.exitCallback = null;
+                    cb();
+                }
+            }
+        }
+    }
 
     property bool _rawSearchLoading: searchFolderModel.status === FolderListModel.Loading
     property bool isSearchActive: false
@@ -152,18 +182,16 @@ Item {
         }
     }
 
-    Process {
+    FileView {
         id: wallpaperHistoryReader
-        running: false
-        command: ["cat", Caching.getCacheDir("wallpaper") + "/history.txt"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                let lines = this.text.trim().split("\n").map(s => s.trim()).filter(s => s.length > 0);
-                window.historyList = lines;
-                if (window.currentFilter === "History") {
-                    if (!window.reorderHistory()) {
-                        window.applyFilters(false);
-                    }
+        path: Caching.getCacheDir("wallpaper") + "/history.txt"
+        onLoaded: {
+            let raw = typeof text === "function" ? text() : text;
+            let lines = (raw || "").trim().split("\n").map(s => s.trim()).filter(s => s.length > 0);
+            window.historyList = lines;
+            if (window.currentFilter === "History") {
+                if (!window.reorderHistory()) {
+                    window.applyFilters(false);
                 }
             }
         }
@@ -425,8 +453,7 @@ Item {
             window.reorderHistory();
         }
 
-        wallpaperHistoryReader.running = false;
-        wallpaperHistoryReader.running = true;
+        wallpaperHistoryReader.reload();
 
         if (window.currentFilter === "Search" && window.hasSearched) {
             let alreadyExists = window.isDownloaded(safeFileName);
@@ -498,14 +525,24 @@ Item {
         }
     }
 
-    Settings {
+    QtObject {
         id: searchState
-        location: Caching.getCacheDir("wallpaper") + "/settings.conf"
-        category: "QS_WallpaperPicker"
         property string query: ""
         property bool searched: false
         property string lastName: ""
         property int sessionId: 0
+
+        readonly property string filePath: Caching.getCacheDir("wallpaper") + "/search_state.json"
+
+        function save() {
+            let data = JSON.stringify({
+                query: searchState.query,
+                searched: searchState.searched,
+                lastName: searchState.lastName,
+                sessionId: searchState.sessionId
+            });
+            Quickshell.execDetached(["sh", "-c", "printf '%s\\n' \"$1\" > \"$2\"", "_", data, filePath]);
+        }
     }
 
     onIsSearchPausedChanged: {
@@ -551,8 +588,7 @@ Item {
         window.trackerResolved = false;
         wallpaperMonitorTracker.running = false;
         wallpaperMonitorTracker.running = true;
-        wallpaperHistoryReader.running = false;
-        wallpaperHistoryReader.running = true;
+        wallpaperHistoryReader.reload();
         window.isFilterAnimating = true;
         filterAnimationTimer.restart();
 
@@ -571,6 +607,8 @@ Item {
 
     onVisibleChanged: {
         if (!visible) {
+            window.isExiting = false;
+            exitAnim.stop();
             window.initialFocusSet = false;
             window.allowAddAnimation = false;
             window.searchIndexRestored = false;
@@ -583,12 +621,14 @@ Item {
                 searchState.searched = window.hasSearched;
                 searchState.lastName = window.lastSearchName;
                 searchState.sessionId = window.searchSessionId;
+                searchState.save();
                 Quickshell.execDetached([
                     window.scriptDir + "/search_control.sh",
                     "pause",
                     Caching.getRunDir("wallpaper")
                 ]);
             } else {
+                searchState.save();
                 Quickshell.execDetached([
                     window.scriptDir + "/search_control.sh",
                     "stop",
@@ -596,6 +636,8 @@ Item {
                 ]);
             }
         } else {
+            window.isExiting = false;
+            exitAnim.stop();
             window.loadMonitors();
             window.refreshForDisplay();
             focusTimer.restart();
@@ -676,6 +718,7 @@ Item {
         window.visibleItemCount = 0;
         searchState.searched = true;
         searchState.query = searchInput.text.trim();
+        searchState.save();
         window.isSearchPaused = false;
         window.searchQuery = searchInput.text.trim();
         window._lastFilter = window.currentFilter;
@@ -849,6 +892,37 @@ Item {
         interval: 150
         repeat: false
         onTriggered: window.triggerIndexer()
+    }
+
+    Process {
+        id: searchStateReader
+        running: false
+        command: ["sh", "-c", "[ -f \"$1\" ] && cat \"$1\"", "_", Caching.getCacheDir("wallpaper") + "/search_state.json"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                let trimmed = this.text ? this.text.trim() : "";
+                if (trimmed.length > 0) {
+                    try {
+                        let data = JSON.parse(trimmed);
+                        if (data && typeof data === "object") {
+                            searchState.query = data.query || "";
+                            searchState.searched = !!data.searched;
+                            searchState.lastName = data.lastName || "";
+                            searchState.sessionId = data.sessionId || 0;
+
+                            if (searchState.searched) {
+                                searchInput.text = searchState.query;
+                                window.searchQuery = searchState.query;
+                                window.hasSearched = true;
+                                window.lastSearchName = searchState.lastName;
+                                window.searchSessionId = searchState.sessionId;
+                                window.isSearchPaused = true;
+                            }
+                        }
+                    } catch(e) {}
+                }
+            }
+        }
     }
 
     Process {
@@ -1049,8 +1123,7 @@ Item {
         window.currentFilter = newFilter;
 
         if (newFilter === "History") {
-            wallpaperHistoryReader.running = false;
-            wallpaperHistoryReader.running = true;
+            wallpaperHistoryReader.reload();
         }
 
         Qt.callLater(() => {
@@ -2060,6 +2133,7 @@ Item {
                     onTextEdited: function(newText) {
                         window.hasSearched = false;
                         searchState.searched = false;
+                        searchState.save();
                     }
 
                     onAccepted: function(finalText) {
@@ -2111,15 +2185,7 @@ Item {
     Component.onCompleted: {
         Quickshell.execDetached(["bash", "-c", "mkdir -p '" + decodeURIComponent(window.searchDir.replace("file://", "")) + "'"]);
 
-        if (searchState.searched) {
-            searchInput.text = searchState.query;
-            window.searchQuery = searchState.query;
-            window.hasSearched = true;
-            window.lastSearchName = searchState.lastName;
-            window.searchSessionId = searchState.sessionId;
-            window.isSearchPaused = true;
-        }
-
+        searchStateReader.running = true;
         indexDiskReader.running = true;
         window.syncFromSrcModel();
         window.triggerIndexer();

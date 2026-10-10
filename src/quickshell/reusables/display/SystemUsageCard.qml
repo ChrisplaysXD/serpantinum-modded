@@ -16,11 +16,49 @@ Item {
     property string subText: ""
     property alias bottomLeftText: root.subText
 
-    property real wavePhase: 0.0
-    property real waveIntensity: 0.0
+    property real internalWavePhase: 0.8
+    property real wavePhase: internalWavePhase
     property bool isLive: true
     property bool hasShadow: false
     property color shadowColor: Qt.rgba(0, 0, 0, 0.22)
+
+    Timer {
+        id: waveSettleTimer
+        interval: 1600
+        repeat: false
+        onTriggered: waveAnimation.stop()
+    }
+
+    NumberAnimation {
+        id: waveAnimation
+        target: root
+        property: "internalWavePhase"
+        from: 0
+        to: Math.PI * 2
+        loops: Animation.Infinite
+        duration: 1800
+    }
+
+    onValueChanged: {
+        if (root.visible && root.isLive && root.fillRatio > 0.001 && root.fillRatio < 0.999) {
+            if (!waveAnimation.running) waveAnimation.start();
+            waveSettleTimer.restart();
+        }
+    }
+
+    onVisibleChanged: {
+        if (!visible) {
+            waveAnimation.stop();
+            waveSettleTimer.stop();
+        }
+    }
+
+    onIsLiveChanged: {
+        if (!isLive) {
+            waveAnimation.stop();
+            waveSettleTimer.stop();
+        }
+    }
 
     property bool compact: false
 
@@ -58,137 +96,12 @@ Item {
 
     default property alias childItems: customContentBox.data
 
-    readonly property real targetRatio: Math.max(0.0, Math.min(1.0, root.value))
-    property real fillRatio: targetRatio
+    readonly property real fillRatio: Math.max(0.0, Math.min(1.0, root.value))
     readonly property real fillY: height * (1.0 - root.fillRatio)
-    readonly property real waveAmp: (root.fillRatio < 0.99 && root.fillRatio > 0.01) ? root.waveAmpMax * Math.sin(root.fillRatio * Math.PI) * root.waveIntensity : 0
+    readonly property real waveAmp: (root.fillRatio < 0.99 && root.fillRatio > 0.01) ? root.waveAmpMax * Math.sin(root.fillRatio * Math.PI) : 0
     readonly property real waveCenterOffset: root.waveAmp > 0 ? 0.375 * root.waveAmp * (Math.sin(root.wavePhase) - Math.cos(root.wavePhase)) : 0
 
-    onTargetRatioChanged: {
-        if (!root.isLive) {
-            growAnimation.stop();
-            fallAnimation.stop();
-            root.fillRatio = targetRatio;
-            root.waveIntensity = 0.0;
-            fluidCanvas.requestPaint();
-            return;
-        }
 
-        if (targetRatio > root.fillRatio) {
-            fallAnimation.stop();
-            growAnimation.stop();
-            growAnimation.fromRatio = root.fillRatio;
-            growAnimation.toRatio = targetRatio;
-            growAnimation.restart();
-        } else if (targetRatio < root.fillRatio) {
-            growAnimation.stop();
-            fallAnimation.stop();
-            fallAnimation.fromRatio = root.fillRatio;
-            fallAnimation.toRatio = targetRatio;
-            fallAnimation.restart();
-        }
-    }
-
-    onFillRatioChanged: {
-        if (root.isLive) {
-            fluidCanvas.requestPaint();
-        }
-    }
-
-    onWavePhaseChanged: {
-        if (root.isLive && root.waveAmp > 0) {
-            fluidCanvas.requestPaint();
-        }
-    }
-
-    onWaveIntensityChanged: {
-        if (root.isLive) {
-            fluidCanvas.requestPaint();
-        }
-    }
-
-    onColorFillChanged: {
-        if (root.isLive) {
-            fluidCanvas.requestPaint();
-        }
-    }
-
-    onWidthChanged: fluidCanvas.requestPaint()
-    onHeightChanged: fluidCanvas.requestPaint()
-
-    ParallelAnimation {
-        id: growAnimation
-        property real fromRatio: 0.0
-        property real toRatio: 0.0
-
-        NumberAnimation {
-            target: root
-            property: "fillRatio"
-            from: growAnimation.fromRatio
-            to: growAnimation.toRatio
-            duration: 750
-            easing.type: Easing.OutCubic
-        }
-
-        SequentialAnimation {
-            NumberAnimation {
-                target: root
-                property: "waveIntensity"
-                from: 0.0
-                to: 1.0
-                duration: 180
-                easing.type: Easing.OutQuad
-            }
-            NumberAnimation {
-                target: root
-                property: "waveIntensity"
-                from: 1.0
-                to: 0.0
-                duration: 570
-                easing.type: Easing.InOutQuad
-            }
-        }
-
-        NumberAnimation {
-            target: root
-            property: "wavePhase"
-            from: root.wavePhase
-            to: root.wavePhase + (Math.PI * 3)
-            duration: 750
-            easing.type: Easing.Linear
-        }
-
-        onFinished: {
-            root.waveIntensity = 0.0;
-            fluidCanvas.requestPaint();
-        }
-    }
-
-    ParallelAnimation {
-        id: fallAnimation
-        property real fromRatio: 0.0
-        property real toRatio: 0.0
-
-        NumberAnimation {
-            target: root
-            property: "fillRatio"
-            from: fallAnimation.fromRatio
-            to: fallAnimation.toRatio
-            duration: 450
-            easing.type: Easing.OutCubic
-        }
-
-        PropertyAction {
-            target: root
-            property: "waveIntensity"
-            value: 0.0
-        }
-
-        onFinished: {
-            root.waveIntensity = 0.0;
-            fluidCanvas.requestPaint();
-        }
-    }
 
     Rectangle {
         anchors.fill: parent
@@ -207,57 +120,18 @@ Item {
         border.color: root.borderColor
     }
 
-    Canvas {
-        id: fluidCanvas
+    FluidWave {
+        id: fluidWave
         anchors.fill: parent
-        renderTarget: Canvas.FramebufferObject
-        renderStrategy: Canvas.Immediate
-
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.clearRect(0, 0, width, height);
-            if (root.fillRatio <= 0) return;
-
-            ctx.save();
-            var r = root.cardRadius;
-            ctx.beginPath();
-            ctx.moveTo(r, 0);
-            ctx.lineTo(width - r, 0);
-            ctx.quadraticCurveTo(width, 0, width, r);
-            ctx.lineTo(width, height - r);
-            ctx.quadraticCurveTo(width, height, width - r, height);
-            ctx.lineTo(r, height);
-            ctx.quadraticCurveTo(0, height, 0, height - r);
-            ctx.lineTo(0, r);
-            ctx.quadraticCurveTo(0, 0, r, 0);
-            ctx.closePath();
-            ctx.clip();
-
-            ctx.beginPath();
-            ctx.moveTo(0, root.fillY);
-            if (root.waveAmp > 0) {
-                var sinPhase = Math.sin(root.wavePhase);
-                var cosPhase = Math.cos(root.wavePhase + Math.PI);
-                var cp1y = root.fillY + sinPhase * root.waveAmp;
-                var cp2y = root.fillY + cosPhase * root.waveAmp;
-                ctx.bezierCurveTo(width * 0.33, cp2y, width * 0.66, cp1y, width, root.fillY);
-                ctx.lineTo(width, height);
-                ctx.lineTo(0, height);
-            } else {
-                ctx.lineTo(width, root.fillY);
-                ctx.lineTo(width, height);
-                ctx.lineTo(0, height);
-            }
-            ctx.closePath();
-
-            var grad = ctx.createLinearGradient(0, 0, 0, height);
-            grad.addColorStop(0, Qt.lighter(root.colorFill, 1.18).toString());
-            grad.addColorStop(1, root.colorFill.toString());
-            ctx.fillStyle = grad;
-            ctx.globalAlpha = 0.94;
-            ctx.fill();
-            ctx.restore();
-        }
+        radius: root.cardRadius
+        fillLevel: root.fillRatio
+        waveAmp: root.waveAmp
+        phase: root.wavePhase
+        vertical: 1.0
+        color1: Qt.lighter(root.colorFill, 1.18)
+        color2: root.colorFill
+        params: Qt.vector4d(0.94, 0.0, 0.0, 0.0)
+        visible: root.fillRatio > 0.001
     }
 
     Item {
@@ -332,13 +206,13 @@ Item {
         anchors.right: parent.right
         height: Math.min(parent.height, Math.max(0, (parent.height * root.fillRatio) - root.waveCenterOffset))
         clip: true
-        visible: root.fillRatio > 0
+        visible: root.value > 0
 
         Item {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            height: root.height
+            height: root.height - (root.contentMargins * 2)
             anchors.margins: root.contentMargins
 
             IconButton {

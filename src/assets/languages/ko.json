@@ -386,6 +386,149 @@
           "title": "스타일",
           "desc": "시계 및 날짜 표시의 시각적 스타일을 선택합니다"
         }
+      },
+      "vis": {
+        "bars": {
+          "title": "막대 개수",
+          "desc": "표시할 주파수 막대의 개수"
+        },
+        "alignment": {
+          "title": "정렬",
+          "desc": "시각화 도구를 중앙, 상단 또는 하단에 정렬"
+        },
+        "align": {
+          "center": "중앙",
+          "top": "상단",
+          "bottom": "하단",
+          "left": "왼쪽",
+          "right": "오른쪽"
+        },
+        "continuous": {
+          "title": "연속 파동",
+          "desc": "개별 막대 대신 부드러운 파동으로 렌더링"
+        }
+      },
+      "sysmon": {
+        "style": {
+          "title": "원 스타일",
+          "desc": "진행률 링의 시각적 모양",
+          "wave": "웨이브",
+          "circle": "원형"
+        },
+        "cpu": {
+          "title": "CPU 사용량",
+          "desc": "프로세서 사용률 링 표시"
+        },
+        "ram": {
+          "title": "메모리 사용량",
+          "desc": "메모리(RAM) 사용률 링 표시"
+        },
+        "temp": {
+          "title": "온도",
+          "desc": "시스템 온도 링 표시"
+        },
+        "disk": {
+          "title": "디스크 사용량",
+          "desc": "스토리지 디스크 사용률 링 표시"
+        }
+      },
+      "bat": {
+        "show_percent": {
+          "title": "백분율 표시",
+          "desc": "배터리 충전 백분율을 숫자로 표시합니다"
+        },
+        "show_icon": {
+          "title": "아이콘 표시",
+          "desc": "배터리 아이콘 또는 그래픽 표시기를 표시합니다"
+        },
+        "style": {
+          "title": "배터리 스타일",
+          "desc": "배터리 표시기의 시각적 모양을 선택합니다",
+          "name": {
+            "classic": "클래식",
+            "minimal": "미니멀",
+            "text": "텍스트"
+          },
+          "classic": "그라디언트 웨이브 알약 스타일",
+          "minimal": "캡이 있는 iOS/Android 캡슐 스타일",
+          "text": "배경 없는 깔끔한 텍스트 및 아이콘"
+        }
+      },
+      "wifi": {
+        "show_icon": {
+          "title": "아이콘 표시",
+          "desc": "네트워크 아이콘 또는 신호 표시기를 표시합니다"
+        },
+        "show_name": {
+          "title": "이름 표시",
+          "desc": "네트워크 SSID 또는 연결 상태 텍스트를 표시합니다"
+        },
+        "style": {
+          "title": "스타일",
+          "desc": "네트워크 모듈의 시각적 모양을 선택합니다",
+          "name": {
+            "button": "버튼",
+            "text": "텍스트"
+          },
+          "button": "배경이 있는 인터랙티브 버튼 캡슐",
+          "text": "배경 없는 깔끔한 텍스트 및 아이콘"
+        }
+      },
+      "bt": {
+        "show_icon": {
+          "title": "아이콘 표시",
+          "desc": "블루투스 상태 아이콘을 표시합니다"
+        },
+        "show_name": {
+          "title": "이름 표시",
+          "desc": "연결된 블루투스 기기 이름을 표시합니다"
+        },
+        "style": {
+          "title": "스타일",
+          "desc": "블루투스 모듈의 시각적 모양을 선택합니다",
+          "name": {
+            "button": "버튼",
+            "text": "텍스트"
+          },
+          "button": "배경이 있는 인터랙티브 버튼 캡슐",
+          "text": "배경 없는 깔끔한 텍스트 및 아이콘"
+        }
+      },
+      "vol": {
+        "show_icon": {
+          "title": "아이콘 표시",
+          "desc": "볼륨 스피커 아이콘을 표시합니다"
+        },
+        "show_percent": {
+          "title": "백분율 표시",
+          "desc": "볼륨 백분율을 숫자로 표시합니다"
+        },
+        "style": {
+          "title": "스타일",
+          "desc": "볼륨 모듈의 시각적 모양을 선택합니다",
+          "name": {
+            "button": "버튼",
+            "text": "텍스트"
+          },
+          "button": "배경이 있는 인터랙티브 버튼 캡슐",
+          "text": "배경 없는 깔끔한 텍스트 및 아이콘"
+        }
+      },
+      "kb": {
+        "show_icon": {
+          "title": "아이콘 표시",
+          "desc": "키보드 배열 아이콘을 표시합니다"
+        },
+        "style": {
+          "title": "스타일",
+          "desc": "키보드 모듈의 시각적 모양을 선택합니다",
+          "name": {
+            "button": "버튼",
+            "text": "텍스트"
+          },
+          "button": "배경이 있는 인터랙티브 버튼 캡슐",
+          "text": "배경 없는 깔끔한 텍스트 및 아이콘"
+        }
       }
     },
     "theme": {
@@ -697,7 +840,9 @@
     "placeholder": "명령을 실행하려면 > 로 시작하세요...",
     "tab_applications": "애플리케이션",
     "tab_files": "파일",
-    "placeholder_files": "파일 검색 또는 경로 입력..."
+    "placeholder_files": "파일 검색 또는 경로 입력...",
+    "tab_emojis": "이모지",
+    "placeholder_emojis": "이모지 검색 또는 키워드 입력..."
   },
   "calendar": {
     "loading": "불러오는 중...",
@@ -859,6 +1004,46 @@
         "pomo_skipped_focus_body": "집중 세션을 건너뛰고 휴식으로 넘어갑니다.",
         "pomo_skipped_break_body": "휴식을 건너뛰고 다시 집중으로 넘어갑니다."
       }
+    },
+    "draw": {
+      "notification": {
+        "app_name": "DrawAction",
+        "saved_title": "Drawing saved",
+        "copied_title": "Drawing copied",
+        "copied_body": "Drawing copied to clipboard",
+        "failed_title": "Export failed",
+        "failed_body": "Could not save drawing"
+      }
+    },
+    "notes": {
+      "title": "메모",
+      "add_note": "메모 추가",
+      "new_note_title": "새 메모",
+      "edit_note": "편집",
+      "preview_note": "마크다운 미리보기",
+      "delete_selected": "선택 삭제 ({count})",
+      "no_notes": "메모가 없습니다. «메모 추가»를 클릭하세요.",
+      "search_placeholder": "메모 검색...",
+      "title_placeholder": "메모 제목...",
+      "content_placeholder": "마크다운으로 작성하세요...",
+      "back": "뒤로",
+      "save": "완료",
+      "cancel": "취소",
+      "delete": "삭제",
+      "select_all": "모두 선택",
+      "deselect_all": "선택 해제",
+      "selected_count": "{count}개 선택됨",
+      "pinned": "고정됨",
+      "recent": "최근",
+      "pin": "고정",
+      "unpin": "고정 해제"
+    },
+    "tabs": {
+      "draw": "그리기",
+      "system": "시스템",
+      "timer": "타이머",
+      "notes": "메모",
+      "tab": "탭"
     }
   },
   "screenshot": {

@@ -25,7 +25,7 @@ Item {
                 "timeout": 120,
                 "enabled": true,
                 "respectInhibitors": true,
-                "mprisInhibit": false,
+                "mprisInhibit": true,
                 "warningTimeout": 0,
                 "warningCommand": "",
                 "beforeCommand": "",
@@ -38,7 +38,7 @@ Item {
                 "timeout": 300,
                 "enabled": true,
                 "respectInhibitors": true,
-                "mprisInhibit": false,
+                "mprisInhibit": true,
                 "warningTimeout": 10,
                 "warningCommand": "",
                 "beforeCommand": "",
@@ -51,7 +51,7 @@ Item {
                 "timeout": 360,
                 "enabled": true,
                 "respectInhibitors": true,
-                "mprisInhibit": false,
+                "mprisInhibit": true,
                 "warningTimeout": 0,
                 "warningCommand": "",
                 "beforeCommand": "",
@@ -64,7 +64,7 @@ Item {
                 "timeout": 600,
                 "enabled": true,
                 "respectInhibitors": true,
-                "mprisInhibit": false,
+                "mprisInhibit": true,
                 "warningTimeout": 30,
                 "warningCommand": "",
                 "isCustom": false
@@ -108,6 +108,29 @@ Item {
         } catch (e) {
             return false;
         }
+    }
+
+    // Set while an app asks org.freedesktop.ScreenSaver not to lock (games, Steam, Wine)
+    property bool isAppInhibited: false
+
+    Process {
+        id: screensaverProc
+        running: Caching.qsDir !== ""
+        command: ["python3", Caching.qsDir + "/idle/screensaver_inhibit.py"]
+        stdout: SplitParser {
+            onRead: data => idleRoot.isAppInhibited = data.trim() === "1"
+        }
+        onExited: (exitCode, exitStatus) => {
+            idleRoot.isAppInhibited = false;
+            // 0 means python-jeepney is missing, no point in retrying
+            if (exitCode !== 0) screensaverRestartTimer.restart();
+        }
+    }
+
+    Timer {
+        id: screensaverRestartTimer
+        interval: 10000
+        onTriggered: screensaverProc.running = true
     }
 
     property var allActions: {
@@ -349,6 +372,7 @@ Item {
             property bool hasWarning: monitorDelegate.modelData && monitorDelegate.modelData.warningCommand && monitorDelegate.modelData.warningCommand.trim().length > 0 && warnLead > 0 && warnLead < actionTimeout
             property bool isActionEnabled: monitorDelegate.modelData && monitorDelegate.modelData.enabled !== undefined ? monitorDelegate.modelData.enabled : true
             property bool isValidInPipeline: idleRoot.isActionPipelineValid(monitorDelegate.modelData)
+            property bool respectsInhibitors: monitorDelegate.modelData && monitorDelegate.modelData.respectInhibitors !== undefined ? monitorDelegate.modelData.respectInhibitors : true
 
             IdleMonitor {
                 timeout: monitorDelegate.warnTimeout
@@ -356,8 +380,9 @@ Item {
                          monitorDelegate.isValidInPipeline &&
                          monitorDelegate.isActionEnabled &&
                          monitorDelegate.hasWarning &&
-                         (!monitorDelegate.modelData || !monitorDelegate.modelData.mprisInhibit || !idleRoot.isMediaPlaying)
-                respectInhibitors: monitorDelegate.modelData && monitorDelegate.modelData.respectInhibitors !== undefined ? monitorDelegate.modelData.respectInhibitors : true
+                         (!monitorDelegate.modelData || !monitorDelegate.modelData.mprisInhibit || !idleRoot.isMediaPlaying) &&
+                         (!monitorDelegate.respectsInhibitors || !idleRoot.isAppInhibited)
+                respectInhibitors: monitorDelegate.respectsInhibitors
 
                 onIsIdleChanged: {
                     if (isIdle) {
@@ -371,8 +396,9 @@ Item {
                 enabled: idleRoot.isIdleSystemActive &&
                          monitorDelegate.isValidInPipeline &&
                          monitorDelegate.isActionEnabled &&
-                         (!monitorDelegate.modelData || !monitorDelegate.modelData.mprisInhibit || !idleRoot.isMediaPlaying)
-                respectInhibitors: monitorDelegate.modelData && monitorDelegate.modelData.respectInhibitors !== undefined ? monitorDelegate.modelData.respectInhibitors : true
+                         (!monitorDelegate.modelData || !monitorDelegate.modelData.mprisInhibit || !idleRoot.isMediaPlaying) &&
+                         (!monitorDelegate.respectsInhibitors || !idleRoot.isAppInhibited)
+                respectInhibitors: monitorDelegate.respectsInhibitors
 
                 onIsIdleChanged: {
                     if (isIdle) {

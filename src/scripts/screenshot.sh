@@ -110,9 +110,21 @@ if [ -f "$CACHE_DIR/rec_pid" ]; then
             notif_body="$(t "screenshot.notifications.recording_error_body")"
             notify-send -a "$notif_app" "$notif_title" "$notif_body"
         fi
+        if [ -f "$CACHE_DIR/rec_modules" ]; then
+            while read -r mod_id; do
+                [ -n "$mod_id" ] && pactl unload-module "$mod_id" 2>/dev/null
+            done < "$CACHE_DIR/rec_modules"
+            rm -f "$CACHE_DIR/rec_modules"
+        fi
         rm -f "$CACHE_DIR/processing.lock" "$CACHE_DIR/rec_pid" "$CACHE_DIR/final_file" "$CACHE_DIR/rec_start_epoch"
         exit 0
     else
+        if [ -f "$CACHE_DIR/rec_modules" ]; then
+            while read -r mod_id; do
+                [ -n "$mod_id" ] && pactl unload-module "$mod_id" 2>/dev/null
+            done < "$CACHE_DIR/rec_modules"
+            rm -f "$CACHE_DIR/rec_modules"
+        fi
         rm -f "$CACHE_DIR/processing.lock" "$CACHE_DIR/rec_pid" "$CACHE_DIR/final_file" "$CACHE_DIR/rec_start_epoch"
     fi
 fi
@@ -258,7 +270,39 @@ if [ "$FULL_MODE" = true ] || [ -n "$GEOMETRY" ]; then
             elif [ -n "$TARGET_MON" ]; then
                 WF_ARGS+=(-o "$TARGET_MON")
             fi
-            if [ "$DESK_MUTE" != "true" ]; then
+
+            REC_MODS=()
+            if [ "$DESK_MUTE" != "true" ] && [ "$MIC_MUTE" != "true" ]; then
+                DESK_SINK=$(pactl get-default-sink 2>/dev/null)
+                DESK_SOURCE="${DESK_SINK:+$DESK_SINK.monitor}"
+                if [ -z "$DESK_SOURCE" ]; then
+                    DESK_SOURCE="default_output"
+                fi
+
+                if [ -n "$MIC_DEVICE" ] && [ "$MIC_DEVICE" != "null" ]; then
+                    MIC_SOURCE="$MIC_DEVICE"
+                else
+                    MIC_SOURCE=$(pactl get-default-source 2>/dev/null)
+                fi
+                if [ -z "$MIC_SOURCE" ]; then
+                    MIC_SOURCE="default_input"
+                fi
+
+                NULL_SINK="qs_rec_mix_$$"
+                M_NULL=$(pactl load-module module-null-sink sink_name="$NULL_SINK" sink_properties=device.description="$NULL_SINK" 2>/dev/null)
+                if [ -n "$M_NULL" ]; then
+                    REC_MODS+=("$M_NULL")
+                    DESK_PA_VOL=$(awk -v v="$DESK_VOL" 'BEGIN { printf "%d", (v > 0 ? v : 1.0) * 65536 }')
+                    MIC_PA_VOL=$(awk -v v="$MIC_VOL" 'BEGIN { printf "%d", (v > 0 ? v : 1.0) * 65536 }')
+                    M_LOOP1=$(pactl load-module module-loopback source="$DESK_SOURCE" sink="$NULL_SINK" volume="$DESK_PA_VOL" 2>/dev/null)
+                    [ -n "$M_LOOP1" ] && REC_MODS+=("$M_LOOP1")
+                    M_LOOP2=$(pactl load-module module-loopback source="$MIC_SOURCE" sink="$NULL_SINK" volume="$MIC_PA_VOL" 2>/dev/null)
+                    [ -n "$M_LOOP2" ] && REC_MODS+=("$M_LOOP2")
+                    WF_ARGS+=(--audio="${NULL_SINK}.monitor")
+                else
+                    WF_ARGS+=(--audio)
+                fi
+            elif [ "$DESK_MUTE" != "true" ]; then
                 DESK_SINK=$(pactl get-default-sink 2>/dev/null)
                 if [ -n "$DESK_SINK" ]; then
                     WF_ARGS+=(--audio="${DESK_SINK}.monitor")
@@ -277,30 +321,46 @@ if [ "$FULL_MODE" = true ] || [ -n "$GEOMETRY" ]; then
                     WF_ARGS+=(--audio)
                 fi
             fi
+
+            if [ ${#REC_MODS[@]} -gt 0 ]; then
+                printf "%s\n" "${REC_MODS[@]}" > "$CACHE_DIR/rec_modules"
+            fi
+
             wf-recorder "${WF_ARGS[@]}" > /dev/null 2>&1 &
             REC_PID=$!
         else
             GSR_ARGS=(-w "${TARGET_MON:-screen}" -c "mp4" -f "60" -ac "aac")
+            DESK_DEV=""
+            MIC_DEV=""
+
             if [ "$DESK_MUTE" != "true" ]; then
                 DESK_SINK=$(pactl get-default-sink 2>/dev/null)
                 if [ -n "$DESK_SINK" ]; then
-                    GSR_ARGS+=(-a "${DESK_SINK}.monitor")
+                    DESK_DEV="${DESK_SINK}.monitor"
                 else
-                    GSR_ARGS+=(-a "default_output")
+                    DESK_DEV="default_output"
                 fi
             fi
+
             if [ "$MIC_MUTE" != "true" ]; then
                 if [ -n "$MIC_DEVICE" ] && [ "$MIC_DEVICE" != "null" ]; then
                     MIC_DEV="$MIC_DEVICE"
                 else
                     MIC_DEV=$(pactl get-default-source 2>/dev/null)
                 fi
-                if [ -n "$MIC_DEV" ]; then
-                    GSR_ARGS+=(-a "$MIC_DEV")
-                else
-                    GSR_ARGS+=(-a "default_input")
+                if [ -z "$MIC_DEV" ]; then
+                    MIC_DEV="default_input"
                 fi
             fi
+
+            if [ -n "$DESK_DEV" ] && [ -n "$MIC_DEV" ]; then
+                GSR_ARGS+=(-a "${DESK_DEV}|${MIC_DEV}")
+            elif [ -n "$DESK_DEV" ]; then
+                GSR_ARGS+=(-a "$DESK_DEV")
+            elif [ -n "$MIC_DEV" ]; then
+                GSR_ARGS+=(-a "$MIC_DEV")
+            fi
+
             gpu-screen-recorder "${GSR_ARGS[@]}" -o "$VID_FILENAME" > /dev/null 2>&1 &
             REC_PID=$!
         fi

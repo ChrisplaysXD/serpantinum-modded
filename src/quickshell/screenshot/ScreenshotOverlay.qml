@@ -94,8 +94,21 @@ PanelWindow {
     }
 
     onIsActiveChanged: {
-        if (!root.isActive) {
+        if (root.isActive) {
+            root.grabKeyboardFocus();
+            Qt.callLater(root.grabKeyboardFocus);
+        } else {
             if (root.freezeImg !== "") Quickshell.execDetached(["bash", "-c", "rm -f " + root.freezeImg]);
+        }
+    }
+
+    function grabKeyboardFocus() {
+        if (!root.isActive) return;
+        if (typeof root.requestActivate === "function") {
+            root.requestActivate();
+        }
+        if (root.contentItem) {
+            root.contentItem.forceActiveFocus();
         }
     }
 
@@ -258,6 +271,8 @@ PanelWindow {
         root.isMaximized = false;
         micDropdown.showMenu = false;
         backendDropdown.showMenu = false;
+        deskAudio.sliderOpen = false;
+        micAudio.sliderOpen = false;
     }
 
     onIsVideoModeChanged: {
@@ -362,8 +377,8 @@ PanelWindow {
         id: audioPrefsFile
         path: Caching.getStateDir("screenshot") + "/audio_prefs"
 
-        onLoaded: (data) => {
-            let content = data.trim();
+        onLoaded: {
+            let content = (typeof text === "function" ? text() : "").trim();
             if (content !== "") {
                 let parts = content.split(",");
                 root.deskVol = parts[0] !== undefined && parts[0] !== "" ? parseFloat(parts[0]) : 1.0;
@@ -673,6 +688,8 @@ PanelWindow {
             onPressed: (mouse) => {
                 micDropdown.showMenu = false;
                 backendDropdown.showMenu = false;
+                deskAudio.sliderOpen = false;
+                micAudio.sliderOpen = false;
 
                 if (mouse.button === Qt.RightButton) { root.deactivate(); return; }
                 if (root.isVideoMode && root.videoBackend === "gpu-screen-recorder") return;
@@ -755,6 +772,11 @@ PanelWindow {
                 border.color: Qt.rgba(ThemeBackend.text.r, ThemeBackend.text.g, ThemeBackend.text.b, 0.08)
                 border.width: s(1)
                 radius: ThemeBackend.borderRadius
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                }
             }
 
             Rectangle {
@@ -959,18 +981,15 @@ PanelWindow {
                 property real volumeValue: 1.0
                 property bool mutedValue: false
                 property bool hasDropdown: false
-                property bool isHovered: controlHover.hovered || (volSlider.pressed ?? false)
+                property bool sliderOpen: false
 
                 signal volumeUpdate(real newVol)
                 signal muteUpdate(bool newMute)
                 signal dropdownClicked()
+                signal toggleSlider()
 
                 implicitHeight: s(36)
                 implicitWidth: ctrlRow.width
-
-                HoverHandler {
-                    id: controlHover
-                }
 
                 Row {
                     id: ctrlRow
@@ -982,18 +1001,20 @@ PanelWindow {
                         cornerRadius: ThemeBackend.borderRadius
                         buttonIcon: audioCtrl.mutedValue ? audioCtrl.iconOff : audioCtrl.iconOn
                         iconFontSize: s(18)
-                        accentColor: ThemeBackend.surface0
-                        textColor: audioCtrl.mutedValue ? ThemeBackend.red : ThemeBackend.text
-                        onClicked: audioCtrl.muteUpdate(!audioCtrl.mutedValue)
+                        accentColor: audioCtrl.sliderOpen ? ThemeBackend.surface1 : ThemeBackend.surface0
+                        textColor: audioCtrl.mutedValue ? ThemeBackend.red : (audioCtrl.sliderOpen ? ThemeBackend.mauve : ThemeBackend.text)
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+                        onClicked: audioCtrl.toggleSlider()
+                        onRightClicked: audioCtrl.muteUpdate(!audioCtrl.mutedValue)
                     }
 
                     Item {
                         id: sliderBox
-                        width: audioCtrl.isHovered ? s(134) : 0
+                        width: audioCtrl.sliderOpen ? s(134) : 0
                         height: s(36)
                         clip: true
-                        opacity: audioCtrl.isHovered ? 1.0 : 0.0
-                        visible: opacity > 0
+                        opacity: audioCtrl.sliderOpen ? 1.0 : 0.0
+                        visible: width > 0
 
                         Behavior on width {
                             enabled: root.animateChanges && !root.isRefreezing
@@ -1002,6 +1023,12 @@ PanelWindow {
                         Behavior on opacity {
                             enabled: root.animateChanges && !root.isRefreezing
                             NumberAnimation { duration: 500; easing.type: Easing.OutExpo }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.RightButton
+                            onClicked: audioCtrl.muteUpdate(!audioCtrl.mutedValue)
                         }
 
                         Draggable {
@@ -1156,7 +1183,7 @@ PanelWindow {
                 AnimWrap {
                     id: deskAudioWrap
                     isShown: root.isVideoMode
-                    contentWidth: deskAudio.isHovered ? s(174) : s(36)
+                    contentWidth: deskAudio.sliderOpen ? s(174) : s(36)
                     AudioControl { 
                         id: deskAudio
                         anchors.fill: parent
@@ -1164,13 +1191,16 @@ PanelWindow {
                         volumeValue: root.deskVol; mutedValue: root.deskMute
                         onVolumeUpdate: (v) => { root.deskVol = v; root.saveAudioPrefs() }
                         onMuteUpdate: (m) => { root.deskMute = m; root.saveAudioPrefs() }
+                        onToggleSlider: {
+                            deskAudio.sliderOpen = !deskAudio.sliderOpen;
+                        }
                     }
                 }
 
                 AnimWrap {
                     id: micAudioWrap
                     isShown: root.isVideoMode
-                    contentWidth: micAudio.isHovered ? s(214) : s(76)
+                    contentWidth: micAudio.sliderOpen ? s(214) : s(76)
                     AudioControl { 
                         id: micAudio
                         anchors.fill: parent
@@ -1178,6 +1208,9 @@ PanelWindow {
                         volumeValue: root.micVol; mutedValue: root.micMute
                         onVolumeUpdate: (v) => { root.micVol = v; root.saveAudioPrefs() }
                         onMuteUpdate: (m) => { root.micMute = m; root.saveAudioPrefs() }
+                        onToggleSlider: {
+                            micAudio.sliderOpen = !micAudio.sliderOpen;
+                        }
                         onDropdownClicked: { 
                             backendDropdown.showMenu = false;
                             micDropdown.showMenu = !micDropdown.showMenu;

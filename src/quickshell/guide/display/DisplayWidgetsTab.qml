@@ -523,18 +523,28 @@ Item {
         }
     }
 
+    Timer {
+        id: screenDetectorDebounceTimer
+        interval: 220
+        repeat: false
+        onTriggered: screenDetector.running = true
+    }
+
     Component.onCompleted: {
         syncSettings();
         reloadPresets();
-        screenDetector.running = true;
+        if (visible) {
+            screenDetectorDebounceTimer.restart();
+        }
     }
 
     onVisibleChanged: {
         if (visible) {
             syncSettings();
             reloadPresets();
-            screenDetector.running = true;
+            screenDetectorDebounceTimer.restart();
         } else {
+            screenDetectorDebounceTimer.stop();
             savePresetPopup.close();
         }
     }
