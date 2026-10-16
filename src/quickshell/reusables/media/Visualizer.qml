@@ -13,7 +13,7 @@ Item {
     // Where the bars grow from: "start" (top/left), "center" or "end" (bottom/right)
     property string alignment: "end"
     property int count: 16
-    property color color: ThemeBackend.mauve
+    property color color: MprisController.grad ? ThemeBackend.mauve : ThemeBackend.mauve
 
     // Frequency mapping: low frequencies first, or in the middle and mirrored to both sides
     property bool mirrored: true
