@@ -304,7 +304,7 @@ Item {
     property real targetWidth: {
         if (module && !module.moduleActive) return 0;
         if (root.wifiStyle === "text") {
-            return (textRow.implicitWidth > 0) ? (textRow.implicitWidth + s(root.isCompact ? 16 : 20)) : 0;
+            return (textRow.implicitWidth > 0) ? (textRow.implicitWidth + s(root.isCompact ? 12 : 16)) : 0;
         }
         return (sysLayout.implicitWidth > 0) ? (sysLayout.implicitWidth + s(root.isCompact ? 8 : 10)) : 0;
     }
@@ -335,14 +335,22 @@ Item {
         opacity: root.showLayout ? 1.0 : 0.0
         Behavior on opacity { NumberAnimation { duration: 450; easing.type: Easing.OutCubic } }
 
-        Text {
+        Item {
             visible: root.showIcon
-            text: root.effectiveIcon
-            font.family: ThemeBackend.iconFont
-            font.pixelSize: s(root.isCompact ? 14 : 15)
-            color: textMouseArea.containsMouse ? Qt.lighter(ThemeBackend.blue, 1.15) : (root.isActive ? ThemeBackend.blue : ThemeBackend.subtext0)
+            width: s(root.isCompact ? 18 : 20)
+            height: width
             anchors.verticalCenter: parent.verticalCenter
-            Behavior on color { ColorAnimation { duration: 150 } }
+
+            Text {
+                anchors.centerIn: parent
+                text: root.effectiveIcon
+                font.family: ThemeBackend.iconFont
+                font.pixelSize: s(root.isCompact ? 14 : 15)
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                color: textMouseArea.containsMouse ? Qt.lighter(ThemeBackend.blue, 1.15) : (root.isActive ? ThemeBackend.blue : ThemeBackend.subtext0)
+                Behavior on color { ColorAnimation { duration: 150 } }
+            }
         }
 
         Text {

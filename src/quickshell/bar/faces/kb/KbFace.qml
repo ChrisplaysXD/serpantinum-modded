@@ -66,6 +66,7 @@ Item {
     property alias kbPill: kbPill
     readonly property bool isNiri: NiriState.isNiri
     property bool isSway: false
+    readonly property bool isMango: MangoState.isMango
     property bool niriSubscribed: false
 
     function syncNiriSubscription() {
@@ -122,7 +123,9 @@ Item {
         command: [
             "bash",
             "-c",
-            root.isSway
+            root.isMango
+                ? "layout=$(mmsg get keyboardlayout 2>/dev/null | jq -r '.layout // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
+                : root.isSway
                 ? "layout=$(swaymsg -t get_inputs 2>/dev/null | jq -r '[.[] | select(.type == \"keyboard\" and .xkb_active_layout_name != null)] | .[0].xkb_active_layout_name // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
                 : "layout=$(LC_ALL=C hyprctl devices -j 2>/dev/null | jq -r '(.keyboards[] | select(.main == true) | .active_keymap) // .keyboards[0].active_keymap // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
         ]
@@ -141,7 +144,7 @@ Item {
         command: [
             "bash",
             Caching.qsDir + "/watchers/kb_wait.sh",
-            root.isSway ? "sway" : "hyprland"
+            root.isMango ? "mango" : (root.isSway ? "sway" : "hyprland")
         ]
         onExited: {
             kbPoller.running = false;
@@ -152,7 +155,7 @@ Item {
     property real targetWidth: {
         if (module && !module.moduleActive) return 0;
         if (root.kbStyle === "text") {
-            return (textRow.implicitWidth > 0) ? (textRow.implicitWidth + s(root.isCompact ? 16 : 20)) : 0;
+            return (textRow.implicitWidth > 0) ? (textRow.implicitWidth + s(root.isCompact ? 12 : 16)) : 0;
         }
         return (sysLayout.implicitWidth > 0) ? (sysLayout.implicitWidth + s(root.isCompact ? 8 : 10)) : 0;
     }
@@ -183,6 +186,8 @@ Item {
                 Quickshell.execDetached(["niri", "msg", "action", "switch-layout", "next"]);
             } else if (root.isSway) {
                 Quickshell.execDetached(["swaymsg", "input", "type:keyboard", "xkb_switch_layout", "next"]);
+            } else if (root.isMango) {
+                Quickshell.execDetached(["mmsg", "dispatch", "switch_keyboard_layout"]);
             } else {
                 Quickshell.execDetached(["hyprctl", "switchxkblayout", "main", "next"]);
             }
@@ -197,14 +202,22 @@ Item {
         opacity: root.showLayout ? 1.0 : 0.0
         Behavior on opacity { NumberAnimation { duration: 450; easing.type: Easing.OutCubic } }
 
-        Text {
+        Item {
             visible: root.showIcon
-            text: "󰌌"
-            font.family: ThemeBackend.iconFont
-            font.pixelSize: s(root.isCompact ? 14 : 15)
-            color: textMouseArea.containsMouse ? Qt.lighter(ThemeBackend.text, 1.15) : ThemeBackend.subtext0
+            width: s(root.isCompact ? 18 : 20)
+            height: width
             anchors.verticalCenter: parent.verticalCenter
-            Behavior on color { ColorAnimation { duration: 150 } }
+
+            Text {
+                anchors.centerIn: parent
+                text: "󰌌"
+                font.family: ThemeBackend.iconFont
+                font.pixelSize: s(root.isCompact ? 14 : 15)
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                color: textMouseArea.containsMouse ? Qt.lighter(ThemeBackend.text, 1.15) : ThemeBackend.subtext0
+                Behavior on color { ColorAnimation { duration: 150 } }
+            }
         }
 
         Text {
@@ -257,6 +270,8 @@ Item {
                     Quickshell.execDetached(["niri", "msg", "action", "switch-layout", "next"]);
                 } else if (root.isSway) {
                     Quickshell.execDetached(["swaymsg", "input", "type:keyboard", "xkb_switch_layout", "next"]);
+                } else if (root.isMango) {
+                    Quickshell.execDetached(["mmsg", "dispatch", "switch_keyboard_layout"]);
                 } else {
                     Quickshell.execDetached(["hyprctl", "switchxkblayout", "main", "next"]);
                 }

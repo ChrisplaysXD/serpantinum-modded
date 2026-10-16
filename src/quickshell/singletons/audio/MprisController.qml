@@ -19,11 +19,17 @@ Singleton {
         return states;
     }
 
+    property string lastPlayingBus: ""
+
     readonly property MprisPlayer activePlayer: {
         let _ = _playerWatch;
         let players = Mpris.players.values.slice().sort((a, b) => (a.busName || "").localeCompare(b.busName || ""));
         let playing = players.find(p => p.isPlaying);
         if (playing) return playing;
+        let last = root.lastPlayingBus !== "" ? players.find(p => p.busName === root.lastPlayingBus) : null;
+        if (last) return last;
+        let loaded = players.find(p => p.playbackState !== MprisPlaybackState.Stopped && p.trackTitle !== "");
+        if (loaded) return loaded;
         let controllable = players.find(p => p.canControl);
         if (controllable) return controllable;
         return players.length > 0 ? players[0] : null;
@@ -58,6 +64,9 @@ Singleton {
     property bool fetchPending: false
 
     onActivePlayerChanged: {
+        if (root.activePlayer && root.activePlayer.isPlaying) {
+            root.lastPlayingBus = root.activePlayer.busName || "";
+        }
         if (root.activePlayer) {
             root.livePosition = root.activePlayer.position;
         }

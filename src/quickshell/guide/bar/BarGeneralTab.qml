@@ -38,6 +38,7 @@ Item {
         "opacity": 100,
         "style": "modular",
         "distinctPills": false,
+        "centerByEdges": true,
         "time": {"format": "HH:mm:ss"},
         "autohide": false,
         "autohideTimeout": 1000,
@@ -63,6 +64,7 @@ Item {
         return "modular";
     }
     property bool distinctPills: barSettings.distinctPills !== undefined ? barSettings.distinctPills : false
+    property bool centerByEdges: barSettings.centerByEdges !== undefined ? barSettings.centerByEdges : true
     property bool autohide: barSettings.autohide !== undefined ? barSettings.autohide : false
     property int autohideTimeout: barSettings.autohideTimeout !== undefined ? barSettings.autohideTimeout : 1000
 
@@ -719,6 +721,7 @@ Item {
             barTabRoot.barStyle = "modular";
         }
         barTabRoot.distinctPills = ts.distinctPills !== undefined ? ts.distinctPills : false;
+        barTabRoot.centerByEdges = ts.centerByEdges !== undefined ? ts.centerByEdges : true;
         barTabRoot.autohide = ts.autohide !== undefined ? ts.autohide : false;
         barTabRoot.autohideTimeout = ts.autohideTimeout !== undefined ? ts.autohideTimeout : 1000;
         if (ts.groupColors) {
@@ -754,6 +757,7 @@ Item {
         current.opacity = barTabRoot.currentBarOpacity;
         current.style = barTabRoot.barStyle;
         current.distinctPills = barTabRoot.distinctPills;
+        current.centerByEdges = barTabRoot.centerByEdges;
         current.autohide = barTabRoot.autohide;
         current.autohideTimeout = barTabRoot.autohideTimeout;
         if (!current.modules) current.modules = barTabRoot.defaultBarSettings.modules;
@@ -1160,77 +1164,83 @@ Item {
                 ]
             }
 
-            Item {
-                id: widthSectionWrapper
-                Layout.fillWidth: true
-                property bool isOpen: barTabRoot.barStyle !== "fill"
-                clip: true
-                visible: implicitHeight > 0
-                opacity: isOpen ? 1.0 : 0.0
-                implicitHeight: isOpen ? widthInnerBox.implicitHeight : 0
-
-                Behavior on opacity { NumberAnimation { duration: 300; easing.type: Easing.OutCubic } }
-                Behavior on implicitHeight { NumberAnimation { duration: 300; easing.type: Easing.OutCubic } }
-
-                SettingsRow {
-                    id: widthInnerBox
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    rootObj: barTabRoot.rootObj
-                    icon: "󰘖"
-                    title: {
-                        if (barTabRoot.barPosition === "left" || barTabRoot.barPosition === "right") {
-                            let h = I18n.t("guide.bar.height.title");
-                            if (h && h !== "guide.bar.height.title") return h;
-                            let w = I18n.t("guide.bar.width.title");
-                            if (w && w.indexOf("Width") !== -1) return w.replace("Width", "Height");
-                            if (w && w.indexOf("width") !== -1) return w.replace("width", "height");
-                            return w;
-                        }
-                        return I18n.t("guide.bar.width.title");
+            SettingsRow {
+                id: widthInnerBox
+                rootObj: barTabRoot.rootObj
+                icon: "󰘖"
+                title: {
+                    if (barTabRoot.barPosition === "left" || barTabRoot.barPosition === "right") {
+                        let h = I18n.t("guide.bar.height.title");
+                        if (h && h !== "guide.bar.height.title") return h;
+                        let w = I18n.t("guide.bar.width.title");
+                        if (w && w.indexOf("Width") !== -1) return w.replace("Width", "Height");
+                        if (w && w.indexOf("width") !== -1) return w.replace("width", "height");
+                        return w;
                     }
-                    description: {
-                        if (barTabRoot.barPosition === "left" || barTabRoot.barPosition === "right") {
-                            let h = I18n.t("guide.bar.height.desc");
-                            if (h && h !== "guide.bar.height.desc") return h;
-                            let w = I18n.t("guide.bar.width.desc");
-                            if (w && w.indexOf("Width") !== -1) return w.replace("Width", "Height");
-                            if (w && w.indexOf("width") !== -1) return w.replace("width", "height");
-                            return w;
-                        }
-                        return I18n.t("guide.bar.width.desc");
+                    return I18n.t("guide.bar.width.title");
+                }
+                description: {
+                    if (barTabRoot.barPosition === "left" || barTabRoot.barPosition === "right") {
+                        let h = I18n.t("guide.bar.height.desc");
+                        if (h && h !== "guide.bar.height.desc") return h;
+                        let w = I18n.t("guide.bar.width.desc");
+                        if (w && w.indexOf("Width") !== -1) return w.replace("Width", "Height");
+                        if (w && w.indexOf("width") !== -1) return w.replace("width", "height");
+                        return w;
                     }
+                    return I18n.t("guide.bar.width.desc");
+                }
 
-                    Draggable {
-                        id: barWidthSlider
-                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                        Layout.rightMargin: rootObj.s(8)
-                        implicitWidth: rootObj.s(220)
-                        implicitHeight: rootObj.s(18)
-                        from: 5
-                        to: 100
-                        stepSize: 1
-                        defaultValue: 100
-                        showValueBubble: true
-                        valueFormatter: function(v) { return Math.round(v) + "%" }
-                        value: barTabRoot.currentBarWidth
-                        backgroundColor: ThemeBackend.surface0
-                        accentColor: ThemeBackend.mauve
-                        handleColor: ThemeBackend.text
-                        handleBorderColor: ThemeBackend.mantle
-                        onMoved: function(val) {
-                            barTabRoot.clearPendingGroup();
-                            let rounded = Math.round(val);
-                            if (barTabRoot.currentBarWidth !== rounded) {
-                                barTabRoot.currentBarWidth = rounded;
-                                barWidthDebounceTimer.restart();
-                            }
+                Draggable {
+                    id: barWidthSlider
+                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                    Layout.rightMargin: rootObj.s(8)
+                    implicitWidth: rootObj.s(220)
+                    implicitHeight: rootObj.s(18)
+                    from: 5
+                    to: 100
+                    stepSize: 1
+                    defaultValue: 100
+                    showValueBubble: true
+                    valueFormatter: function(v) { return Math.round(v) + "%" }
+                    value: barTabRoot.currentBarWidth
+                    backgroundColor: ThemeBackend.surface0
+                    accentColor: ThemeBackend.mauve
+                    handleColor: ThemeBackend.text
+                    handleBorderColor: ThemeBackend.mantle
+                    onMoved: function(val) {
+                        barTabRoot.clearPendingGroup();
+                        let rounded = Math.round(val);
+                        if (barTabRoot.currentBarWidth !== rounded) {
+                            barTabRoot.currentBarWidth = rounded;
+                            barWidthDebounceTimer.restart();
                         }
-                        onDragFinished: {
-                            barWidthDebounceTimer.stop();
-                            barTabRoot.updateBarSettings();
-                        }
+                    }
+                    onDragFinished: {
+                        barWidthDebounceTimer.stop();
+                        barTabRoot.updateBarSettings();
+                    }
+                }
+            }
+
+            SettingsRow {
+                id: centerByEdgesBox
+                rootObj: barTabRoot.rootObj
+                icon: "󰉹"
+                title: I18n.t("guide.bar.center_by_edges.title")
+                description: (barTabRoot.barPosition === "left" || barTabRoot.barPosition === "right") ? I18n.t("guide.bar.center_by_edges.desc_vertical") : I18n.t("guide.bar.center_by_edges.desc")
+
+                Toggle {
+                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                    checked: barTabRoot.centerByEdges
+                    accentColor: ThemeBackend.mauve
+                    baseColor: ThemeBackend.surface1
+                    handleColor: ThemeBackend.crust
+                    handleOffColor: ThemeBackend.text
+                    onToggled: function(c) {
+                        barTabRoot.clearPendingGroup();
+                        barTabRoot.centerByEdges = c;
+                        barTabRoot.updateBarSettings();
                     }
                 }
             }

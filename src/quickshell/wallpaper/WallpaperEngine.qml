@@ -477,7 +477,7 @@ ShellRoot {
                         id: transitionShaderA
                         anchors.fill: parent
                         visible: false
-                        layer.enabled: true
+                        layer.enabled: layerA.layer.enabled
 
                         property vector2d itemSize: Qt.vector2d(width, height)
                         property real progress: barWindow.transitionProgress
@@ -544,7 +544,7 @@ ShellRoot {
                         id: transitionShaderB
                         anchors.fill: parent
                         visible: false
-                        layer.enabled: true
+                        layer.enabled: layerB.layer.enabled
 
                         property vector2d itemSize: Qt.vector2d(width, height)
                         property real progress: barWindow.transitionProgress

@@ -101,6 +101,10 @@
         "title": "Hoạt ảnh trung tâm trống",
         "desc": "Hiển thị hình chú mèo đang ngủ trong trung tâm thông báo khi không có thông báo"
       },
+      "right_click_close": {
+        "title": "Đóng bằng chuột phải",
+        "desc": "Đóng thông báo bằng cách nhấp chuột phải"
+      },
       "test": "Thử nghiệm thông báo",
       "test_desc": "Đây là thông báo thử nghiệm"
     },
@@ -165,7 +169,11 @@
       "hooks": {
         "title": "Hook (lệnh shell)"
       },
-      "custom_action_desc": "Hành động và lệnh hết thời gian tùy chỉnh"
+      "custom_action_desc": "Hành động và lệnh hết thời gian tùy chỉnh",
+      "lock_on_sleep": {
+        "title": "Khóa trước khi ngủ",
+        "desc": "Khóa phiên trước khi hệ thống tạm ngưng, ví dụ khi đóng nắp"
+      }
     },
     "welcome": {
       "by_author": "bởi @{author}",
@@ -323,6 +331,11 @@
       "width": {
         "title": "Chiều rộng thanh tác vụ",
         "desc": "Đặt chiều rộng của thanh tác vụ theo phần trăm"
+      },
+      "center_by_edges": {
+        "title": "Căn giữa theo mép",
+        "desc": "Giữ lề bằng nhau ở mép trái và phải của thanh thay vì căn giữa theo mô-đun ở giữa",
+        "desc_vertical": "Giữ lề bằng nhau ở mép trên và dưới của thanh thay vì căn giữa theo mô-đun ở giữa"
       },
       "workspaces": {
         "title": "Chọn số lượng không gian làm việc để hiển thị",
@@ -529,6 +542,30 @@
           "button": "Nút tương tác có nền",
           "text": "Biểu tượng và văn bản không có nền"
         }
+      },
+      "media": {
+        "info_mode": {
+          "title": "Secondary info",
+          "desc": "Choose whether to show the song duration or its author",
+          "duration": "Duration",
+          "author": "Author"
+        },
+        "width": {
+          "title": "Width",
+          "desc": "Width of the song title area"
+        },
+        "show_icon": {
+          "title": "Hiển thị biểu tượng",
+          "desc": "Hiển thị ảnh bìa album hoặc biểu tượng nhạc"
+        },
+        "show_controls": {
+          "title": "Hiển thị điều khiển",
+          "desc": "Hiển thị các nút trước, phát và tiếp theo"
+        },
+        "preview": {
+          "title": "Tên bài hát",
+          "author": "Song author"
+        }
       }
     },
     "theme": {
@@ -568,7 +605,8 @@
         "pictures": "Hình ảnh",
         "music": "Âm nhạc",
         "documents": "Tài liệu"
-      }
+      },
+      "done": "Hoàn tất"
     },
     "font_picker": {
       "title": "Chọn phông chữ",
@@ -796,6 +834,29 @@
       "smart_autohide": {
         "title": "Tự động ẩn thông minh",
         "desc": "Chỉ ẩn dock khi có cửa sổ mở, giữ hiển thị trên màn hình chính"
+      },
+      "focus_running": {
+        "title": "Tập trung vào cửa sổ hiện có",
+        "desc": "Nhấp vào biểu tượng ứng dụng sẽ kích hoạt cửa sổ đang mở thay vì khởi chạy phiên bản mới"
+      },
+      "show_running_indicators": {
+        "title": "Chỉ báo ứng dụng đang chạy",
+        "desc": "Hiển thị chỉ báo dấu chấm hoặc thanh trên các biểu tượng ứng dụng đang mở"
+      },
+      "show_running_apps": {
+        "title": "Hiển thị ứng dụng đang mở",
+        "desc": "Hiển thị các ứng dụng đang mở chưa ghim trong dock"
+      },
+      "running_scope": {
+        "title": "Phạm vi cửa sổ hoạt động",
+        "desc": "Lọc các cửa sổ đang chạy được hiển thị và điều khiển bởi dock",
+        "auto": "Tự động (mặc định của trình tổng hợp)",
+        "all": "Tất cả không gian làm việc & màn hình",
+        "output": "Chỉ màn hình hiện tại",
+        "workspace": "Chỉ không gian làm việc đang hoạt động"
+      },
+      "window_menu": {
+        "untitled": "Untitled"
       }
     },
     "lyrics_picker": {
@@ -880,6 +941,11 @@
       "authenticating": "Đang xác thực...",
       "enter_pin": "Nhập mã PIN"
     },
+    "fingerprint": {
+      "ready": "Chạm vào cảm biến",
+      "not_recognized": "Không nhận diện được vân tay",
+      "recognized": "Đã nhận diện vân tay"
+    },
     "power": {
       "suspend": "Ngủ",
       "reboot": "Khởi động lại",
@@ -938,7 +1004,8 @@
     },
     "actions": {
       "unpair": "Hủy ghép nối",
-      "scan": "Quét"
+      "scan": "Quét",
+      "sign_in": "Đăng nhập"
     }
   },
   "notifications": {
@@ -1459,7 +1526,11 @@
     "deploy": {
       "configuring_sddm": "Đang cấu hình trình quản lý hiển thị SDDM...",
       "disabling_dm": "-> Đang vô hiệu hóa trình quản lý hiển thị xung đột: {dm}",
-      "sddm_success": "-> Đã cài đặt chủ đề Material You cho SDDM và bật dịch vụ [ OK ]"
+      "sddm_success": "-> Đã cài đặt chủ đề Material You cho SDDM và bật dịch vụ [ OK ]",
+      "sddm_no_wayland_compositor": "Không tìm thấy compositor Wayland được hỗ trợ cho màn hình đăng nhập (kwin_wayland/weston), SDDM dùng X11.",
+      "sddm_no_xorg": "Không tìm thấy Xorg, SDDM dùng {compositor}.",
+      "sddm_no_backend": "Không tìm thấy Xorg hay compositor Wayland được hỗ trợ cho màn hình đăng nhập (kwin_wayland/weston) trong /usr/local/bin, /usr/bin hoặc /bin.",
+      "sddm_skipped": "Bỏ qua thiết lập SDDM: không tìm thấy máy chủ hiển thị hoặc compositor đăng nhập khả dụng. Trình quản lý đăng nhập hiện tại được giữ nguyên."
     }
   },
   "translator": {

@@ -18,19 +18,28 @@ Scope {
     id: root
 
     property string freezeTimestamp: ""
+    property bool staticLock: false
     property bool isUnlocking: false
     property int resumeRevision: 0
 
     property bool isNiri: false
     property bool isSway: false
+    readonly property bool isMango: MangoState.isMango
     property string kbLayout: "US"
     property int connectedScreenCount: 1
+    property bool fingerprintAvailable: false
+    property bool fpUnsupported: false
+    property bool fpHolding: false
+    property bool fpGotInfo: false
+    property bool fpAborting: false
+    property bool pwAborting: false
+    readonly property int fingerprintMaxAttempts: 5
 
     readonly property bool isDesktop: UPower.displayDevice.ready ? !UPower.displayDevice.isLaptopBattery : SystemInfo.isDesktop
     readonly property int batCap: UPower.displayDevice.ready ? Math.round(UPower.displayDevice.percentage * 100) : 0
     readonly property string batPercent: batCap + "%"
     readonly property string batStatus: UPower.displayDevice.ready ? (UPower.displayDevice.state === UPowerDeviceState.FullyCharged ? "Full" : (UPower.displayDevice.state === UPowerDeviceState.Charging ? "Charging" : "Unknown")) : "Unknown"
-    readonly property bool isCharging: UPower.displayDevice.ready && (UPower.displayDevice.state === UPowerDeviceState.Charging || UPowerDeviceState.FullyCharged)
+    readonly property bool isCharging: UPower.displayDevice.ready && (UPower.displayDevice.state === UPowerDeviceState.Charging || UPower.displayDevice.state === UPowerDeviceState.FullyCharged)
     readonly property string batIcon: isCharging ? "󰂄" : (batCap > 20 ? "󰁹" : "󰂃")
 
     readonly property color batDynamicColor: {
@@ -55,6 +64,7 @@ Scope {
         root.updateDeInfo();
         root.updateScreenCount();
         Quickshell.execDetached(["rm", "-f", Caching.getRunDir("lock") + "/locked"]);
+        pamServiceProbe.running = true;
     }
 
     Component.onDestruction: {
@@ -74,6 +84,8 @@ Scope {
             Quickshell.execDetached(["niri", "msg", "action", "switch-layout", "next"]);
         } else if (root.isSway) {
             Quickshell.execDetached(["swaymsg", "input", "type:keyboard", "xkb_switch_layout", "next"]);
+        } else if (root.isMango) {
+            Quickshell.execDetached(["mmsg", "dispatch", "switch_keyboard_layout"]);
         } else {
             Quickshell.execDetached(["hyprctl", "switchxkblayout", "main", "next"]);
         }
@@ -96,7 +108,9 @@ Scope {
         command: [
             "bash",
             "-c",
-            root.isNiri
+            root.isMango
+                ? "layout=$(mmsg get keyboardlayout 2>/dev/null | jq -r '.layout // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
+                : root.isNiri
                 ? "layout=$(niri msg -j keyboard-layouts 2>/dev/null | jq -r '.names[.current_idx] // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
                 : (root.isSway
                     ? "layout=$(swaymsg -t get_inputs 2>/dev/null | jq -r '[.[] | select(.type == \"keyboard\" and .xkb_active_layout_name != null)] | .[0].xkb_active_layout_name // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
@@ -117,7 +131,7 @@ Scope {
         command: [
             "bash",
             Caching.qsDir + "/watchers/kb_wait.sh",
-            root.isNiri ? "niri" : (root.isSway ? "sway" : "hyprland")
+            root.isMango ? "mango" : (root.isNiri ? "niri" : (root.isSway ? "sway" : "hyprland"))
         ]
         onExited: {
             kbPoller.running = false;
@@ -170,8 +184,161 @@ Scope {
         }
     }
 
+    Process {
+        id: pamServiceProbe
+        command: [
+            "bash",
+            "-c",
+            "test -e \"${1:-/etc/pam.d}/serpantinum\"",
+            "pam-probe",
+            pam.configDirectory
+        ]
+        onExited: (exitCode) => {
+            if (exitCode !== 0) return;
+            pam.config = "serpantinum";
+            fpPam.config = "serpantinum";
+        }
+    }
+
+    Timer {
+        id: fingerprintRestartTimer
+        interval: 1000
+        repeat: false
+        onTriggered: root.startFingerprint()
+    }
+
+    Timer {
+        id: fingerprintSettleTimer
+        interval: 1700
+        repeat: false
+        onTriggered: {
+            if (lockUI.fpState === "failed") lockUI.fpState = "ready";
+        }
+    }
+
+    Timer {
+        id: fingerprintUnlockTimer
+        interval: 480
+        repeat: false
+        onTriggered: root.finishUnlock()
+    }
+
+    Timer {
+        id: passwordStartTimer
+        interval: 3000
+        repeat: false
+        onTriggered: root.startPassword(true)
+    }
+
+    Timer {
+        id: passwordRetryTimer
+        interval: 350
+        repeat: false
+        onTriggered: root.startPassword(false)
+    }
+
+    function markFingerprintUnsupported() {
+        root.fpUnsupported = true;
+        root.fpHolding = false;
+        root.fingerprintAvailable = false;
+        fingerprintRestartTimer.stop();
+        root.startPassword(true);
+    }
+
+    function startFingerprint() {
+        if (root.fpUnsupported || !rootLock.locked || root.isUnlocking || fpPam.active) return;
+        if (lockUI.fpState === "success") return;
+        root.fpGotInfo = false;
+        root.fpAborting = false;
+        fpPam.start();
+    }
+
+    function startPassword(force) {
+        if (!rootLock.locked || root.isUnlocking || pam.active) return;
+        if (!force && !root.fpUnsupported && !root.fpHolding) {
+            passwordRetryTimer.restart();
+            return;
+        }
+        root.pwAborting = false;
+        pam.start();
+    }
+
+    function beginAuth() {
+        if (!rootLock.locked || root.isUnlocking) return;
+        root.startFingerprint();
+        passwordStartTimer.restart();
+    }
+
+    function stopAuth() {
+        fingerprintRestartTimer.stop();
+        fingerprintSettleTimer.stop();
+        passwordStartTimer.stop();
+        passwordRetryTimer.stop();
+        root.fpAborting = true;
+        root.fpHolding = false;
+        if (fpPam.active) fpPam.abort();
+        if (pam.active) {
+            root.pwAborting = true;
+            pam.abort();
+        }
+    }
+
+    function restartAuth() {
+        root.stopAuth();
+        root.fpUnsupported = false;
+        root.fingerprintAvailable = false;
+        if (lockUI.fpState !== "success") lockUI.fpState = "ready";
+        pamActionTimer.restart();
+    }
+
+    function handleFingerprintMessage() {
+        if (!rootLock.locked || root.isUnlocking || lockUI.fpState === "success") return;
+        if (fpPam.responseRequired) {
+            root.fpHolding = false;
+            root.fpAborting = true;
+            fpPam.abort();
+            if (root.fpGotInfo) fingerprintRestartTimer.restart();
+            else root.markFingerprintUnsupported();
+            return;
+        }
+        if (fpPam.messageIsError) {
+            lockUI.fpFailures = Math.min(lockUI.fpFailures + 1, root.fingerprintMaxAttempts);
+            lockUI.fpState = "failed";
+            fingerprintSettleTimer.restart();
+            return;
+        }
+        root.fpGotInfo = true;
+        root.fpHolding = true;
+        root.fingerprintAvailable = true;
+        root.startPassword(false);
+    }
+
+    function handleFingerprintCompleted(result) {
+        root.fpHolding = false;
+        if (root.fpAborting || !rootLock.locked || root.isUnlocking) return;
+        if (result === PamResult.Success) {
+            fingerprintSettleTimer.stop();
+            lockUI.fpState = "success";
+            fingerprintUnlockTimer.restart();
+        } else if (root.fpGotInfo) {
+            fingerprintRestartTimer.restart();
+        } else {
+            root.markFingerprintUnsupported();
+        }
+    }
+
+    function lockStatic() {
+        if (rootLock.locked) return;
+        grimLockSnapProcess.running = false;
+        grimTimeoutTimer.stop();
+        root.staticLock = true;
+        root.freezeTimestamp = "";
+        root.doLock();
+    }
+
     function lock() {
         if (rootLock.locked) return;
+        root.staticLock = false;
         let ts = Date.now().toString();
         let mons = [];
         if (Quickshell.screens) {
@@ -197,6 +364,12 @@ Scope {
         lockUI.failed = false;
         lockUI.authenticating = false;
         lockUI.statusText = I18n.t("lock.status.locked");
+        lockUI.fpState = "ready";
+        lockUI.fpFailures = 0;
+        root.stopAuth();
+        root.fpUnsupported = false;
+        root.fingerprintAvailable = false;
+        fingerprintUnlockTimer.stop();
         rootLock.locked = true;
         pamActionTimer.start();
         kbPollerRestartTimer.restart();
@@ -205,12 +378,15 @@ Scope {
     function finishUnlock() {
         if (root.isUnlocking) return;
         root.isUnlocking = true;
+        fingerprintUnlockTimer.stop();
+        root.stopAuth();
     }
 
     function completeUnlock() {
         if (!rootLock.locked) return;
         rootLock.locked = false;
         root.isUnlocking = false;
+        root.stopAuth();
         kbWaiter.running = false;
         kbPoller.running = false;
         Quickshell.execDetached(["rm", "-f", Caching.getRunDir("lock") + "/locked"]);
@@ -225,6 +401,9 @@ Scope {
         function activate(): void {
             root.lock();
         }
+        function activateStatic(): void {
+            root.lockStatic();
+        }
     }
 
 
@@ -233,16 +412,31 @@ Scope {
         property bool failed: false
         property bool authenticating: false
         property string statusText: I18n.t("lock.status.locked")
+        property string fpState: "ready"
+        property int fpFailures: 0
+        readonly property string fpLabel: {
+            switch (fpState) {
+            case "failed": return I18n.t("lock.fingerprint.not_recognized");
+            case "success": return I18n.t("lock.fingerprint.recognized");
+            default: return I18n.t("lock.fingerprint.ready");
+            }
+        }
     }
 
     Timer {
         id: pamActionTimer
         interval: 350
         onTriggered: {
-            if (rootLock.locked) {
-                pam.start();
-            }
+            root.beginAuth();
         }
+    }
+
+    PamContext {
+        id: fpPam
+
+        onPamMessage: root.handleFingerprintMessage()
+        onCompleted: (result) => root.handleFingerprintCompleted(result)
+        onError: root.markFingerprintUnsupported()
     }
 
     PamContext {
@@ -250,12 +444,13 @@ Scope {
 
         onCompleted: (result) => {
             lockUI.authenticating = false;
+            if (root.pwAborting) return;
             if (result === PamResult.Success) {
                 root.finishUnlock();
             } else {
                 lockUI.failed = true;
                 lockUI.statusText = I18n.t("lock.status.access_denied");
-                pamActionTimer.start();
+                passwordRetryTimer.start();
             }
         }
     }
@@ -266,12 +461,9 @@ Scope {
         onExited: {
             SystemInfo.fetch();
             root.updateDeInfo();
-            pamActionTimer.restart();
             kbPollerRestartTimer.restart();
             root.resumeRevision++;
-            if (rootLock.locked) {
-                pam.start();
-            }
+            if (rootLock.locked) root.restartAuth();
         }
     }
 
@@ -483,7 +675,7 @@ Scope {
 
                     property bool powerMenuOpen: false
                     property bool inputActive: false
-                    property bool isPlayingIntro: true
+                    property bool isPlayingIntro: !root.staticLock
 
                     property real centerReveal: 0.0
                     property real wingsReveal: 0.0
@@ -678,8 +870,8 @@ Scope {
                         }
                     }
 
-                    property real panelReveal: 0.0
-                    property real contentReveal: 0.0
+                    property real panelReveal: root.staticLock ? 1.0 : 0.0
+                    property real contentReveal: root.staticLock ? 1.0 : 0.0
                     property real mainOpacity: 1.0
 
                     property bool isSysSubscribed: false
@@ -729,11 +921,13 @@ Scope {
                     Behavior on ramUsedGb { enabled: screenRoot.wingsReveal > 0.98; NumberAnimation { duration: 800; easing.type: Easing.OutQuint } }
 
                     property real netRx: isNaN(SysData.netRx) ? 0 : SysData.netRx
+                    Behavior on netRx { enabled: screenRoot.wingsReveal > 0.98; NumberAnimation { duration: 1200; easing.type: Easing.OutCubic } }
                     property real netTx: isNaN(SysData.netTx) ? 0 : SysData.netTx
+                    Behavior on netTx { enabled: screenRoot.wingsReveal > 0.98; NumberAnimation { duration: 1200; easing.type: Easing.OutCubic } }
                     function formatBytes(bytes) {
-                        if (bytes <= 0 || isNaN(bytes)) return "0 B/s";
+                        if (!(bytes >= 1)) return "0 B/s";
                         let k = 1024, sizes = ["B/s", "KB/s", "MB/s", "GB/s"];
-                        let i = Math.floor(Math.log(bytes) / Math.log(k));
+                        let i = Math.min(sizes.length - 1, Math.floor(Math.log(bytes) / Math.log(k)));
                         return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
                     }
                     property string rxSpeedStr: formatBytes(netRx)
@@ -1186,6 +1380,25 @@ Scope {
                                 }
                             }
 
+                            FingerprintIndicator {
+                                id: clockFingerprint
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: screenRoot.s(36)
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                status: lockUI.fpState
+                                label: lockUI.fpLabel
+                                attempts: lockUI.fpFailures
+                                maxAttempts: root.fingerprintMaxAttempts
+                                glyphSize: screenRoot.s(40)
+                                labelPixelSize: screenRoot.s(12)
+                                opacity: (screenRoot.inputActive || screenRoot.centerReveal > 0.02) ? 0.0 : 1.0
+                                scale: (screenRoot.inputActive || screenRoot.centerReveal > 0.02) ? 0.92 : 1.0
+                                visible: root.fingerprintAvailable && opacity > 0.01
+
+                                Behavior on opacity { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
+                                Behavior on scale { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
+                            }
+
                             Rectangle {
                                 id: mainDashboardShellShadow
                                 anchors.fill: mainDashboardShell
@@ -1431,7 +1644,20 @@ Scope {
                                             }
                                         }
 
-                                        Item { Layout.fillHeight: true; Layout.preferredHeight: screenRoot.s(16) }
+                                        Item { Layout.fillHeight: true; Layout.preferredHeight: screenRoot.s(8) }
+
+                                        FingerprintIndicator {
+                                            Layout.alignment: Qt.AlignHCenter
+                                            visible: root.fingerprintAvailable
+                                            status: lockUI.fpState
+                                            label: lockUI.fpLabel
+                                            attempts: lockUI.fpFailures
+                                            maxAttempts: root.fingerprintMaxAttempts
+                                            glyphSize: screenRoot.s(44)
+                                            labelPixelSize: screenRoot.s(12)
+                                        }
+
+                                        Item { Layout.fillHeight: true; Layout.preferredHeight: screenRoot.s(8) }
                                     }
                                 }
 
@@ -1669,7 +1895,7 @@ Scope {
                                             }
 
                                             Text {
-                                                text: "Feels like " + screenRoot.getFeelsLike()
+                                                text: I18n.t("calendar.weather.feels") + " " + screenRoot.getFeelsLike()
                                                 font.family: ThemeBackend.fontFamily
                                                 font.pixelSize: screenRoot.s(10.5)
                                                 font.weight: Font.Medium
@@ -1858,20 +2084,6 @@ Scope {
                                     ColumnLayout {
                                         anchors.centerIn: parent
                                         spacing: screenRoot.s(6)
-
-                                        ClickButton {
-                                            Layout.alignment: Qt.AlignHCenter
-                                            buttonText: SysData.isScanningNet ? "Scanning..." : "Scan"
-                                            buttonIcon: SysData.isScanningNet ? "\uF110" : "\uF021"
-                                            iconFontSize: Math.round(screenRoot.s(14))
-                                            textFontSize: Math.round(screenRoot.s(12))
-                                            accentColor: Qt.rgba(ThemeBackend.surface1.r, ThemeBackend.surface1.g, ThemeBackend.surface1.b, 0.7)
-                                            textColor: ThemeBackend.text
-                                            cornerRadius: Math.round(screenRoot.s(8))
-                                            horizontalPadding: Math.round(screenRoot.s(10))
-                                            enabled: !SysData.isScanningNet
-                                            onClicked: SysData.scanNetwork()
-                                        }
 
                                         Rectangle {
                                             Layout.preferredHeight: screenRoot.s(26)
@@ -2075,60 +2287,15 @@ Scope {
                                             Layout.alignment: Qt.AlignVCenter
                                             spacing: 2
 
-                                            Item {
-                                                id: lockMediaTitleClip
+                                            MarqueeText {
                                                 Layout.fillWidth: true
-                                                implicitHeight: lockMediaTitleText.implicitHeight
-                                                clip: true
-
-                                                property int marqueeSpacing: screenRoot.s(30)
-                                                property real scrollProgress: 0.0
-
-                                                Item {
-                                                    id: lockMediaMarquee
-                                                    height: parent.height
-                                                    x: lockMediaTitleText.implicitWidth > lockMediaTitleClip.width ? -lockMediaTitleClip.scrollProgress * (lockMediaTitleText.implicitWidth + lockMediaTitleClip.marqueeSpacing) : 0
-
-                                                    Row {
-                                                        spacing: lockMediaTitleClip.marqueeSpacing
-                                                        Text {
-                                                            id: lockMediaTitleText
-                                                            text: screenRoot.isMediaActive ? (MprisController.trackTitle || "Unknown Track") : I18n.t("music.nothing_playing")
-                                                            font.family: ThemeBackend.fontFamily
-                                                            font.weight: Font.Black
-                                                            font.pixelSize: screenRoot.s(13)
-                                                            color: ThemeBackend.text
-
-                                                            onTextChanged: {
-                                                                lockMediaTitleClip.scrollProgress = 0.0;
-                                                            }
-                                                        }
-
-                                                        Text {
-                                                            text: lockMediaTitleText.text
-                                                            font.family: ThemeBackend.fontFamily
-                                                            font.weight: Font.Black
-                                                            font.pixelSize: screenRoot.s(13)
-                                                            color: ThemeBackend.text
-                                                            visible: lockMediaTitleText.implicitWidth > lockMediaTitleClip.width
-                                                        }
-                                                    }
-                                                }
-
-                                                SequentialAnimation {
-                                                    loops: Animation.Infinite
-                                                    running: screenRoot.wingsReveal > 0.98 && screenRoot.isMediaActive && MprisController.isPlaying && (lockMediaTitleText.implicitWidth > lockMediaTitleClip.width)
-
-                                                    PauseAnimation { duration: 3000 }
-                                                    NumberAnimation {
-                                                        target: lockMediaTitleClip
-                                                        property: "scrollProgress"
-                                                        from: 0.0
-                                                        to: 1.0
-                                                        duration: (lockMediaTitleText.implicitWidth + lockMediaTitleClip.marqueeSpacing) * 25
-                                                    }
-                                                    PropertyAction { target: lockMediaTitleClip; property: "scrollProgress"; value: 0.0 }
-                                                }
+                                                text: screenRoot.isMediaActive ? (MprisController.trackTitle || "Unknown Track") : I18n.t("music.nothing_playing")
+                                                color: ThemeBackend.text
+                                                font.family: ThemeBackend.fontFamily
+                                                font.weight: Font.Black
+                                                font.pixelSize: screenRoot.s(13)
+                                                marqueeSpacing: screenRoot.s(30)
+                                                active: screenRoot.wingsReveal > 0.98 && screenRoot.isMediaActive && MprisController.isPlaying
                                             }
 
                                             Text {

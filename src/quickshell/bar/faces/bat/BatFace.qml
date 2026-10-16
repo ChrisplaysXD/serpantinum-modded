@@ -158,7 +158,7 @@ Item {
     property real targetWidth: {
         if (module && !module.moduleActive) return 0;
         if (root.batStyle === "text") {
-            return (textRow.implicitWidth > 0) ? (textRow.implicitWidth + (isPreview ? 0 : s(isCompact ? 16 : 20))) : 0;
+            return (textRow.implicitWidth > 0) ? (textRow.implicitWidth + (isPreview ? 0 : s(isCompact ? 12 : 16))) : 0;
         }
         return (sysLayout.implicitWidth > 0) ? (sysLayout.implicitWidth + (isPreview ? 0 : s(isCompact ? 8 : 10))) : 0;
     }
@@ -195,14 +195,22 @@ Item {
         opacity: root.showLayout ? 1.0 : 0.0
         Behavior on opacity { NumberAnimation { duration: 450; easing.type: Easing.OutCubic } }
 
-        Text {
+        Item {
             visible: root.effectiveShowIcon
-            text: root.batIcon
-            font.family: ThemeBackend.fontFamily
-            font.pixelSize: root.isDesktop ? s(root.isCompact ? 15 : 16) : s(root.isCompact ? 13 : 14.5)
-            color: textMouseArea.containsMouse ? Qt.lighter(root.batDynamicColor, 1.15) : root.batDynamicColor
+            width: s(root.isCompact ? 18 : 20)
+            height: width
             anchors.verticalCenter: parent.verticalCenter
-            Behavior on color { ColorAnimation { duration: 150 } }
+
+            Text {
+                anchors.centerIn: parent
+                text: root.batIcon
+                font.family: ThemeBackend.iconFont
+                font.pixelSize: s(root.isCompact ? 14 : 15)
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                color: textMouseArea.containsMouse ? Qt.lighter(root.batDynamicColor, 1.15) : root.batDynamicColor
+                Behavior on color { ColorAnimation { duration: 150 } }
+            }
         }
 
         Text {

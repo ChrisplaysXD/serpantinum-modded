@@ -57,6 +57,12 @@ Item {
 
     property real focusPop: 1.0
 
+    property int holdDirection: 0
+    property bool holdTriggered: false
+    property int holdInitialDelay: 400
+    property int holdStartInterval: 130
+    property int holdMinInterval: 30
+
     signal triggered()
     signal clicked()
 
@@ -120,6 +126,29 @@ Item {
 
     function triggerShake() {
         shakeAnim.restart();
+    }
+
+    function beginHold(direction) {
+        root.holdDirection = direction;
+        root.holdTriggered = false;
+        holdDelay.restart();
+    }
+
+    function endHold() {
+        holdDelay.stop();
+        holdRepeat.stop();
+        root.holdDirection = 0;
+    }
+
+    function holdStep() {
+        if (root.isEditing) root.commitValue();
+        if (root.holdDirection > 0) {
+            if (root.value >= root.to) { root.endHold(); return; }
+            root.stepUp();
+        } else if (root.holdDirection < 0) {
+            if (root.value <= root.from) { root.endHold(); return; }
+            root.stepDown();
+        }
     }
 
     function updateScroll() {
@@ -213,6 +242,27 @@ Item {
         id: copyProc
     }
 
+    Timer {
+        id: holdDelay
+        interval: root.holdInitialDelay
+        repeat: false
+        onTriggered: {
+            root.holdTriggered = true;
+            holdRepeat.interval = root.holdStartInterval;
+            root.holdStep();
+            if (root.holdDirection !== 0) holdRepeat.restart();
+        }
+    }
+
+    Timer {
+        id: holdRepeat
+        repeat: true
+        onTriggered: {
+            root.holdStep();
+            interval = Math.max(root.holdMinInterval, Math.round(interval * 0.88));
+        }
+    }
+
     SequentialAnimation {
         id: shakeAnim
         NumberAnimation { target: shakeT; property: "x"; from: 0; to: -5; duration: 45 }
@@ -280,7 +330,13 @@ Item {
             enabled: root.enabled && root.value > root.from
             Layout.alignment: Qt.AlignVCenter
 
+            onPressedChanged: pressed ? root.beginHold(-1) : root.endHold()
+
             onClicked: {
+                if (root.holdTriggered) {
+                    root.holdTriggered = false;
+                    return;
+                }
                 if (root.isEditing) {
                     root.commitValue();
                 }
@@ -523,7 +579,13 @@ Item {
             enabled: root.enabled && root.value < root.to
             Layout.alignment: Qt.AlignVCenter
 
+            onPressedChanged: pressed ? root.beginHold(1) : root.endHold()
+
             onClicked: {
+                if (root.holdTriggered) {
+                    root.holdTriggered = false;
+                    return;
+                }
                 if (root.isEditing) {
                     root.commitValue();
                 }

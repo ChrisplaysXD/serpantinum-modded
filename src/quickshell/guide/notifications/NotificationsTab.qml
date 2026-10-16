@@ -62,7 +62,8 @@ Item {
         "verticalPosition": presetTopV,
         "sound": true,
         "soundFile": "",
-        "showEmptyGraphic": true
+        "showEmptyGraphic": true,
+        "rightClickClose": true
     })
 
     property var notifSettings: {
@@ -96,6 +97,8 @@ Item {
     property bool soundEnabled: notifSettings && notifSettings.sound !== undefined ? notifSettings.sound : true
     property string selectedSound: notifSettings && notifSettings.soundFile !== undefined ? notifSettings.soundFile : ""
     property bool showEmptyGraphic: notifSettings && notifSettings.showEmptyGraphic !== undefined ? notifSettings.showEmptyGraphic : true
+
+    property bool rightClickClose: notifSettings && notifSettings.rightClickClose !== undefined ? notifSettings.rightClickClose : true
 
     function getPresetIndex(h, v) {
         if (Math.abs(v - presetTopV) <= 2 && Math.abs(h - presetRightH) <= 2) return 0;
@@ -185,6 +188,7 @@ Item {
         notificationsTabRoot.soundEnabled = s.sound !== undefined ? s.sound : true;
         notificationsTabRoot.selectedSound = s.soundFile !== undefined ? s.soundFile : "";
         notificationsTabRoot.showEmptyGraphic = s.showEmptyGraphic !== undefined ? s.showEmptyGraphic : true;
+        notificationsTabRoot.rightClickClose = s.rightClickClose !== undefined ? s.rightClickClose : true;
         notificationsTabRoot.notifSettings = s;
     }
 
@@ -708,6 +712,26 @@ Item {
                     onToggled: function(c) {
                         notificationsTabRoot.showEmptyGraphic = c;
                         notificationsTabRoot.updateNotifSetting("showEmptyGraphic", c);
+                    }
+                }
+            }
+
+            SettingsRow {
+                rootObj: notificationsTabRoot.rootObj
+                icon: "󰍽"
+                title: I18n.t("guide.notifications.right_click_close.title", "Close with right click")
+                description: I18n.t("guide.notifications.right_click_close.desc", "Dismiss a notification by right-clicking it")
+
+                Toggle {
+                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                    checked: notificationsTabRoot.rightClickClose
+                    accentColor: ThemeBackend.mauve
+                    baseColor: ThemeBackend.surface1
+                    handleColor: ThemeBackend.crust
+                    handleOffColor: ThemeBackend.text
+                    onToggled: function(c) {
+                        notificationsTabRoot.rightClickClose = c;
+                        notificationsTabRoot.updateNotifSetting("rightClickClose", c);
                     }
                 }
             }

@@ -33,6 +33,7 @@ Item {
         let de = (SystemInfo.desktopEnv || "").toLowerCase();
         if (de.indexOf("niri") !== -1) return "niri";
         if (de.indexOf("sway") !== -1) return "sway";
+        if (de.indexOf("mango") !== -1) return "mango";
         return "hyprland";
     }
 
@@ -267,7 +268,9 @@ Item {
                 ? "niri msg -j outputs 2>/dev/null"
                 : (displayTabRoot.compositor === "sway"
                     ? "swaymsg -t get_outputs -r 2>/dev/null"
-                    : "hyprctl monitors all -j 2>/dev/null || hyprctl monitors -j 2>/dev/null")
+                    : (displayTabRoot.compositor === "mango"
+                        ? "mmsg get all-monitors 2>/dev/null | jq -c '.monitors' 2>/dev/null"
+                        : "hyprctl monitors all -j 2>/dev/null || hyprctl monitors -j 2>/dev/null"))
         ]
         stdout: StdioCollector {
             onStreamFinished: {
@@ -296,6 +299,19 @@ Item {
                                 scale: sc,
                                 active: !isOff
                             });
+                        }
+                    } else if (displayTabRoot.compositor === "mango") {
+                        if (Array.isArray(data)) {
+                            for (let i = 0; i < data.length; i++) {
+                                let item = data[i];
+                                mList.push({
+                                    name: item.name || "",
+                                    dimensions: (item.width || 0) + "x" + (item.height || 0),
+                                    framerate: "60",
+                                    scale: item.scale !== undefined ? item.scale : 1.0,
+                                    active: item.active !== false
+                                });
+                            }
                         }
                     } else if (displayTabRoot.compositor === "sway") {
                         if (Array.isArray(data)) {
@@ -385,6 +401,8 @@ Item {
             Quickshell.execDetached(["bash", "-c", enabled ? "niri msg output " + monName + " on" : "niri msg output " + monName + " off"]);
         } else if (displayTabRoot.compositor === "sway") {
             Quickshell.execDetached(["bash", "-c", "swaymsg output " + monName + (enabled ? " enable" : " disable")]);
+        } else if (displayTabRoot.compositor === "mango") {
+            Quickshell.execDetached(["mmsg", "dispatch", (enabled ? "wakeup_monitor," : "sleep_monitor,") + monName]);
         } else {
             let mon = displayTabRoot.monitorsList.find(m => m.name === monName);
             let modeStr = mon ? (mon.dimensions + "@" + mon.framerate) : "preferred";
@@ -413,7 +431,7 @@ Item {
             Quickshell.execDetached(["bash", "-c", "niri msg output " + monName + " scale " + scaleVal.toString()]);
         } else if (displayTabRoot.compositor === "sway") {
             Quickshell.execDetached(["bash", "-c", "swaymsg output " + monName + " scale " + scaleVal.toString()]);
-        } else {
+        } else if (displayTabRoot.compositor !== "mango") {
             let mon = displayTabRoot.monitorsList.find(m => m.name === monName);
             let modeStr = mon ? (mon.dimensions + "@" + mon.framerate) : "preferred";
             let luaCmd = 'hl.monitor({ output = "' + monName + '", mode = "' + modeStr + '", position = "auto", scale = ' + scaleVal.toString() + ' })';
@@ -810,6 +828,7 @@ Item {
                         }
 
                         SettingsRow {
+                            visible: displayTabRoot.compositor !== "mango"
                             rootObj: displayTabRoot.rootObj
                             baseColor: Qt.alpha(ThemeBackend.surface1, 0.35)
                             icon: "󰍍"

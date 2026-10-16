@@ -102,6 +102,10 @@
         "title": "Animación de centro vacío",
         "desc": "Mostrar el gráfico del gato durmiendo en el centro de notificaciones cuando esté vacío"
       },
+      "right_click_close": {
+        "title": "Cerrar con clic derecho",
+        "desc": "Descartar una notificación con clic derecho"
+      },
       "test": "Probar notificación",
       "test_desc": "Esta es una notificación de prueba"
     },
@@ -166,7 +170,11 @@
       "hooks": {
         "title": "Ganchos (comandos de shell)"
       },
-      "custom_action_desc": "Acción y comando personalizados por tiempo de espera"
+      "custom_action_desc": "Acción y comando personalizados por tiempo de espera",
+      "lock_on_sleep": {
+        "title": "Bloquear antes de suspender",
+        "desc": "Bloquear la sesión antes de que el sistema se suspenda, por ejemplo al cerrar la tapa"
+      }
     },
     "welcome": {
       "by_author": "por @{author}",
@@ -324,6 +332,11 @@
       "width": {
         "title": "Ancho de la barra",
         "desc": "Establecer el ancho de la barra como porcentaje"
+      },
+      "center_by_edges": {
+        "title": "Centrar por los bordes",
+        "desc": "Mantiene márgenes iguales a izquierda y derecha de la barra en lugar de centrar por el módulo central",
+        "desc_vertical": "Mantiene márgenes iguales arriba y abajo de la barra en lugar de centrar por el módulo central"
       },
       "workspaces": {
         "title": "Elegir cantidad de espacios de trabajo a mostrar",
@@ -530,6 +543,30 @@
           "button": "Botón interactivo con fondo",
           "text": "Texto e icono limpios sin fondo"
         }
+      },
+      "media": {
+        "info_mode": {
+          "title": "Secondary info",
+          "desc": "Choose whether to show the song duration or its author",
+          "duration": "Duration",
+          "author": "Author"
+        },
+        "width": {
+          "title": "Width",
+          "desc": "Width of the song title area"
+        },
+        "show_icon": {
+          "title": "Mostrar icono",
+          "desc": "Muestra la portada del álbum o el icono de música"
+        },
+        "show_controls": {
+          "title": "Mostrar controles",
+          "desc": "Muestra los botones de anterior, reproducir y siguiente"
+        },
+        "preview": {
+          "title": "Título de la canción",
+          "author": "Song author"
+        }
       }
     },
     "theme": {
@@ -569,7 +606,8 @@
         "pictures": "Imágenes",
         "music": "Música",
         "documents": "Documentos"
-      }
+      },
+      "done": "Listo"
     },
     "font_picker": {
       "title": "Seleccionar fuente",
@@ -840,6 +878,29 @@
       "smart_autohide": {
         "title": "Ocultación automática inteligente",
         "desc": "Ocultar el dock solo cuando haya ventanas abiertas, mantener visible en el escritorio"
+      },
+      "focus_running": {
+        "title": "Enfocar ventana existente",
+        "desc": "Hacer clic en el icono de una aplicación activa su ventana abierta en lugar de iniciar una nueva instancia"
+      },
+      "show_running_indicators": {
+        "title": "Indicadores de ejecución",
+        "desc": "Mostrar indicadores de punto o barra en los iconos de aplicaciones abiertas"
+      },
+      "show_running_apps": {
+        "title": "Mostrar aplicaciones abiertas",
+        "desc": "Mostrar aplicaciones abiertas no ancladas en el dock"
+      },
+      "running_scope": {
+        "title": "Ámbito de ventanas activas",
+        "desc": "Filtrar las ventanas en ejecución mostradas y controladas por el dock",
+        "auto": "Automático (por defecto del compositor)",
+        "all": "Todos los espacios de trabajo y monitores",
+        "output": "Solo monitor actual",
+        "workspace": "Solo espacio de trabajo activo"
+      },
+      "window_menu": {
+        "untitled": "Untitled"
       }
     },
     "lyrics_picker": {
@@ -924,6 +985,11 @@
       "authenticating": "Autenticando...",
       "enter_pin": "Introduce el PIN"
     },
+    "fingerprint": {
+      "ready": "Toca el sensor",
+      "not_recognized": "Huella no reconocida",
+      "recognized": "Huella reconocida"
+    },
     "power": {
       "suspend": "Suspender",
       "reboot": "Reiniciar",
@@ -982,7 +1048,8 @@
     },
     "actions": {
       "unpair": "Desvincular",
-      "scan": "Escanear"
+      "scan": "Escanear",
+      "sign_in": "Iniciar sesión"
     }
   },
   "notifications": {
@@ -1503,7 +1570,11 @@
     "deploy": {
       "configuring_sddm": "Configurando el gestor de pantalla SDDM...",
       "disabling_dm": "-> Deshabilitando gestor de pantalla en conflicto: {dm}",
-      "sddm_success": "-> Tema material you para SDDM instalado y servicio habilitado [ OK ]"
+      "sddm_success": "-> Tema material you para SDDM instalado y servicio habilitado [ OK ]",
+      "sddm_no_wayland_compositor": "No se encontró un compositor Wayland compatible para la pantalla de inicio de sesión (kwin_wayland/weston), se usa X11 para SDDM.",
+      "sddm_no_xorg": "No se encontró Xorg, se usa {compositor} para SDDM.",
+      "sddm_no_backend": "No se encontró Xorg ni un compositor Wayland compatible para la pantalla de inicio de sesión (kwin_wayland/weston) en /usr/local/bin, /usr/bin o /bin.",
+      "sddm_skipped": "Se omite la configuración de SDDM: no se encontró un servidor gráfico ni un compositor de inicio de sesión utilizable. El gestor de pantalla actual no se modifica."
     }
   },
   "translator": {

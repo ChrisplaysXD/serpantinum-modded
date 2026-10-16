@@ -40,10 +40,7 @@ Item {
         if (module && module.kbStyle !== undefined) return module.kbStyle;
         let dummy = configRevision;
         if (typeof Config !== "undefined" && Config.rawSettings) {
-            let ss = Config.rawSettings.sideBar;
-            if (ss && ss.kbStyle) return ss.kbStyle;
             let bs = Config.rawSettings.bar;
-            if (bs && bs.sideKbStyle) return bs.sideKbStyle;
             if (bs && bs.kbStyle) return bs.kbStyle;
             if (bs && bs.kb && bs.kb.style) return bs.kb.style;
         }
@@ -55,6 +52,7 @@ Item {
     property alias kbPill: kbBtn
     readonly property bool isNiri: NiriState.isNiri
     property bool isSway: false
+    readonly property bool isMango: MangoState.isMango
     property bool niriSubscribed: false
 
     function syncNiriSubscription() {
@@ -111,7 +109,9 @@ Item {
         command: [
             "bash",
             "-c",
-            root.isSway
+            root.isMango
+                ? "layout=$(mmsg get keyboardlayout 2>/dev/null | jq -r '.layout // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
+                : root.isSway
                 ? "layout=$(swaymsg -t get_inputs 2>/dev/null | jq -r '[.[] | select(.type == \"keyboard\" and .xkb_active_layout_name != null)] | .[0].xkb_active_layout_name // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
                 : "layout=$(LC_ALL=C hyprctl devices -j 2>/dev/null | jq -r '(.keyboards[] | select(.main == true) | .active_keymap) // .keyboards[0].active_keymap // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
         ]
@@ -130,7 +130,7 @@ Item {
         command: [
             "bash",
             Caching.qsDir + "/watchers/kb_wait.sh",
-            root.isSway ? "sway" : "hyprland"
+            root.isMango ? "mango" : (root.isSway ? "sway" : "hyprland")
         ]
         onExited: {
             kbPoller.running = false;
@@ -167,6 +167,8 @@ Item {
                 Quickshell.execDetached(["niri", "msg", "action", "switch-layout", "next"]);
             } else if (root.isSway) {
                 Quickshell.execDetached(["swaymsg", "input", "type:keyboard", "xkb_switch_layout", "next"]);
+            } else if (root.isMango) {
+                Quickshell.execDetached(["mmsg", "dispatch", "switch_keyboard_layout"]);
             } else {
                 Quickshell.execDetached(["hyprctl", "switchxkblayout", "main", "next"]);
             }
@@ -206,6 +208,8 @@ Item {
                 Quickshell.execDetached(["niri", "msg", "action", "switch-layout", "next"]);
             } else if (root.isSway) {
                 Quickshell.execDetached(["swaymsg", "input", "type:keyboard", "xkb_switch_layout", "next"]);
+            } else if (root.isMango) {
+                Quickshell.execDetached(["mmsg", "dispatch", "switch_keyboard_layout"]);
             } else {
                 Quickshell.execDetached(["hyprctl", "switchxkblayout", "main", "next"]);
             }

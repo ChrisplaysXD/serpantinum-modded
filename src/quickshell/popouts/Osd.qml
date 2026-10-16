@@ -273,7 +273,7 @@ PanelWindow {
 
     Timer {
         id: briCmdThrottle
-        interval: 400
+        interval: 120
         property int targetPct: -1
         onTriggered: {
             if (targetPct >= 0) {
@@ -508,12 +508,6 @@ PanelWindow {
                 IconButton {
                     Layout.alignment: Qt.AlignHCenter
                     size: osdWindow.s(26)
-                    iconOffsetX: {
-                        if (osdWindow.kind === "airplane" || osdWindow.kind === "capslock") return -1;
-                        if (osdWindow.kind === "volume") return -1;
-                        if (osdWindow.kind === "mic") return 0;
-                        return -3;
-                    }
                     cornerRadius: osdWindow.s(8)
                     buttonIcon: {
                         if (osdWindow.kind === "volume") {
@@ -642,7 +636,7 @@ PanelWindow {
                         if (osdWindow.kind === "brightness") {
                             OsdController.briVal = pct;
                             briCmdThrottle.targetPct = pct;
-                            if (!verticalSlider.isDragging) briCmdThrottle.restart();
+                            if (!briCmdThrottle.running) briCmdThrottle.start();
                         } else if (osdWindow.kind === "volume") {
                             cmdThrottle.targetPct = pct;
                             if (!cmdThrottle.running) cmdThrottle.start();
@@ -685,12 +679,6 @@ PanelWindow {
                         anchors.centerIn: parent
                         size: osdWindow.s(30)
                         cornerRadius: osdWindow.s(8)
-                        iconOffsetX: {
-                            if (osdWindow.kind === "airplane" || osdWindow.kind === "capslock") return -1;
-                            if (osdWindow.kind === "volume") return -1;
-                            if (osdWindow.kind === "mic") return 0;
-                            return -3;
-                        }
                         buttonIcon: {
                             if (osdWindow.kind === "volume") {
                                 return osdWindow.isMuted || osdWindow.volVal === 0 ? "󰖁" : (osdWindow.volVal > 50 ? "󰕾" : "󰖀");
@@ -852,7 +840,7 @@ PanelWindow {
                         if (osdWindow.kind === "brightness") {
                             OsdController.briVal = pct;
                             briCmdThrottle.targetPct = pct;
-                            if (!horizontalSlider.isDragging) briCmdThrottle.restart();
+                            if (!briCmdThrottle.running) briCmdThrottle.start();
                         } else if (osdWindow.kind === "volume") {
                             cmdThrottle.targetPct = pct;
                             if (!cmdThrottle.running) cmdThrottle.start();

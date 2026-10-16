@@ -33,6 +33,20 @@ Item {
         if (want) NiriState.subscribe();
         else NiriState.unsubscribe();
     }
+
+    readonly property bool isMango: MangoState.isMango
+    readonly property int mangoActiveIndex: MangoState.activeIndexFor(myOutput)
+    readonly property var mangoOccupiedMap: MangoState.occupiedByOutput
+    readonly property int mangoTagCount: MangoState.tagCount
+    property bool mangoSubscribed: false
+
+    function syncMangoSubscription() {
+        let want = isMango && moduleActive;
+        if (want === mangoSubscribed) return;
+        mangoSubscribed = want;
+        if (want) MangoState.subscribe();
+        else MangoState.unsubscribe();
+    }
     property int swayActiveIndex: 0
     property var swayOccupiedMap: ({})
 
@@ -76,6 +90,7 @@ Item {
         let count = base;
         if (act >= count) count = act + 1;
         if (isNiri && niriMaxWorkspaceIndex >= count) count = niriMaxWorkspaceIndex + 1;
+        if (isMango && mangoTagCount > 0) count = Math.min(count, mangoTagCount);
         return Math.max(2, count);
     }
 
@@ -141,13 +156,14 @@ Item {
     }
 
     function wsForId(id) {
-        if (isNiri || isSway) return null;
+        if (isNiri || isSway || isMango) return null;
         return Hyprland.workspaces.values.find(w => w.id === id) ?? null;
     }
 
     function isOccupied(index) {
         if (isNiri) return !!(niriExistingMap[index] && niriOccupiedMap[index]);
         if (isSway) return !!swayOccupiedMap[index];
+        if (isMango) return !!(mangoOccupiedMap && MangoState.isOccupied(myOutput, index));
         let ws = wsForId(index + 1);
         return ws !== null && ws.toplevels && ws.toplevels.values && ws.toplevels.values.length > 0;
     }
@@ -164,6 +180,8 @@ Item {
         } else if (isSway) {
             swayActiveIndex = index;
             Quickshell.execDetached(["swaymsg", "workspace", "number", wsId.toString()]);
+        } else if (isMango) {
+            Quickshell.execDetached(["mmsg", "dispatch", "view," + wsId]);
         } else {
             Hyprland.dispatch("hl.dsp.focus({ workspace = " + wsId + " })");
         }
@@ -175,6 +193,8 @@ Item {
             idx = (niriExistingMap[niriActiveIndex] || Object.keys(niriExistingMap).length === 0) ? niriActiveIndex : -1;
         } else if (isSway) {
             idx = swayActiveIndex;
+        } else if (isMango) {
+            idx = mangoActiveIndex;
         } else {
             const fw = Hyprland.focusedWorkspace;
             if (!fw) return -1;
@@ -187,6 +207,7 @@ Item {
         let de = SystemInfo.desktopEnv ? SystemInfo.desktopEnv.toLowerCase() : "";
         root.isSway = de.indexOf("sway") !== -1;
         syncNiriSubscription();
+        syncMangoSubscription();
         if (root.isSway && root.moduleActive) {
             swayPoller.running = true;
         }
@@ -195,10 +216,12 @@ Item {
 
     Component.onDestruction: {
         if (niriSubscribed) NiriState.unsubscribe();
+        if (mangoSubscribed) MangoState.unsubscribe();
     }
 
     onModuleActiveChanged: {
         syncNiriSubscription();
+        syncMangoSubscription();
         if (!moduleActive) {
             if (isSway) {
                 swayPoller.running = false;

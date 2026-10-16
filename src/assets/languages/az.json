@@ -100,6 +100,10 @@
       "empty_graphic": {
         "title": "Bildiriş olmadıqda göstərilən animasiya",
         "desc": "Bildiriş mərkəzi boş olduqda yatan pişik təsvirini göstər"
+      },
+      "right_click_close": {
+        "title": "Sağ klikləmə ilə bağla",
+        "desc": "Bildirişi sağ klikləməklə bağla"
       }
     },
     "idle": {
@@ -163,7 +167,11 @@
       "hooks": {
         "title": "Hadisə əmrləri (qabıq əmrləri)"
       },
-      "custom_action_desc": "Xüsusi vaxt aşımı fəaliyyəti və əmri"
+      "custom_action_desc": "Xüsusi vaxt aşımı fəaliyyəti və əmri",
+      "lock_on_sleep": {
+        "title": "Yuxudan əvvəl kilidlə",
+        "desc": "Sistem dayandırılmazdan əvvəl, məsələn qapaq bağlananda, sessiyanı kilidlə"
+      }
     },
     "welcome": {
       "by_author": "Müəllif: @{author}",
@@ -321,6 +329,11 @@
       "width": {
         "title": "Zolağın eni",
         "desc": "Zolağın enini faizlə təyin edin"
+      },
+      "center_by_edges": {
+        "title": "Kənarlara görə mərkəzləşdir",
+        "desc": "Orta modula görə mərkəzləşdirmək əvəzinə panelin sol və sağ kənarlarında bərabər boşluq saxlayır",
+        "desc_vertical": "Orta modula görə mərkəzləşdirmək əvəzinə panelin yuxarı və aşağı kənarlarında bərabər boşluq saxlayır"
       },
       "workspaces": {
         "title": "Göstəriləcək iş sahələrinin sayını seçin",
@@ -527,6 +540,30 @@
           "button": "Arxa planlı interaktiv düymə",
           "text": "Arxa plansız sadə mətn və ikon"
         }
+      },
+      "media": {
+        "info_mode": {
+          "title": "Secondary info",
+          "desc": "Choose whether to show the song duration or its author",
+          "duration": "Duration",
+          "author": "Author"
+        },
+        "width": {
+          "title": "Width",
+          "desc": "Width of the song title area"
+        },
+        "show_icon": {
+          "title": "İkonu göstər",
+          "desc": "Albom üz qabığını və ya musiqi ikonunu göstər"
+        },
+        "show_controls": {
+          "title": "İdarəetməni göstər",
+          "desc": "Əvvəlki, oxut və növbəti düymələrini göstər"
+        },
+        "preview": {
+          "title": "Mahnının adı",
+          "author": "Song author"
+        }
       }
     },
     "theme": {
@@ -566,7 +603,8 @@
         "pictures": "Şəkillər",
         "music": "Musiqi",
         "documents": "Sənədlər"
-      }
+      },
+      "done": "Hazırdır"
     },
     "font_picker": {
       "title": "Yazı növü seç",
@@ -790,6 +828,29 @@
       "smart_autohide": {
         "title": "Ağıllı avto-gizlətmə",
         "desc": "Doku yalnız pəncərələr açıq olduqda gizlət, masaüstündə görünən saxla"
+      },
+      "focus_running": {
+        "title": "Mövcud pəncərəni fokuslayın",
+        "desc": "Tətbiq ikonuna kliklədikdə yeni nüsxə başlatmaq əvəzinə açıq pəncərəsi aktivləşdirilir"
+      },
+      "show_running_indicators": {
+        "title": "İşləmə indikatorları",
+        "desc": "Açıq tətbiq ikonlarında nöqtə və ya xətt indikatorlarını göstərin"
+      },
+      "show_running_apps": {
+        "title": "Açıq tətbiqləri göstərin",
+        "desc": "Bərkidilməmiş açıq tətbiqləri dokda göstərin"
+      },
+      "running_scope": {
+        "title": "Aktiv pəncərə əhatəsi",
+        "desc": "Dok tərəfindən göstərilən və idarə olunan işləyən pəncərələri filtrləyin",
+        "auto": "Avtomatik (kompozitor susmaya görə)",
+        "all": "Bütün iş sahələri və monitorlar",
+        "output": "Yalnız cari monitor",
+        "workspace": "Yalnız aktiv iş sahəsi"
+      },
+      "window_menu": {
+        "untitled": "Untitled"
       }
     },
     "lyrics_picker": {
@@ -874,6 +935,11 @@
       "authenticating": "Kimlik doğrulanır...",
       "enter_pin": "PIN daxil edin"
     },
+    "fingerprint": {
+      "ready": "Sensora toxunun",
+      "not_recognized": "Barmaq izi tanınmadı",
+      "recognized": "Barmaq izi tanındı"
+    },
     "power": {
       "suspend": "Yuxu rejiminə keçir",
       "reboot": "Yenidən başlat",
@@ -932,7 +998,8 @@
     },
     "actions": {
       "unpair": "Cütləşdirməni ləğv et",
-      "scan": "Axtar"
+      "scan": "Axtar",
+      "sign_in": "Daxil ol"
     }
   },
   "notifications": {
@@ -1453,7 +1520,11 @@
     "deploy": {
       "configuring_sddm": "SDDM giriş ekranı idarəedicisi tənzimlənir...",
       "disabling_dm": "-> Uyğunsuzluq yaradan giriş ekranı idarəedicisi söndürülür: {dm}",
-      "sddm_success": "-> SDDM Material You mövzusu quraşdırılıb və xidmət aktivdir [ OK ]"
+      "sddm_success": "-> SDDM Material You mövzusu quraşdırılıb və xidmət aktivdir [ OK ]",
+      "sddm_no_wayland_compositor": "Giriş ekranı üçün dəstəklənən Wayland kompozitoru (kwin_wayland/weston) tapılmadı, SDDM üçün X11 istifadə olunur.",
+      "sddm_no_xorg": "Xorg tapılmadı, SDDM üçün {compositor} istifadə olunur.",
+      "sddm_no_backend": "/usr/local/bin, /usr/bin və ya /bin içində nə Xorg, nə də giriş ekranı üçün dəstəklənən Wayland kompozitoru (kwin_wayland/weston) tapıldı.",
+      "sddm_skipped": "SDDM quraşdırılması ötürüldü: istifadə oluna bilən ekran serveri və ya giriş kompozitoru tapılmadı. Cari ekran meneceri dəyişdirilmədi."
     }
   },
   "translator": {

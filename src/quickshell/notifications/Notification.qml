@@ -212,6 +212,7 @@ Rectangle {
         id: cardHover
         anchors.fill: parent
         hoverEnabled: true
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         cursorShape: Qt.PointingHandCursor
         property real startRootX: 0
         property real startRootY: 0
@@ -225,6 +226,7 @@ Rectangle {
         }
 
         onPressed: (mouse) => {
+            if (mouse.button === Qt.RightButton) return;
             let r = getTrackingRoot();
             let pt = mapToItem(r, mouse.x, mouse.y);
             startRootX = pt.x;
@@ -236,7 +238,7 @@ Rectangle {
         }
 
         onPositionChanged: (mouse) => {
-            if (!pressed) return;
+            if (!pressed || pressedButtons !== Qt.LeftButton) return;
             let r = getTrackingRoot();
             let pt = mapToItem(r, mouse.x, mouse.y);
             let dx = pt.x - startRootX;
@@ -264,6 +266,14 @@ Rectangle {
         }
 
         onReleased: (mouse) => {
+            if (mouse.button === Qt.RightButton) {
+                let cfg = Config.getSetting("notifications", {});
+                if (!cfg || cfg.rightClickClose !== false) {
+                    typeRoot.isDismissing = true;
+                    typeRoot.doClose();
+                }
+                return;
+            }
             cardHover.preventStealing = false;
             if (draggingH) {
                 let threshold = typeRoot.width * 0.18;
@@ -518,6 +528,7 @@ Rectangle {
                 Layout.fillWidth: true
                 spacing: typeRoot.showIcon ? s(10) : 0
                 Layout.alignment: Qt.AlignTop
+                layoutDirection: I18n.layoutDirection
 
                 Item {
                     Layout.alignment: Qt.AlignTop
@@ -574,18 +585,20 @@ Rectangle {
 
                         RowLayout {
                             id: headerContentContainer
-                            anchors.left: parent.left
+                            x: I18n.rtl ? (parent.width - width) : 0
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: s(6)
+                            layoutDirection: I18n.layoutDirection
                             opacity: Math.max(0.0, (typeRoot.expandProgress - 0.25) / 0.75)
                             visible: opacity > 0.0
                         }
 
                         Text {
                             id: collapsedSummary
-                            anchors.left: parent.left
+                            x: I18n.rtl ? (parent.width - width) : 0
                             anchors.verticalCenter: parent.verticalCenter
                             width: Math.max(0, Math.min(implicitWidth, parent.width - typeRoot.expandBtnSpace - timeMetrics.width - typeRoot.dotSpace))
+                            horizontalAlignment: I18n.textAlignment
                             text: typeRoot.fullSummary
                             font.family: ThemeBackend.fontFamily
                             font.weight: Font.Bold
@@ -599,8 +612,7 @@ Rectangle {
 
                         Text {
                             id: dotLabel
-                            anchors.left: collapsedSummary.right
-                            anchors.leftMargin: s(6)
+                            x: I18n.rtl ? (collapsedSummary.x - implicitWidth - s(6)) : (collapsedSummary.x + collapsedSummary.width + s(6))
                             anchors.verticalCenter: parent.verticalCenter
                             text: "•"
                             font.family: ThemeBackend.fontFamily
@@ -618,8 +630,8 @@ Rectangle {
                             font.pixelSize: s(11)
                             color: ThemeBackend.subtext1
 
-                            readonly property real startX: collapsedSummary.width + s(12) + dotLabel.implicitWidth
-                            readonly property real endX: Math.max(0, topHeaderRow.width - typeRoot.expandBtnSpace - implicitWidth)
+                            readonly property real startX: I18n.rtl ? (topHeaderRow.width - collapsedSummary.width - s(12) - dotLabel.implicitWidth - implicitWidth) : (collapsedSummary.width + s(12) + dotLabel.implicitWidth)
+                            readonly property real endX: I18n.rtl ? typeRoot.expandBtnSpace : Math.max(0, topHeaderRow.width - typeRoot.expandBtnSpace - implicitWidth)
                             x: typeRoot.timeOnNextRowCollapsed ? endX : (startX + (endX - startX) * typeRoot.expandProgress)
 
                             opacity: typeRoot.timeOnNextRowCollapsed ? Math.max(0.0, (typeRoot.expandProgress - 0.25) / 0.75) : 1.0
@@ -628,9 +640,8 @@ Rectangle {
 
                         Column {
                             id: collapsedTwoLineContainer
-                            anchors.left: parent.left
-                            anchors.right: expandButton.visible ? expandButton.left : parent.right
-                            anchors.rightMargin: expandButton.visible ? s(6) : 0
+                            x: I18n.rtl ? (expandButton.visible ? expandButton.width + s(6) : 0) : 0
+                            width: parent.width - (expandButton.visible ? expandButton.width + s(6) : 0)
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: s(1)
                             opacity: typeRoot.timeOnNextRowCollapsed ? Math.max(0.0, 1.0 - typeRoot.expandProgress * 3.0) : 0.0
@@ -638,6 +649,7 @@ Rectangle {
 
                             Text {
                                 width: parent.width
+                                horizontalAlignment: I18n.textAlignment
                                 text: typeRoot.summaryPrefix
                                 font.family: ThemeBackend.fontFamily
                                 font.weight: Font.Bold
@@ -650,6 +662,7 @@ Rectangle {
                             Row {
                                 spacing: s(5)
                                 width: parent.width
+                                layoutDirection: I18n.layoutDirection
 
                                 Text {
                                     text: typeRoot.summaryLastWord
@@ -682,7 +695,7 @@ Rectangle {
 
                         FlipIcon {
                             id: expandButton
-                            anchors.right: parent.right
+                            x: I18n.rtl ? 0 : (parent.width - width)
                             anchors.verticalCenter: parent.verticalCenter
                             visible: typeRoot.canExpand
                             size: s(28)
@@ -709,6 +722,7 @@ Rectangle {
                             anchors.top: parent.top
                             anchors.left: parent.left
                             anchors.right: parent.right
+                            horizontalAlignment: I18n.textAlignment
                             text: typeRoot.fullSummary
                             font.family: ThemeBackend.fontFamily
                             font.weight: Font.Bold
@@ -735,6 +749,7 @@ Rectangle {
                             anchors.top: parent.top
                             anchors.left: parent.left
                             anchors.right: parent.right
+                            horizontalAlignment: I18n.textAlignment
                             text: typeRoot.fullBody
                             font.family: ThemeBackend.fontFamily
                             font.weight: Font.Normal
@@ -751,6 +766,7 @@ Rectangle {
                             anchors.top: parent.top
                             anchors.left: parent.left
                             anchors.right: parent.right
+                            horizontalAlignment: I18n.textAlignment
                             text: typeRoot.fullBody
                             font.family: ThemeBackend.fontFamily
                             font.weight: Font.Normal
@@ -792,8 +808,10 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             anchors.topMargin: s(10)
-                            anchors.rightMargin: s(8)
+                            anchors.leftMargin: I18n.rtl ? s(8) : 0
+                            anchors.rightMargin: I18n.rtl ? 0 : s(8)
                             spacing: s(8)
+                            layoutDirection: I18n.layoutDirection
 
                             Item {
                                 Layout.fillWidth: true

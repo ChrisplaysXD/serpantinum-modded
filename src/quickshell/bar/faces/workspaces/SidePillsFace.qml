@@ -54,6 +54,7 @@ Item {
                 widget.activeIndex;
                 widget.niriOccupiedMap;
                 widget.swayOccupiedMap;
+                widget.mangoOccupiedMap;
             }
             return (curIdx >= 0 && widget) ? getY(curIdx, curIdx) : 0;
         }
