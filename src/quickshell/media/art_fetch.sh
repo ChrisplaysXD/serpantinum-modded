@@ -229,13 +229,20 @@ if ! $CACHE_VALID && [ -n "$trackHash" ]; then
 
         echo "$textColor" > "$TEXT_PATH"
 
+        # Call matugen for album art primary color (solid hex, no gradient crash)
+        matugen image "$tempArt" --source-color-index 0 -c ~/vibrant_dots_backup/matugen/config.toml 2>/dev/null || true
+        PRIMARY_HEX=$(grep "^foreground = " ~/.config/cava/colors 2>/dev/null | sed -E "s/foreground = '#([0-9a-fA-F]{6})'/\1/" | head -1)
+        PRIMARY_HEX="#${PRIMARY_HEX:-cba6f7}"
+        echo "${PRIMARY_HEX}" > "$COLOR_PATH"
+
         mv -f "$tempBlur" "$BLUR_PATH"
         mv -f "$tempArt" "$FINAL_ART"
 
         DISPLAY_ART="$FINAL_ART"
         DISPLAY_BLUR="$BLUR_PATH"
-        DISPLAY_GRAD="linear-gradient(45deg, $c1, $c2, $c3, $c1)"
-        DISPLAY_TEXT="$textColor"
+        # Read matugen primary hex (solid string for shader, not gradient)
+        DISPLAY_GRAD="$PRIMARY_HEX"
+        DISPLAY_TEXT="#cdd6f4"
         IS_PLACEHOLDER=false
 
         (cd "$TMP_DIR" 2>/dev/null && ls -1t -- *_art.jpg 2>/dev/null | tail -n +35 | while read -r f; do
@@ -306,66 +313,10 @@ jq -n -c \
         rawUrl: $rawUrl,
         isPlaceholder: $isPlaceholder
     }'
-
-update_cava_album_colors() {
-    if [ -n "$COLOR_PATH" ] && [ -f "$COLOR_PATH" ]; then
-        # Update cava config with album gradient colors
-        if [ -f "$COLOR_PATH" ]; then
-            # Read gradient colors from grad file (simple format: linear-gradient(45deg, #c1, #c2, #c3, #c1))
-            # For cava, we'll add a basic color reference
-            if [ -f ~/.config/cava/config ]; then
-                # Append/update gradient reference
-                echo "# Album gradient from art_fetch: $(date +%Y%m%d)" >> ~/.config/cava/config
-            fi
-        fi
-    fi
-}
-update_cava_album_colors
-
+# CAVA album art sync (minimal, robust)
 update_cava_album_colors_full() {
-    # Full CAVA album color sync using matugen-style vibrant palette
-    # Updates ~/.config/cava/config with gradient from art_fetch grad.txt
-    if [ -n "$COLOR_PATH" ] && [ -f "$COLOR_PATH" ]; then
-        # Read gradient from grad file (format: linear-gradient(45deg, #c1, #c2, #c3, #c1))
-        GRAD_LINE=$(cat "$COLOR_PATH" 2>/dev/null | head -1)
-        if [ -n "$GRAD_LINE" ]; then
-            # Extract hex colors using basic parsing
-            COLORS=$(echo "$GRAD_LINE" | grep -oE '#[0-9a-fA-F]{6}' | tr -d ' ' | sort -u)
-            if [ -n "$COLORS" ]; then
-                # Write/update .config/cava/config with gradient reference
-                CAVA_CONFIG="$HOME/.config/cava/config"
-                mkdir -p "$(dirname "$CAVA_CONFIG")"
-                # Add/update [color] section with gradient
-                # Preserve existing config, add/update gradient line
-                awk '
-                    BEGIN {in_color=0; gradient_added=0}
-                    /^\[color\]/ {in_color=1; print; next}
-                    /^[ \t]*$/ && in_color {next}
-                    /^\[/ {in_color=0}
-                    in_color && /gradient/ {gradient_added=1; print "gradient = 1 # full sync from art_fetch"; print "# colors: '"$COLORS"'"; next}
-                    in_color {print}
-                    !in_color {if (!gradient_added) print; else {gradient_added=1; print "gradient = 1 # full sync from art_fetch"}}' "$CAVA_CONFIG" 2>/dev/null > "${CAVA_CONFIG}.tmp" || true
-                # If awk didn't work properly, do basic append/update
-                if [ -f "$CAVA_CONFIG" ]; then
-                    if ! grep -q "gradient = 1" "$CAVA_CONFIG"; then
-                        # Append or insert gradient reference
-                        echo "[color]" >> "$CAVA_CONFIG.tmp" 2>/dev/null || echo "gradient = 1" >> "$CAVA_CONFIG"
-                        echo "gradient = 1  # full sync from album art (grad.txt: $GRAD_LINE)" >> "$CAVA_CONFIG"
-                        echo "# Palette colors: $COLORS" >> "$CAVA_CONFIG"
-                    fi
-                else
-                    echo "[general]" > "$CAVA_CONFIG"
-                    echo "framerate = 60" >> "$CAVA_CONFIG"
-                    echo "bars = 0" >> "$CAVA_CONFIG"
-                    echo "[color]" >> "$CAVA_CONFIG"
-                    echo "gradient = 1  # full sync from album art (grad.txt)" >> "$CAVA_CONFIG"
-                    echo "# Palette: $COLORS" >> "$CAVA_CONFIG"
-                fi
-                mv -f "${CAVA_CONFIG}.tmp" "$CAVA_CONFIG" 2>/dev/null || true
-                # Send signal to cava to reload
-                killall -USR1 cava 2>/dev/null || true
-            fi
-        fi
-    fi
+    [ -n "$COLOR_PATH" ] && [ -f "$COLOR_PATH" ] || return
+    python3 /home/chrisplaysxd/.local/share/serpantinum/src/scripts/update_cava_config.py "$HOME/.config/cava/colors" "" "$COLOR_PATH"
+    killall -USR1 cava 2>/dev/null || true
 }
 update_cava_album_colors_full
