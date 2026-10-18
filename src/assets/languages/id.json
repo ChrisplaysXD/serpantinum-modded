@@ -350,10 +350,6 @@
           "desc": "Pilih gaya visual untuk indikator ruang kerja"
         }
       },
-      "opacity": {
-        "title": "Opasitas bilah",
-        "desc": "Atur opasitas bilah sebagai persentase"
-      },
       "style": {
         "title": "Gaya bilah",
         "desc": "Pilih antara tampilan bilah modular, padat, atau terisi",
@@ -566,6 +562,30 @@
           "title": "Judul lagu",
           "author": "Song author"
         }
+      },
+      "thickness": {
+        "title": "Ketebalan bar",
+        "desc": "Ubah ketebalan bar, modul menyesuaikan"
+      },
+      "menu": {
+        "show_settings": {
+          "title": "Tampilkan ikon pengaturan",
+          "desc": "Menampilkan tombol yang membuka pengaturan"
+        },
+        "show_launcher": {
+          "title": "Tampilkan ikon peluncur",
+          "desc": "Menampilkan tombol pencarian yang membuka peluncur"
+        },
+        "style": {
+          "title": "Gaya",
+          "desc": "Pilih tampilan visual modul menu",
+          "name": {
+            "button": "Tombol",
+            "icon": "Ikon"
+          },
+          "button": "Tombol ikon interaktif dengan latar belakang",
+          "icon": "Ikon bersih tanpa latar belakang"
+        }
       }
     },
     "theme": {
@@ -591,6 +611,18 @@
         "select_wallpaper": "Pilih gambar latar",
         "no_wallpaper_selected": "Tidak ada gambar latar yang dipilih",
         "select": "Gambar latar"
+      },
+      "element_opacity": {
+        "title": "Opasitas elemen",
+        "desc": "Opasitas bilah, dock, widget, dan semua elemen shell lainnya"
+      },
+      "blur_background": {
+        "title": "Tambahkan latar belakang wallpaper yang diburamkan",
+        "desc": "Memburamkan wallpaper di belakang setiap elemen yang menggunakan transparansi",
+        "style": {
+          "blur": "Buram",
+          "liquid": "Kaca cair"
+        }
       }
     },
     "file_picker": {
@@ -799,10 +831,6 @@
         "done": "Selesai",
         "empty": "Tidak ada aplikasi yang cocok"
       },
-      "opacity": {
-        "title": "Opasitas dok",
-        "desc": "Sesuaikan tingkat opasitas latar belakang dok"
-      },
       "override_bounds": {
         "title": "Abaikan koreksi ukuran di luar batas layar",
         "desc": "Pertahankan ukuran elemen kustom meskipun dok melebihi batas layar"
@@ -981,7 +1009,27 @@
     "searching_lyrics": "Mencari lirik...",
     "no_lyrics": "Lirik tidak ditemukan",
     "select_local_file": "Pilih berkas lokal",
-    "lyrics": "Lirik"
+    "lyrics": "Lirik",
+    "audio": {
+      "title": "Audio",
+      "balance": "Keseimbangan kanal",
+      "reset": "Atur ulang",
+      "centered": "Seimbang",
+      "left_slightly_favored": "Sedikit condong ke kiri",
+      "right_slightly_favored": "Sedikit condong ke kanan",
+      "left_only": "Hanya kanal kiri",
+      "right_only": "Hanya kanal kanan",
+      "left_favored": "Condong ke kiri",
+      "right_favored": "Condong ke kanan",
+      "test": "Uji",
+      "stop_test": "Hentikan",
+      "mono": "Audio mono",
+      "swap": "Tukar kiri/kanan",
+      "dynamic_range": "Rentang dinamis",
+      "off": "Mati",
+      "balanced": "Seimbang",
+      "night": "Malam"
+    }
   },
   "network": {
     "tabs": {

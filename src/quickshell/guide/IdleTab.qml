@@ -7,19 +7,8 @@ import "../"
 import "../reusables"
 import "../reusables/guide"
 
-Item {
+GuideTab {
     id: idleTabRoot
-    required property var rootObj
-    required property int tabIndex
-
-    anchors.fill: parent
-    visible: rootObj.currentTab === tabIndex
-    opacity: visible ? 1.0 : 0.0
-    property real slideY: visible ? 0 : rootObj.s(10)
-
-    Behavior on slideY { NumberAnimation { duration: 250; easing.type: Easing.OutQuart } }
-    transform: Translate { y: slideY }
-    Behavior on opacity { NumberAnimation { duration: 250 } }
 
     property bool isNiri: false
     property bool isMango: false
@@ -756,61 +745,63 @@ Item {
             width: parent.width
             spacing: rootObj.s(6)
 
-            SettingsRow {
-                rootObj: idleTabRoot.rootObj
-                settingId: "idle_enabled"
-                searchKeywords: "idle enable system power sleep timeout"
-                icon: "󰒲"
-                title: I18n.t("guide.idle.enabled.title", "Enable Idle System")
-                description: I18n.t("guide.idle.enabled.desc", "Activate power management and lock timeouts")
+            SettingsBlob {
+                SettingsRow {
+                    rootObj: idleTabRoot.rootObj
+                    settingId: "idle_enabled"
+                    searchKeywords: "idle enable system power sleep timeout"
+                    icon: "󰒲"
+                    title: I18n.t("guide.idle.enabled.title", "Enable Idle System")
+                    description: I18n.t("guide.idle.enabled.desc", "Activate power management and lock timeouts")
 
-                Toggle {
-                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                    checked: idleTabRoot.idleEnabled
-                    accentColor: ThemeBackend.mauve
-                    baseColor: ThemeBackend.surface1
-                    handleColor: ThemeBackend.crust
-                    handleOffColor: ThemeBackend.text
-                    onToggled: function(c) { idleTabRoot.updateRootSetting("enabled", c); }
+                    Toggle {
+                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                        checked: idleTabRoot.idleEnabled
+                        accentColor: ThemeBackend.mauve
+                        baseColor: ThemeBackend.surface1
+                        handleColor: ThemeBackend.crust
+                        handleOffColor: ThemeBackend.text
+                        onToggled: function(c) { idleTabRoot.updateRootSetting("enabled", c); }
+                    }
                 }
-            }
 
-            SettingsRow {
-                rootObj: idleTabRoot.rootObj
-                settingId: "idle_lock_on_sleep"
-                searchKeywords: "lock sleep suspend lid close hibernate"
-                icon: "󰌾"
-                title: I18n.t("guide.idle.lock_on_sleep.title", "Lock before sleep")
-                description: I18n.t("guide.idle.lock_on_sleep.desc", "Lock the session before the system suspends, such as when closing the lid")
+                SettingsRow {
+                    rootObj: idleTabRoot.rootObj
+                    settingId: "idle_lock_on_sleep"
+                    searchKeywords: "lock sleep suspend lid close hibernate"
+                    icon: "󰌾"
+                    title: I18n.t("guide.idle.lock_on_sleep.title", "Lock before sleep")
+                    description: I18n.t("guide.idle.lock_on_sleep.desc", "Lock the session before the system suspends, such as when closing the lid")
 
-                Toggle {
-                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                    checked: idleTabRoot.lockOnSleep
-                    accentColor: ThemeBackend.mauve
-                    baseColor: ThemeBackend.surface1
-                    handleColor: ThemeBackend.crust
-                    handleOffColor: ThemeBackend.text
-                    onToggled: function(c) { idleTabRoot.updateRootSetting("lockOnSleep", c); }
+                    Toggle {
+                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                        checked: idleTabRoot.lockOnSleep
+                        accentColor: ThemeBackend.mauve
+                        baseColor: ThemeBackend.surface1
+                        handleColor: ThemeBackend.crust
+                        handleOffColor: ThemeBackend.text
+                        onToggled: function(c) { idleTabRoot.updateRootSetting("lockOnSleep", c); }
+                    }
                 }
-            }
 
-            SettingsRow {
-                rootObj: idleTabRoot.rootObj
-                settingId: "idle_manual_inhibit"
-                searchKeywords: "do not disturb keep awake inhibit idle sleep"
-                visible: idleTabRoot.idleEnabled
-                icon: "󰅶"
-                title: I18n.t("guide.idle.manual_inhibit.title", "Do Not Disturb (Keep Awake)")
-                description: I18n.t("guide.idle.manual_inhibit.desc", "Manually prevent the system from idling")
+                SettingsRow {
+                    rootObj: idleTabRoot.rootObj
+                    settingId: "idle_manual_inhibit"
+                    searchKeywords: "do not disturb keep awake inhibit idle sleep"
+                    visible: idleTabRoot.idleEnabled
+                    icon: "󰅶"
+                    title: I18n.t("guide.idle.manual_inhibit.title", "Do Not Disturb (Keep Awake)")
+                    description: I18n.t("guide.idle.manual_inhibit.desc", "Manually prevent the system from idling")
 
-                Toggle {
-                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                    checked: idleTabRoot.manualInhibit
-                    accentColor: ThemeBackend.mauve
-                    baseColor: ThemeBackend.surface1
-                    handleColor: ThemeBackend.crust
-                    handleOffColor: ThemeBackend.text
-                    onToggled: function(c) { idleTabRoot.updateRootSetting("manualInhibit", c); }
+                    Toggle {
+                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                        checked: idleTabRoot.manualInhibit
+                        accentColor: ThemeBackend.mauve
+                        baseColor: ThemeBackend.surface1
+                        handleColor: ThemeBackend.crust
+                        handleOffColor: ThemeBackend.text
+                        onToggled: function(c) { idleTabRoot.updateRootSetting("manualInhibit", c); }
+                    }
                 }
             }
 
@@ -818,7 +809,15 @@ Item {
                 Layout.fillWidth: true
                 implicitHeight: actionsBoxCol.implicitHeight + rootObj.s(24)
                 radius: ThemeBackend.borderRadius
-                color: Qt.alpha(ThemeBackend.surface0, 0.4)
+                color: gf1.active ? "transparent" : Qt.alpha(ThemeBackend.surface0, 0.4)
+
+                GlassFill {
+                    id: gf1
+                    anchors.fill: parent
+                    radius: parent.radius
+                    tintColor: Qt.alpha(ThemeBackend.surface0, 0.4)
+                    tintAmount: 0.25
+                }
                 border.width: 0
                 visible: idleTabRoot.idleEnabled
 

@@ -350,10 +350,6 @@
           "desc": "Choose the visual style for workspace indicators"
         }
       },
-      "opacity": {
-        "title": "Bar opacity",
-        "desc": "Set the opacity of the bar as a percentage"
-      },
       "style": {
         "title": "Bar style",
         "desc": "Choose between modular, solid or a filled bar look",
@@ -566,6 +562,30 @@
           "title": "Song title",
           "author": "Song author"
         }
+      },
+      "thickness": {
+        "title": "Bar thickness",
+        "desc": "Change how thick the bar is, modules scale to fit"
+      },
+      "menu": {
+        "show_settings": {
+          "title": "Show settings icon",
+          "desc": "Display the button that opens settings"
+        },
+        "show_launcher": {
+          "title": "Show launcher icon",
+          "desc": "Display the search button that opens the launcher"
+        },
+        "style": {
+          "title": "Style",
+          "desc": "Choose the visual appearance of the menu module",
+          "name": {
+            "button": "Button",
+            "icon": "Icon"
+          },
+          "button": "Interactive icon buttons with background",
+          "icon": "Clean icons without background"
+        }
       }
     },
     "theme": {
@@ -577,6 +597,18 @@
       "radius": {
         "title": "Border radius",
         "desc": "Corner radius for UI elements"
+      },
+      "element_opacity": {
+        "title": "Element opacity",
+        "desc": "Opacity of the bar, dock, widgets and every other shell element"
+      },
+      "blur_background": {
+        "title": "Add a blurred wallpaper background",
+        "desc": "Blur the wallpaper behind every element that uses transparency",
+        "style": {
+          "blur": "Blur",
+          "liquid": "Liquid glass"
+        }
       },
       "colors": {
         "title": "Color themes",
@@ -781,6 +813,10 @@
         "title": "Floating dock",
         "desc": "Detach dock from screen edge with rounded corners"
       },
+      "background": {
+        "title": "Draw a background behind apps",
+        "desc": "Show the dock panel behind app icons"
+      },
       "transparency": {
         "title": "Dock transparency",
         "desc": "Adjust dock background opacity level"
@@ -798,10 +834,6 @@
         "search": "Search apps...",
         "done": "Done",
         "empty": "No matching applications"
-      },
-      "opacity": {
-        "title": "Dock opacity",
-        "desc": "Adjust dock background opacity level"
       },
       "override_bounds": {
         "title": "Override out-of-screen-bounds size correction",
@@ -969,6 +1001,26 @@
     "eq": {
       "apply": "Apply",
       "saved": "Saved"
+    },
+    "audio": {
+      "title": "Audio",
+      "balance": "Channel balance",
+      "reset": "Reset",
+      "centered": "Centered",
+      "left_slightly_favored": "Slightly left favored",
+      "right_slightly_favored": "Slightly right favored",
+      "left_only": "Left only",
+      "right_only": "Right only",
+      "left_favored": "Left favored",
+      "right_favored": "Right favored",
+      "test": "Test",
+      "stop_test": "Stop",
+      "mono": "Mono audio",
+      "swap": "Swap L/R",
+      "dynamic_range": "Dynamic range",
+      "off": "Off",
+      "balanced": "Balanced",
+      "night": "Night"
     },
     "presets": {
       "flat": "Flat",

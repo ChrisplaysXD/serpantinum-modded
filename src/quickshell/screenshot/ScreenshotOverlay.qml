@@ -767,10 +767,20 @@ PanelWindow {
 
             Rectangle {
                 anchors.fill: parent
-                color: ThemeBackend.base
+                color: ThemeBackend.liquidGlass ? Qt.alpha(ThemeBackend.base, ThemeBackend.elementOpacity) : ThemeBackend.base
                 border.color: Qt.rgba(ThemeBackend.text.r, ThemeBackend.text.g, ThemeBackend.text.b, 0.08)
-                border.width: s(1)
+                border.width: ThemeBackend.liquidGlass ? 0 : s(1)
                 radius: ThemeBackend.borderRadius
+
+                WallpaperBlur {
+                    z: -1
+                    anchors.fill: parent
+                    surfaceEnabled: ThemeBackend.liquidGlass
+                    topLeftRadius: parent.radius
+                    topRightRadius: parent.radius
+                    bottomLeftRadius: parent.radius
+                    bottomRightRadius: parent.radius
+                }
 
                 MouseArea {
                     anchors.fill: parent
@@ -795,9 +805,9 @@ PanelWindow {
                 anchors.top: toolbar.fitsOutsideBottom ? parent.bottom : undefined
                 anchors.topMargin: toolbar.fitsOutsideBottom ? s(4) : 0
 
-                color: ThemeBackend.base
+                color: ThemeBackend.liquidGlass ? Qt.alpha(ThemeBackend.base, ThemeBackend.elementOpacity) : ThemeBackend.base
                 border.color: Qt.rgba(ThemeBackend.text.r, ThemeBackend.text.g, ThemeBackend.text.b, 0.08)
-                border.width: s(1)
+                border.width: ThemeBackend.liquidGlass ? 0 : s(1)
                 radius: ThemeBackend.borderRadius
                 z: 50
                 opacity: showMenu ? 1.0 : 0.0
@@ -807,6 +817,16 @@ PanelWindow {
                 Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
                 visible: opacity > 0
+
+                WallpaperBlur {
+                    z: -1
+                    anchors.fill: parent
+                    surfaceEnabled: ThemeBackend.liquidGlass
+                    topLeftRadius: parent.radius
+                    topRightRadius: parent.radius
+                    bottomLeftRadius: parent.radius
+                    bottomRightRadius: parent.radius
+                }
 
                 ListView {
                     anchors.fill: parent
@@ -818,7 +838,18 @@ PanelWindow {
                         width: ListView.view.width
                         height: s(40)
                         radius: ThemeBackend.borderRadius
-                        color: maBackendItem.containsMouse ? ThemeBackend.surface0 : "transparent"
+                        color: (backendItemGlass.active || !maBackendItem.containsMouse) ? "transparent" : ThemeBackend.surface0
+
+                        GlassFill {
+                            id: backendItemGlass
+                            anchors.fill: parent
+                            radius: parent.radius
+                            allowed: maBackendItem.containsMouse
+                            tintColor: ThemeBackend.text
+                            tintAmount: 0.14
+                            tintStrength: 1.0
+                            press: 0.25
+                        }
 
                         RowLayout {
                             anchors.fill: parent
@@ -886,9 +917,9 @@ PanelWindow {
                 anchors.top: toolbar.fitsOutsideBottom ? parent.bottom : undefined
                 anchors.topMargin: toolbar.fitsOutsideBottom ? s(4) : 0
 
-                color: ThemeBackend.base
+                color: ThemeBackend.liquidGlass ? Qt.alpha(ThemeBackend.base, ThemeBackend.elementOpacity) : ThemeBackend.base
                 border.color: Qt.rgba(ThemeBackend.text.r, ThemeBackend.text.g, ThemeBackend.text.b, 0.08)
-                border.width: s(1)
+                border.width: ThemeBackend.liquidGlass ? 0 : s(1)
                 radius: ThemeBackend.borderRadius
                 z: 50
                 opacity: showMenu ? 1.0 : 0.0
@@ -898,6 +929,16 @@ PanelWindow {
                 Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
 
                 visible: opacity > 0
+
+                WallpaperBlur {
+                    z: -1
+                    anchors.fill: parent
+                    surfaceEnabled: ThemeBackend.liquidGlass
+                    topLeftRadius: parent.radius
+                    topRightRadius: parent.radius
+                    bottomLeftRadius: parent.radius
+                    bottomRightRadius: parent.radius
+                }
 
                 Text {
                     visible: Audio.inputs.length === 0
@@ -918,7 +959,18 @@ PanelWindow {
                         width: ListView.view.width
                         height: micDropdown.itemHeight
                         radius: ThemeBackend.borderRadius
-                        color: maList.containsMouse ? ThemeBackend.surface0 : "transparent"
+                        color: (micItemGlass.active || !maList.containsMouse) ? "transparent" : ThemeBackend.surface0
+
+                        GlassFill {
+                            id: micItemGlass
+                            anchors.fill: parent
+                            radius: parent.radius
+                            allowed: maList.containsMouse
+                            tintColor: ThemeBackend.text
+                            tintAmount: 0.14
+                            tintStrength: 1.0
+                            press: 0.25
+                        }
 
                         RowLayout {
                             anchors.fill: parent
@@ -1132,9 +1184,19 @@ PanelWindow {
                         width: s(136)
                         height: s(36)
                         radius: ThemeBackend.borderRadius
-                        color: backendDropdown.showMenu ? ThemeBackend.surface1 : (backendMa.containsMouse ? ThemeBackend.surface1 : ThemeBackend.surface0)
+                        color: backendBtnGlass.active ? "transparent" : (backendDropdown.showMenu ? ThemeBackend.surface1 : (backendMa.containsMouse ? ThemeBackend.surface1 : ThemeBackend.surface0))
                         border.color: Qt.rgba(ThemeBackend.text.r, ThemeBackend.text.g, ThemeBackend.text.b, 0.08)
-                        border.width: s(1)
+                        border.width: backendBtnGlass.active ? 0 : s(1)
+
+                        GlassFill {
+                            id: backendBtnGlass
+                            anchors.fill: parent
+                            radius: parent.radius
+                            tintColor: ThemeBackend.surface1
+                            tintAmount: 0.3
+                            shadow: 1
+                            press: backendDropdown.showMenu ? 0.6 : (backendMa.containsMouse ? 0.25 : 0)
+                        }
 
                         RowLayout {
                             anchors.fill: parent
@@ -1361,9 +1423,19 @@ PanelWindow {
                 width: qrPopupLayout.implicitWidth + s(32)
                 height: s(52)
                 radius: ThemeBackend.borderRadius
-                color: ThemeBackend.base
+                color: ThemeBackend.liquidGlass ? Qt.alpha(ThemeBackend.base, ThemeBackend.elementOpacity) : ThemeBackend.base
                 border.color: model.qSuccess ? ThemeBackend.green : ThemeBackend.red
                 border.width: s(2)
+
+                WallpaperBlur {
+                    z: -1
+                    anchors.fill: parent
+                    surfaceEnabled: ThemeBackend.liquidGlass
+                    topLeftRadius: parent.radius
+                    topRightRadius: parent.radius
+                    bottomLeftRadius: parent.radius
+                    bottomRightRadius: parent.radius
+                }
 
                 property bool isHovered: maHover.containsMouse
                 scale: isHovered ? 1.0 : model.qBaseScale

@@ -350,10 +350,6 @@
           "desc": "選擇工作區指示器的視覺樣式"
         }
       },
-      "opacity": {
-        "title": "狀態列不透明度",
-        "desc": "以百分比設定狀態列的不透明度"
-      },
       "style": {
         "title": "狀態列樣式",
         "desc": "在模組化、實心或填滿狀態列外觀之間選擇",
@@ -566,6 +562,30 @@
           "title": "歌曲標題",
           "author": "Song author"
         }
+      },
+      "thickness": {
+        "title": "列厚度",
+        "desc": "變更列的厚度，模組會隨之調整"
+      },
+      "menu": {
+        "show_settings": {
+          "title": "顯示設定圖示",
+          "desc": "顯示開啟設定的按鈕"
+        },
+        "show_launcher": {
+          "title": "顯示啟動器圖示",
+          "desc": "顯示開啟啟動器的搜尋按鈕"
+        },
+        "style": {
+          "title": "樣式",
+          "desc": "選擇選單模組的外觀",
+          "name": {
+            "button": "按鈕",
+            "icon": "圖示"
+          },
+          "button": "帶背景的互動式圖示按鈕",
+          "icon": "無背景的簡潔圖示"
+        }
       }
     },
     "theme": {
@@ -591,6 +611,18 @@
         "select_wallpaper": "選取桌布",
         "no_wallpaper_selected": "未選取桌布",
         "select": "桌布"
+      },
+      "element_opacity": {
+        "title": "元素不透明度",
+        "desc": "狀態列、Dock、小工具及所有其他介面元素的不透明度"
+      },
+      "blur_background": {
+        "title": "新增模糊的桌布背景",
+        "desc": "對所有使用透明度的元素後方的桌布進行模糊處理",
+        "style": {
+          "blur": "模糊",
+          "liquid": "液態玻璃"
+        }
       }
     },
     "file_picker": {
@@ -799,10 +831,6 @@
         "done": "完成",
         "empty": "找不到相符的應用程式"
       },
-      "opacity": {
-        "title": "Dock 不透明度",
-        "desc": "調整 Dock 背景不透明度"
-      },
       "override_bounds": {
         "title": "忽略超出螢幕範圍的大小修正",
         "desc": "即使 Dock 超出螢幕限制，仍保留自訂元素大小"
@@ -981,7 +1009,27 @@
     "searching_lyrics": "正在搜尋歌詞...",
     "no_lyrics": "找不到歌詞",
     "select_local_file": "選取本機檔案",
-    "lyrics": "歌詞"
+    "lyrics": "歌詞",
+    "audio": {
+      "title": "音訊",
+      "balance": "聲道平衡",
+      "reset": "重設",
+      "centered": "置中",
+      "left_slightly_favored": "稍微偏左",
+      "right_slightly_favored": "稍微偏右",
+      "left_only": "僅左聲道",
+      "right_only": "僅右聲道",
+      "left_favored": "偏左",
+      "right_favored": "偏右",
+      "test": "測試",
+      "stop_test": "停止",
+      "mono": "單聲道音訊",
+      "swap": "交換左右聲道",
+      "dynamic_range": "動態範圍",
+      "off": "關閉",
+      "balanced": "平衡",
+      "night": "夜間"
+    }
   },
   "network": {
     "tabs": {

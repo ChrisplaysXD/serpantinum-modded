@@ -350,10 +350,6 @@
           "desc": "Choisir le style visuel des indicateurs d'espaces de travail"
         }
       },
-      "opacity": {
-        "title": "Opacité de la barre",
-        "desc": "Définir l'opacité de la barre en pourcentage"
-      },
       "style": {
         "title": "Style de la barre",
         "desc": "Choisir entre un style modulaire, solide ou rempli",
@@ -566,6 +562,30 @@
           "title": "Titre du morceau",
           "author": "Song author"
         }
+      },
+      "thickness": {
+        "title": "Épaisseur de la barre",
+        "desc": "Modifier l'épaisseur de la barre, les modules s'adaptent"
+      },
+      "menu": {
+        "show_settings": {
+          "title": "Afficher l'icône des paramètres",
+          "desc": "Affiche le bouton qui ouvre les paramètres"
+        },
+        "show_launcher": {
+          "title": "Afficher l'icône du lanceur",
+          "desc": "Affiche le bouton de recherche qui ouvre le lanceur"
+        },
+        "style": {
+          "title": "Style",
+          "desc": "Choisissez l'apparence du module de menu",
+          "name": {
+            "button": "Bouton",
+            "icon": "Icône"
+          },
+          "button": "Boutons d'icône interactifs avec arrière-plan",
+          "icon": "Icônes épurées sans arrière-plan"
+        }
       }
     },
     "theme": {
@@ -591,6 +611,18 @@
         "select_wallpaper": "Sélectionner un fond d'écran",
         "no_wallpaper_selected": "Aucun fond d'écran sélectionné",
         "select": "Fond d'écran"
+      },
+      "element_opacity": {
+        "title": "Opacité des éléments",
+        "desc": "Opacité de la barre, du dock, des widgets et de tous les autres éléments du shell"
+      },
+      "blur_background": {
+        "title": "Ajouter un arrière-plan de fond d'écran flouté",
+        "desc": "Floute le fond d'écran derrière chaque élément utilisant la transparence",
+        "style": {
+          "blur": "Flou",
+          "liquid": "Verre liquide"
+        }
       }
     },
     "file_picker": {
@@ -799,10 +831,6 @@
         "done": "Terminé",
         "empty": "Aucune application correspondante"
       },
-      "opacity": {
-        "title": "Opacité du dock",
-        "desc": "Ajuster le niveau d'opacité de l'arrière-plan du dock"
-      },
       "override_bounds": {
         "title": "Outrepasser la correction de dépassement d'écran",
         "desc": "Conserver la taille d'élément personnalisée même si le dock dépasse de l'écran"
@@ -981,7 +1009,27 @@
     "searching_lyrics": "Recherche des paroles...",
     "no_lyrics": "Aucune parole trouvée",
     "select_local_file": "Sélectionner un fichier local",
-    "lyrics": "Paroles"
+    "lyrics": "Paroles",
+    "audio": {
+      "title": "Audio",
+      "balance": "Balance des canaux",
+      "reset": "Réinitialiser",
+      "centered": "Centré",
+      "left_slightly_favored": "Légèrement à gauche",
+      "right_slightly_favored": "Légèrement à droite",
+      "left_only": "Gauche uniquement",
+      "right_only": "Droite uniquement",
+      "left_favored": "Gauche favorisée",
+      "right_favored": "Droite favorisée",
+      "test": "Tester",
+      "stop_test": "Arrêter",
+      "mono": "Audio mono",
+      "swap": "Permuter G/D",
+      "dynamic_range": "Plage dynamique",
+      "off": "Désactivé",
+      "balanced": "Équilibré",
+      "night": "Nuit"
+    }
   },
   "network": {
     "tabs": {

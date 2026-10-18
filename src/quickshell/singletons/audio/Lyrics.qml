@@ -13,9 +13,27 @@ Item {
     property var customPlayer: null
     readonly property var player: customPlayer || MprisController.activePlayer
 
-    readonly property bool isMediaActive: player !== null && player.playbackState !== MprisPlaybackState.Stopped && (player.trackTitle || "") !== ""
-    readonly property string trackTitle: player ? (player.trackTitle || "") : ""
-    readonly property string trackArtist: player ? (player.trackArtist || "") : ""
+    readonly property bool isMediaActive: {
+        try {
+            return !!player && player.playbackState !== MprisPlaybackState.Stopped && (player.trackTitle || "") !== "";
+        } catch (e) {
+            return false;
+        }
+    }
+    readonly property string trackTitle: {
+        try {
+            return player ? String(player.trackTitle || "") : "";
+        } catch (e) {
+            return "";
+        }
+    }
+    readonly property string trackArtist: {
+        try {
+            return player ? String(player.trackArtist || "") : "";
+        } catch (e) {
+            return "";
+        }
+    }
     readonly property string currentTrackKey: isMediaActive ? (trackArtist.trim() + " - " + trackTitle.trim()) : ""
 
     property var localCache: ({})

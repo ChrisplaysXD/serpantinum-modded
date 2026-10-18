@@ -350,10 +350,6 @@
           "desc": "Kies de visuele stijl voor werkbladindicatoren"
         }
       },
-      "opacity": {
-        "title": "Dekking van balk",
-        "desc": "Stel de dekking van de balk in als percentage"
-      },
       "style": {
         "title": "Balkstijl",
         "desc": "Kies tussen een modulair, effen of gevuld uiterlijk van de balk",
@@ -566,6 +562,30 @@
           "title": "Titel van het nummer",
           "author": "Song author"
         }
+      },
+      "thickness": {
+        "title": "Balkdikte",
+        "desc": "Wijzig de dikte van de balk, modules passen zich aan"
+      },
+      "menu": {
+        "show_settings": {
+          "title": "Instellingenpictogram tonen",
+          "desc": "Toont de knop die de instellingen opent"
+        },
+        "show_launcher": {
+          "title": "Launcherpictogram tonen",
+          "desc": "Toont de zoekknop die de launcher opent"
+        },
+        "style": {
+          "title": "Stijl",
+          "desc": "Kies het uiterlijk van de menumodule",
+          "name": {
+            "button": "Knop",
+            "icon": "Pictogram"
+          },
+          "button": "Interactieve pictogramknoppen met achtergrond",
+          "icon": "Strakke pictogrammen zonder achtergrond"
+        }
       }
     },
     "theme": {
@@ -591,6 +611,18 @@
         "select_wallpaper": "Achtergrond selecteren",
         "no_wallpaper_selected": "Geen achtergrond geselecteerd",
         "select": "Achtergrond"
+      },
+      "element_opacity": {
+        "title": "Elementdekking",
+        "desc": "Dekking van de balk, dock, widgets en alle andere shell-elementen"
+      },
+      "blur_background": {
+        "title": "Een vervaagde achtergrond van het bureaublad toevoegen",
+        "desc": "Vervaagt de achtergrond achter elk element dat transparantie gebruikt",
+        "style": {
+          "blur": "Vervagen",
+          "liquid": "Liquid glass"
+        }
       }
     },
     "file_picker": {
@@ -799,10 +831,6 @@
         "done": "Klaar",
         "empty": "Geen overeenkomende applicaties"
       },
-      "opacity": {
-        "title": "Dekking van dock",
-        "desc": "Achtergronddekking van het dock aanpassen"
-      },
       "override_bounds": {
         "title": "Groottecorrectie buiten schermgrenzen overschrijven",
         "desc": "Behoud aangepaste elementgrootte, zelfs als het dock buiten de schermgrenzen valt"
@@ -981,7 +1009,27 @@
     "searching_lyrics": "Songteksten zoeken...",
     "no_lyrics": "Geen songtekst gevonden",
     "select_local_file": "Lokaal bestand selecteren",
-    "lyrics": "Songtekst"
+    "lyrics": "Songtekst",
+    "audio": {
+      "title": "Audio",
+      "balance": "Kanaalbalans",
+      "reset": "Resetten",
+      "centered": "Gecentreerd",
+      "left_slightly_favored": "Iets meer links",
+      "right_slightly_favored": "Iets meer rechts",
+      "left_only": "Alleen links",
+      "right_only": "Alleen rechts",
+      "left_favored": "Meer links",
+      "right_favored": "Meer rechts",
+      "test": "Test",
+      "stop_test": "Stoppen",
+      "mono": "Mono-audio",
+      "swap": "L/R omwisselen",
+      "dynamic_range": "Dynamisch bereik",
+      "off": "Uit",
+      "balanced": "Gebalanceerd",
+      "night": "Nacht"
+    }
   },
   "network": {
     "tabs": {

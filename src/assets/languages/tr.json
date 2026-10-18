@@ -350,10 +350,6 @@
           "desc": "Çalışma alanı göstergeleri için görsel stili seçin"
         }
       },
-      "opacity": {
-        "title": "Çubuk opaklığı",
-        "desc": "Çubuk opaklığını yüzde olarak ayarlayın"
-      },
       "style": {
         "title": "Çubuk stili",
         "desc": "Modüler, düz veya dolgulu çubuk görünümü arasında seçim yapın",
@@ -566,6 +562,30 @@
           "title": "Şarkı adı",
           "author": "Song author"
         }
+      },
+      "thickness": {
+        "title": "Çubuk kalınlığı",
+        "desc": "Çubuğun kalınlığını değiştirin, modüller buna uyum sağlar"
+      },
+      "menu": {
+        "show_settings": {
+          "title": "Ayarlar simgesini göster",
+          "desc": "Ayarları açan düğmeyi gösterir"
+        },
+        "show_launcher": {
+          "title": "Başlatıcı simgesini göster",
+          "desc": "Başlatıcıyı açan arama düğmesini gösterir"
+        },
+        "style": {
+          "title": "Stil",
+          "desc": "Menü modülünün görünümünü seçin",
+          "name": {
+            "button": "Düğme",
+            "icon": "Simge"
+          },
+          "button": "Arka planlı etkileşimli simge düğmeleri",
+          "icon": "Arka plansız sade simgeler"
+        }
       }
     },
     "theme": {
@@ -591,6 +611,18 @@
         "select_wallpaper": "Duvar kâğıdı seç",
         "no_wallpaper_selected": "Duvar kâğıdı seçilmedi",
         "select": "Duvar Kâğıdı"
+      },
+      "element_opacity": {
+        "title": "Öğe opaklığı",
+        "desc": "Çubuğun, dock'un, widget'ların ve diğer tüm kabuk öğelerinin opaklığı"
+      },
+      "blur_background": {
+        "title": "Bulanık duvar kağıdı arka planı ekle",
+        "desc": "Saydamlık kullanan her öğenin arkasındaki duvar kağıdını bulanıklaştırır",
+        "style": {
+          "blur": "Bulanıklık",
+          "liquid": "Sıvı cam"
+        }
       }
     },
     "file_picker": {
@@ -799,10 +831,6 @@
         "done": "Tamam",
         "empty": "Eşleşen uygulama yok"
       },
-      "opacity": {
-        "title": "Dock opaklığı",
-        "desc": "Dock arka planı opaklık seviyesini ayarlayın"
-      },
       "override_bounds": {
         "title": "Ekran sınırları dışı boyut düzeltmesini geçersiz kıl",
         "desc": "Dock ekran sınırlarını aşsa bile özel öge boyutunu koruyun"
@@ -981,7 +1009,27 @@
     "searching_lyrics": "Şarkı sözleri aranıyor...",
     "no_lyrics": "Şarkı sözü bulunamadı",
     "select_local_file": "Yerel bir dosya seçin",
-    "lyrics": "Şarkı Sözleri"
+    "lyrics": "Şarkı Sözleri",
+    "audio": {
+      "title": "Ses",
+      "balance": "Kanal dengesi",
+      "reset": "Sıfırla",
+      "centered": "Ortalanmış",
+      "left_slightly_favored": "Hafifçe sola ağırlıklı",
+      "right_slightly_favored": "Hafifçe sağa ağırlıklı",
+      "left_only": "Yalnızca sol kanal",
+      "right_only": "Yalnızca sağ kanal",
+      "left_favored": "Sola ağırlıklı",
+      "right_favored": "Sağa ağırlıklı",
+      "test": "Test",
+      "stop_test": "Durdur",
+      "mono": "Mono ses",
+      "swap": "Sol/sağ değiştir",
+      "dynamic_range": "Dinamik aralık",
+      "off": "Kapalı",
+      "balanced": "Dengeli",
+      "night": "Gece"
+    }
   },
   "network": {
     "tabs": {

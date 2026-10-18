@@ -56,6 +56,19 @@ Item {
     property bool isHoveredOrHighlighted: (mainHover.hovered || root.action_highlight) && root.enabled
 
     property real focusPop: 1.0
+    property real valueDrop: 0.0
+    property int valueDir: 0
+    property real shownValue: 0.0
+
+    Component.onCompleted: shownValue = value
+
+    onValueChanged: {
+        if (glass.active && !root.isEditing) {
+            root.valueDir = root.value >= root.shownValue ? 1 : -1;
+            valueDropAnim.restart();
+        }
+        root.shownValue = root.value;
+    }
 
     property int holdDirection: 0
     property bool holdTriggered: false
@@ -273,6 +286,12 @@ Item {
     }
 
     SequentialAnimation {
+        id: valueDropAnim
+        NumberAnimation { target: root; property: "valueDrop"; to: 1.0; duration: 90; easing.type: Easing.OutCubic }
+        NumberAnimation { target: root; property: "valueDrop"; to: 0.0; duration: 460; easing.type: Easing.OutQuint }
+    }
+
+    SequentialAnimation {
         id: focusPopAnim
         NumberAnimation { target: root; property: "focusPop"; to: 1.03; duration: 110; easing.type: Easing.OutQuad }
         NumberAnimation { target: root; property: "focusPop"; to: 1.0; duration: 380; easing.type: Easing.OutQuint }
@@ -299,12 +318,23 @@ Item {
         anchors.fill: parent
         radius: root.cornerRadius
         clip: true
-        color: root.isHoveredOrHighlighted ? Qt.darker(root.baseColor, 1.14) : root.baseColor
+        color: glass.active ? "transparent" : (root.isHoveredOrHighlighted ? Qt.darker(root.baseColor, 1.14) : root.baseColor)
         opacity: root.enabled ? 1.0 : 0.5
 
         Behavior on color { ColorAnimation { duration: 180 } }
         Behavior on border.color { ColorAnimation { duration: 180 } }
         Behavior on opacity { NumberAnimation { duration: 180 } }
+
+        GlassFill {
+            id: glass
+            anchors.fill: parent
+            radius: parent.radius
+            tintColor: root.baseColor
+            press: root.isEditing ? 0.55 : (root.isHoveredOrHighlighted ? 0.2 : 0)
+            Behavior on press { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
+            tintAmount: (root.isEditing ? 0.38 : (root.isHoveredOrHighlighted ? 0.3 : 0.22))
+            Behavior on tintAmount { NumberAnimation { duration: 180 } }
+        }
 
         scale: (root.isEditing ? 1.02 : 1.0) * root.focusPop
         Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutQuint } }
@@ -359,9 +389,30 @@ Item {
                 Behavior on color { ColorAnimation { duration: 150 } }
             }
 
+            Item {
+                id: valueLens
+                visible: glass.active && !root.isEditing && root.valueDrop > 0.001
+                width: Math.min(parent.width, displayLabel.width + 18) * (0.82 + 0.18 * root.valueDrop)
+                height: parent.height * (0.78 + 0.22 * root.valueDrop)
+                x: (parent.width - width) / 2 + root.valueDir * 7 * (1 - root.valueDrop)
+                y: (parent.height - height) / 2
+                opacity: Math.min(1, root.valueDrop * 1.6)
+
+                GlassFill {
+                    anchors.fill: parent
+                    radius: height / 2
+                    tintColor: root.textColor
+                    tintAmount: 0.14
+                    tintStrength: 1.0
+                    press: 0.3 + 0.7 * root.valueDrop
+                    pulse: root.valueDrop
+                }
+            }
+
             Text {
                 id: displayLabel
                 anchors.centerIn: parent
+                scale: glass.active ? 1.0 + 0.1 * root.valueDrop : 1.0
                 visible: !root.isEditing
                 text: root.formatValue(root.value)
                 font.family: root.fontFamily

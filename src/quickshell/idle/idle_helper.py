@@ -7,6 +7,7 @@ logind sleep delay inhibitor on the system bus.
 Output, one line per event:
     inhibit 1 | inhibit 0   an app asked not to lock, or stopped asking
     sleep                   logind announced PrepareForSleep
+    wake                    logind announced the end of sleep
 
 Input, one line per command on stdin:
     sleep-lock on | sleep-lock off
@@ -294,9 +295,11 @@ class SleepLock:
         if msg.body[0]:
             print("sleep", flush=True)
             self.release_at = time.monotonic() + LOCK_WAIT
-        elif self.inhibitor is None:
-            self.release_at = None
-            self.inhibitor = self.take_inhibitor()
+        else:
+            print("wake", flush=True)
+            if self.inhibitor is None:
+                self.release_at = None
+                self.inhibitor = self.take_inhibitor()
 
     def pump(self):
         if self.conn is None:

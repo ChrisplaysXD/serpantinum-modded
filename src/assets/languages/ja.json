@@ -110,7 +110,27 @@
     "searching_lyrics": "歌詞を検索中...",
     "no_lyrics": "歌詞が見つかりません",
     "select_local_file": "ローカルファイルを選択",
-    "lyrics": "歌詞"
+    "lyrics": "歌詞",
+    "audio": {
+      "title": "オーディオ",
+      "balance": "チャンネルバランス",
+      "reset": "リセット",
+      "centered": "中央",
+      "left_slightly_favored": "やや左寄り",
+      "right_slightly_favored": "やや右寄り",
+      "left_only": "左チャンネルのみ",
+      "right_only": "右チャンネルのみ",
+      "left_favored": "左寄り",
+      "right_favored": "右寄り",
+      "test": "テスト",
+      "stop_test": "停止",
+      "mono": "モノラル音声",
+      "swap": "左右を入れ替え",
+      "dynamic_range": "ダイナミックレンジ",
+      "off": "オフ",
+      "balanced": "バランス",
+      "night": "ナイト"
+    }
   },
   "network": {
     "tabs": {
@@ -1036,10 +1056,6 @@
           "desc": "ワークスペースインジケーターの視覚スタイルを選択します"
         }
       },
-      "opacity": {
-        "title": "バーの不透明度",
-        "desc": "バーの不透明度をパーセンテージで設定します"
-      },
       "style": {
         "title": "バースタイル",
         "desc": "モジュラー、ソリッド、または塗りつぶし (Fill) から外観を選択します",
@@ -1252,6 +1268,30 @@
           "title": "曲のタイトル",
           "author": "Song author"
         }
+      },
+      "thickness": {
+        "title": "バーの太さ",
+        "desc": "バーの太さを変更します。モジュールも合わせて調整されます"
+      },
+      "menu": {
+        "show_settings": {
+          "title": "設定アイコンを表示",
+          "desc": "設定を開くボタンを表示します"
+        },
+        "show_launcher": {
+          "title": "ランチャーアイコンを表示",
+          "desc": "ランチャーを開く検索ボタンを表示します"
+        },
+        "style": {
+          "title": "スタイル",
+          "desc": "メニューモジュールの外観を選択します",
+          "name": {
+            "button": "ボタン",
+            "icon": "アイコン"
+          },
+          "button": "背景付きのインタラクティブなアイコンボタン",
+          "icon": "背景なしのすっきりしたアイコン"
+        }
       }
     },
     "theme": {
@@ -1277,6 +1317,18 @@
         "select_wallpaper": "壁紙を選択",
         "no_wallpaper_selected": "壁紙が選択されていません",
         "select": "壁紙"
+      },
+      "element_opacity": {
+        "title": "要素の不透明度",
+        "desc": "バー、ドック、ウィジェット、その他すべてのシェル要素の不透明度"
+      },
+      "blur_background": {
+        "title": "ぼかした壁紙の背景を追加",
+        "desc": "透明度を使用するすべての要素の背後の壁紙をぼかします",
+        "style": {
+          "blur": "ぼかし",
+          "liquid": "リキッドグラス"
+        }
       }
     },
     "file_picker": {
@@ -1484,10 +1536,6 @@
         "search": "アプリを検索...",
         "done": "完了",
         "empty": "一致するアプリケーションがありません"
-      },
-      "opacity": {
-        "title": "ドックの不透明度",
-        "desc": "ドック背景の不透明度レベルを調整します"
       },
       "override_bounds": {
         "title": "画面外サイズ補正をオーバーライド",

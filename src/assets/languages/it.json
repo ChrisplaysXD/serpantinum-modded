@@ -349,10 +349,6 @@
           "desc": "Scegli lo stile visivo per gli indicatori degli spazi di lavoro"
         }
       },
-      "opacity": {
-        "title": "Opacità barra",
-        "desc": "Imposta la percentuale di opacità della barra"
-      },
       "style": {
         "title": "Stile barra",
         "desc": "Scegli tra modulare, solida o una barra piena",
@@ -565,6 +561,30 @@
           "title": "Titolo del brano",
           "author": "Song author"
         }
+      },
+      "thickness": {
+        "title": "Spessore della barra",
+        "desc": "Cambia lo spessore della barra, i moduli si adattano"
+      },
+      "menu": {
+        "show_settings": {
+          "title": "Mostra icona impostazioni",
+          "desc": "Mostra il pulsante che apre le impostazioni"
+        },
+        "show_launcher": {
+          "title": "Mostra icona del launcher",
+          "desc": "Mostra il pulsante di ricerca che apre il launcher"
+        },
+        "style": {
+          "title": "Stile",
+          "desc": "Scegli l'aspetto visivo del modulo menu",
+          "name": {
+            "button": "Pulsante",
+            "icon": "Icona"
+          },
+          "button": "Pulsanti con icona interattivi e sfondo",
+          "icon": "Icone pulite senza sfondo"
+        }
       }
     },
     "theme": {
@@ -590,6 +610,18 @@
         "select_wallpaper": "Seleziona sfondo",
         "no_wallpaper_selected": "Nessuno sfondo selezionato",
         "select": "Sfondo"
+      },
+      "element_opacity": {
+        "title": "Opacità degli elementi",
+        "desc": "Opacità di barra, dock, widget e di ogni altro elemento della shell"
+      },
+      "blur_background": {
+        "title": "Aggiungi uno sfondo sfocato del wallpaper",
+        "desc": "Sfoca il wallpaper dietro ogni elemento che usa la trasparenza",
+        "style": {
+          "blur": "Sfocatura",
+          "liquid": "Vetro liquido"
+        }
       }
     },
     "file_picker": {
@@ -798,10 +830,6 @@
         "done": "Fatto",
         "empty": "Nessuna applicazione trovata"
       },
-      "opacity": {
-        "title": "Opacità dock",
-        "desc": "Regola il livello di opacità dello sfondo della dock"
-      },
       "override_bounds": {
         "title": "Ignora correzione dimensioni fuori schermo",
         "desc": "Mantieni dimensione personalizzata anche se la dock supera i limiti dello schermo"
@@ -965,6 +993,26 @@
     "eq": {
       "apply": "Applica",
       "saved": "Salvati"
+    },
+    "audio": {
+      "title": "Audio",
+      "balance": "Bilanciamento canali",
+      "reset": "Ripristina",
+      "centered": "Centrato",
+      "left_slightly_favored": "Leggermente a sinistra",
+      "right_slightly_favored": "Leggermente a destra",
+      "left_only": "Solo sinistra",
+      "right_only": "Solo destra",
+      "left_favored": "Prevalenza a sinistra",
+      "right_favored": "Prevalenza a destra",
+      "test": "Prova",
+      "stop_test": "Ferma",
+      "mono": "Audio mono",
+      "swap": "Scambia S/D",
+      "dynamic_range": "Gamma dinamica",
+      "off": "Disattivato",
+      "balanced": "Bilanciato",
+      "night": "Notte"
     },
     "presets": {
       "flat": "Piatto",

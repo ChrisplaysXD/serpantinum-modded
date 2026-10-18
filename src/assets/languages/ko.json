@@ -350,10 +350,6 @@
           "desc": "워크스페이스 표시기의 시각적 스타일을 선택합니다"
         }
       },
-      "opacity": {
-        "title": "바 불투명도",
-        "desc": "바의 불투명도를 백분율로 설정합니다"
-      },
       "style": {
         "title": "바 스타일",
         "desc": "모듈형, 단색, 채움 스타일 중에서 선택합니다",
@@ -566,6 +562,30 @@
           "title": "곡 제목",
           "author": "Song author"
         }
+      },
+      "thickness": {
+        "title": "바 두께",
+        "desc": "바의 두께를 변경합니다. 모듈이 그에 맞게 조정됩니다"
+      },
+      "menu": {
+        "show_settings": {
+          "title": "설정 아이콘 표시",
+          "desc": "설정을 여는 버튼을 표시합니다"
+        },
+        "show_launcher": {
+          "title": "런처 아이콘 표시",
+          "desc": "런처를 여는 검색 버튼을 표시합니다"
+        },
+        "style": {
+          "title": "스타일",
+          "desc": "메뉴 모듈의 시각적 모양을 선택하세요",
+          "name": {
+            "button": "버튼",
+            "icon": "아이콘"
+          },
+          "button": "배경이 있는 인터랙티브 아이콘 버튼",
+          "icon": "배경 없는 깔끔한 아이콘"
+        }
       }
     },
     "theme": {
@@ -591,6 +611,18 @@
         "select_wallpaper": "배경화면 선택",
         "no_wallpaper_selected": "선택된 배경화면 없음",
         "select": "배경화면"
+      },
+      "element_opacity": {
+        "title": "요소 불투명도",
+        "desc": "바, 독, 위젯 및 기타 모든 셸 요소의 불투명도"
+      },
+      "blur_background": {
+        "title": "흐린 배경화면 배경 추가",
+        "desc": "투명도를 사용하는 모든 요소 뒤의 배경화면을 흐리게 합니다",
+        "style": {
+          "blur": "흐림",
+          "liquid": "리퀴드 글라스"
+        }
       }
     },
     "file_picker": {
@@ -799,10 +831,6 @@
         "done": "완료",
         "empty": "일치하는 애플리케이션이 없습니다"
       },
-      "opacity": {
-        "title": "독 불투명도",
-        "desc": "독 배경 불투명도 수준 조절"
-      },
       "override_bounds": {
         "title": "화면 범위 초과 시 크기 자동 보정 비활성화",
         "desc": "독이 화면 한계를 초과하더라도 사용자 지정 요소 크기를 유지합니다"
@@ -966,6 +994,26 @@
     "eq": {
       "apply": "적용",
       "saved": "저장됨"
+    },
+    "audio": {
+      "title": "오디오",
+      "balance": "채널 밸런스",
+      "reset": "초기화",
+      "centered": "중앙",
+      "left_slightly_favored": "왼쪽 약간 강조",
+      "right_slightly_favored": "오른쪽 약간 강조",
+      "left_only": "왼쪽만",
+      "right_only": "오른쪽만",
+      "left_favored": "왼쪽 강조",
+      "right_favored": "오른쪽 강조",
+      "test": "테스트",
+      "stop_test": "중지",
+      "mono": "모노 오디오",
+      "swap": "좌우 바꾸기",
+      "dynamic_range": "다이내믹 레인지",
+      "off": "끔",
+      "balanced": "균형",
+      "night": "야간"
     },
     "presets": {
       "flat": "플랫",

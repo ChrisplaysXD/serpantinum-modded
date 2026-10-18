@@ -128,6 +128,7 @@ Item {
                 if (line === "inhibit 1") idleRoot.isAppInhibited = true;
                 else if (line === "inhibit 0") idleRoot.isAppInhibited = false;
                 else if (line === "sleep" && idleRoot.lockOnSleep) idleRoot.lockSession(true);
+                else if (line === "wake") idleRoot.reauthLockSession();
             }
         }
         onStarted: idleRoot.syncSleepLock()
@@ -232,6 +233,10 @@ Item {
         let cmd = ["bash", Caching.serpantinumDir + "/scripts/lock.sh"];
         if (isStatic === true) cmd.push("--static");
         Quickshell.execDetached(cmd);
+    }
+
+    function reauthLockSession() {
+        Quickshell.execDetached(["bash", Caching.serpantinumDir + "/scripts/lock.sh", "--reauth"]);
     }
 
     function performLock() {

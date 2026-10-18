@@ -113,7 +113,27 @@
     "searching_lyrics": "Szukanie tekstu utworu...",
     "no_lyrics": "Nie znaleziono tekstu utworu",
     "select_local_file": "Wybierz plik lokalny",
-    "lyrics": "Tekst utworu"
+    "lyrics": "Tekst utworu",
+    "audio": {
+      "title": "Dźwięk",
+      "balance": "Balans kanałów",
+      "reset": "Resetuj",
+      "centered": "Wyśrodkowany",
+      "left_slightly_favored": "Lekko w lewo",
+      "right_slightly_favored": "Lekko w prawo",
+      "left_only": "Tylko lewy kanał",
+      "right_only": "Tylko prawy kanał",
+      "left_favored": "Przewaga lewego kanału",
+      "right_favored": "Przewaga prawego kanału",
+      "test": "Test",
+      "stop_test": "Zatrzymaj",
+      "mono": "Dźwięk mono",
+      "swap": "Zamień L/P",
+      "dynamic_range": "Zakres dynamiczny",
+      "off": "Wyłączony",
+      "balanced": "Zrównoważony",
+      "night": "Nocny"
+    }
   },
   "network": {
     "tabs": {
@@ -1036,10 +1056,6 @@
           "desc": "Wybierz styl wizualny wskaźników obszarów roboczych"
         }
       },
-      "opacity": {
-        "title": "Przezroczystość paska",
-        "desc": "Ustaw przezroczystość paska w procentach"
-      },
       "style": {
         "title": "Styl paska",
         "desc": "Wybierz między wyglądem modułowym, jednolitym lub wypełnionym",
@@ -1252,6 +1268,30 @@
           "title": "Tytuł utworu",
           "author": "Song author"
         }
+      },
+      "thickness": {
+        "title": "Grubość paska",
+        "desc": "Zmień grubość paska, moduły dostosują się do niej"
+      },
+      "menu": {
+        "show_settings": {
+          "title": "Pokaż ikonę ustawień",
+          "desc": "Wyświetla przycisk otwierający ustawienia"
+        },
+        "show_launcher": {
+          "title": "Pokaż ikonę launchera",
+          "desc": "Wyświetla przycisk wyszukiwania otwierający launcher"
+        },
+        "style": {
+          "title": "Styl",
+          "desc": "Wybierz wygląd modułu menu",
+          "name": {
+            "button": "Przycisk",
+            "icon": "Ikona"
+          },
+          "button": "Interaktywne przyciski z ikonami i tłem",
+          "icon": "Czyste ikony bez tła"
+        }
       }
     },
     "theme": {
@@ -1277,6 +1317,18 @@
         "select_wallpaper": "Wybierz tapetę",
         "no_wallpaper_selected": "Nie wybrano tapety",
         "select": "Tapeta"
+      },
+      "element_opacity": {
+        "title": "Przezroczystość elementów",
+        "desc": "Przezroczystość paska, docka, widżetów i wszystkich innych elementów powłoki"
+      },
+      "blur_background": {
+        "title": "Dodaj rozmyte tło z tapety",
+        "desc": "Rozmywa tapetę za każdym elementem używającym przezroczystości",
+        "style": {
+          "blur": "Rozmycie",
+          "liquid": "Płynne szkło"
+        }
       }
     },
     "file_picker": {
@@ -1484,10 +1536,6 @@
         "search": "Szukaj aplikacji...",
         "done": "Gotowe",
         "empty": "Brak pasujących aplikacji"
-      },
-      "opacity": {
-        "title": "Nieprzezroczystość doku",
-        "desc": "Dostosuj poziom przezroczystości tła doku"
       },
       "override_bounds": {
         "title": "Ignoruj korektę rozmiaru poza granicami ekranu",

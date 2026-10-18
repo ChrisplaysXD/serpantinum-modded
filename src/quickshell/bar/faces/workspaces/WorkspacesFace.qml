@@ -13,6 +13,9 @@ Item {
     property var module: null
     property var widget: root
 
+    property string orientation: module ? module.orientation : "horizontal"
+    readonly property bool isVertical: orientation === "vertical"
+
     readonly property bool isCompact: module ? module.isCompact : false
     readonly property var barWindow: module ? module.barWindow : null
     readonly property bool moduleActive: module ? module.moduleActive : true
@@ -61,7 +64,10 @@ Item {
     property string workspacesStyle: {
         let dummy = configRevision;
         if (module && module.variant) return module.variant;
-        if (typeof Config !== "undefined" && Config.rawSettings && Config.rawSettings.bar) {
+        if (isVertical) {
+            let bs = (typeof Config !== "undefined") ? Config.getSetting("bar", {}) : {};
+            if (bs && bs.workspacesStyle) return bs.workspacesStyle;
+        } else if (typeof Config !== "undefined" && Config.rawSettings && Config.rawSettings.bar) {
             if (Config.rawSettings.bar.workspacesStyle) return Config.rawSettings.bar.workspacesStyle;
             if (Config.rawSettings.bar.workspaces && Config.rawSettings.bar.workspaces.style) return Config.rawSettings.bar.workspaces.style;
         }
@@ -96,7 +102,10 @@ Item {
 
     property bool hideEmptyWorkspaces: {
         let dummy = configRevision;
-        if (typeof Config !== "undefined" && Config.rawSettings && Config.rawSettings.bar) {
+        if (isVertical) {
+            let bs = (typeof Config !== "undefined") ? Config.getSetting("bar", {}) : {};
+            if (bs && bs.hideEmptyWorkspaces !== undefined) return Boolean(bs.hideEmptyWorkspaces);
+        } else if (typeof Config !== "undefined" && Config.rawSettings && Config.rawSettings.bar) {
             if (Config.rawSettings.bar.hideEmptyWorkspaces !== undefined)
                 return Boolean(Config.rawSettings.bar.hideEmptyWorkspaces);
         }
@@ -150,7 +159,7 @@ Item {
     }
 
     function s(val) {
-        if (barWindow && typeof barWindow.s === "function") return barWindow.s(val);
+        if (barWindow && typeof barWindow.s === "function") return barWindow.cs(val);
         if (typeof Scaler !== "undefined" && typeof Scaler.s === "function") return Math.round(Scaler.s(val));
         return val;
     }
@@ -286,9 +295,9 @@ Item {
         }
     }
 
-    property real targetWidth: (moduleActive && workspaceCount > 0 && faceLoader.item) ? faceLoader.item.implicitWidth + s(isCompact ? 18 : 22) : 0
-    implicitWidth: targetWidth
-    implicitHeight: parent ? parent.height : 0
+    property real targetLength: (moduleActive && workspaceCount > 0 && faceLoader.item) ? (isVertical ? faceLoader.item.implicitHeight : faceLoader.item.implicitWidth) + s(isCompact ? 18 : 22) : 0
+    implicitWidth: isVertical ? (parent ? parent.width : 0) : targetLength
+    implicitHeight: isVertical ? targetLength : (parent ? parent.height : 0)
 
     property real wheelAccumulator: 0
     Timer {
@@ -342,14 +351,23 @@ Item {
     Loader {
         id: faceLoader
         z: 2
-        anchors.left: parent.left
-        anchors.leftMargin: s(isCompact ? 18 : 22) / 2
-        anchors.verticalCenter: parent.verticalCenter
-        source: BarModuleRegistry.variantFaceFile("workspaces", root.workspacesStyle, false)
+        anchors.left: root.isVertical ? undefined : parent.left
+        anchors.leftMargin: root.isVertical ? 0 : s(isCompact ? 18 : 22) / 2
+        anchors.verticalCenter: root.isVertical ? undefined : parent.verticalCenter
+        anchors.top: root.isVertical ? parent.top : undefined
+        anchors.topMargin: root.isVertical ? s(isCompact ? 18 : 22) / 2 : 0
+        anchors.horizontalCenter: root.isVertical ? parent.horizontalCenter : undefined
+        source: BarModuleRegistry.variantFaceFile("workspaces", root.workspacesStyle)
         onLoaded: {
             attachModel();
-            Qt.callLater(attachModel);
+            attachTimer.restart();
         }
+    }
+
+    Timer {
+        id: attachTimer
+        interval: 0
+        onTriggered: root.attachModel()
     }
 
     Binding {
