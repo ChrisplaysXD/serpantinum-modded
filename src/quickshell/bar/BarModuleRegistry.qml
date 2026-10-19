@@ -364,4 +364,3 @@ QtObject {
         types = updated;
     }
 }
-import "../../reusables/media/Visualizer.qml"
