@@ -42,7 +42,8 @@
       "dock": "Dock",
       "bar_general": "Chung",
       "bar_modules": "Mô-đun",
-      "bar_side_modules": "Mô-đun bên cạnh"
+      "bar_side_modules": "Mô-đun bên cạnh",
+      "display_lockscreen": "Màn hình khóa"
     },
     "launcher": {
       "position": {
@@ -282,6 +283,36 @@
         },
         "preset_name_placeholder": "Nhập tên preset...",
         "screen_desc": "Cấu hình và chỉnh sửa tiện ích màn hình nền"
+      },
+      "lockscreen": {
+        "edit": {
+          "title": "Màn hình khóa",
+          "desc": "Tùy chỉnh bố cục màn hình khóa của bạn",
+          "button": "Chỉnh sửa màn hình khóa"
+        },
+        "limits": {
+          "title": "Giới hạn số lần thử",
+          "desc": "Tạm thời chặn nhập mật khẩu và tắt trình đọc vân tay sau quá nhiều lần thử thất bại"
+        },
+        "password_attempts": {
+          "title": "Số lần thử mật khẩu",
+          "desc": "Số lần thất bại trước khi việc nhập mật khẩu bị chặn trong 30 giây"
+        },
+        "fingerprint_attempts": {
+          "title": "Số lần thử vân tay",
+          "desc": "Số lần quét thất bại trước khi trình đọc vân tay bị tắt cho đến lần mở khóa tiếp theo"
+        },
+        "fingerprint": {
+          "title": "Bật đăng nhập bằng vân tay",
+          "desc": "Cho phép mở khóa màn hình khóa bằng vân tay"
+        },
+        "background": {
+          "select": "Chọn nền",
+          "follow": "Theo hình nền",
+          "custom": "Tùy chỉnh",
+          "follows_hint": "Đang theo hình nền",
+          "none": "Chưa chọn nền"
+        }
       }
     },
     "bar": {
@@ -885,6 +916,10 @@
       },
       "window_menu": {
         "untitled": "Untitled"
+      },
+      "background": {
+        "title": "Vẽ nền phía sau ứng dụng",
+        "desc": "Hiển thị bảng dock phía sau biểu tượng ứng dụng"
       }
     },
     "lyrics_picker": {
@@ -980,7 +1015,54 @@
       "power_off": "Tắt nguồn"
     },
     "default_user": "Người dùng",
-    "unknown": "Không rõ"
+    "unknown": "Không rõ",
+    "redactor": {
+      "done": "Xong",
+      "element": {
+        "avatar": "Ảnh đại diện",
+        "user": "Người dùng",
+        "password": "Mật khẩu",
+        "fingerprint": "Vân tay",
+        "notifications": "Thông báo",
+        "clock": "Đồng hồ",
+        "lockstatus": "Trạng thái khóa",
+        "keyboard": "Bàn phím",
+        "battery": "Pin"
+      },
+      "variant": {
+        "avatar": {
+          "round": "Tròn",
+          "rounded": "Bo góc"
+        },
+        "user": {
+          "filled": "Đặc",
+          "plain": "Đơn giản"
+        },
+        "password": {
+          "filled": "Đặc",
+          "glass": "Kính"
+        },
+        "fingerprint": {
+          "classic": "Cổ điển",
+          "ring": "Vòng",
+          "scanner": "Máy quét",
+          "pulse": "Nhịp",
+          "orbit": "Quỹ đạo",
+          "liquid": "Chất lỏng"
+        },
+        "notifications": {
+          "card": "Thẻ",
+          "plain": "Đơn giản"
+        },
+        "lockstatus": {
+          "filled": "Đặc",
+          "plain": "Đơn giản"
+        }
+      },
+      "setting": {
+        "show_text": "Hiện văn bản"
+      }
+    }
   },
   "music": {
     "nothing_playing": "Không có nhạc đang phát",
@@ -1153,11 +1235,33 @@
       "pin": "Ghim",
       "unpin": "Bỏ ghim"
     },
+    "calculator": {
+      "history": "Lịch sử",
+      "no_history": "Chưa có phép tính nào",
+      "clear_history": "Xóa lịch sử",
+      "copied": "Đã sao chép",
+      "deg": "Độ",
+      "rad": "Rad",
+      "grad": "Grad",
+      "inv": "Ngược",
+      "mode": {
+        "normal": "Thường",
+        "advanced": "Nâng cao"
+      },
+      "clear": "AC",
+      "error": {
+        "syntax": "Biểu thức không hợp lệ",
+        "div0": "Không thể chia cho không",
+        "domain": "Đầu vào không hợp lệ",
+        "paste": "Dán không hợp lệ"
+      }
+    },
     "tabs": {
       "draw": "Vẽ",
       "system": "Hệ thống",
       "timer": "Hẹn giờ",
       "notes": "Ghi chú",
+      "calculator": "Máy tính",
       "tab": "Tab"
     }
   },
@@ -1372,6 +1476,8 @@
       "default": "Mặc định",
       "material": "Material",
       "materialAnalog": "Material kim",
+      "lockscreen": "Lockscreen",
+      "stretched": "Stretched",
       "lumen": "Lumen",
       "lyrics": "Lời bài hát",
       "simpleLyrics": "Lời bài hát đơn giản"
@@ -1416,29 +1522,32 @@
     "description": "Một desktop shell dành cho các Wayland compositor.",
     "commands": "Các lệnh:",
     "script_commands": "Các lệnh tập lệnh:",
-    "launch_desc": "Khởi chạy các thành phần độc lập (start, widgetredactor)",
+    "launch_desc": "Khởi chạy các thành phần độc lập (start, widgetredactor, lock-redactor)",
     "msg_desc": "Gửi lệnh hoặc chuyển không gian làm việc đến trình quản lý giao diện",
     "ipc_desc": "Chuyển tiếp lệnh gọi IPC trực tiếp đến shell",
     "kill_desc": "Dừng daemon đang chạy một cách sạch sẽ",
+    "restart_desc": "Khởi động lại daemon",
     "options": "Các tùy chọn:",
     "verbose_desc": "Bật ghi nhật ký chi tiết",
     "version_desc": "Hiển thị thông tin phiên bản và thoát",
     "help_desc": "Hiển thị thông báo trợ giúp này và thoát",
     "examples": "Ví dụ:",
     "daemon_stopped": "Đã dừng daemon Serpantinum.",
+    "daemon_restarted": "Đã khởi động lại daemon Serpantinum.",
     "starting_daemon": "Daemon không chạy. Đang khởi động serpantinumd ở nền...",
     "error_missing_qml": "Lỗi: thiếu mục tiêu để khởi chạy.",
-    "launch_usage": "Cách dùng: serpantinum launch <start|widgetredactor> [đối số...]",
+    "launch_usage": "Cách dùng: serpantinum launch <start|widgetredactor|lock-redactor> [đối số...]",
     "error_qml_not_found": "Lỗi: không tìm thấy {NAME}.qml trong {DIR}",
     "error_shell_qml_not_found": "Lỗi: không tìm thấy đường dẫn đến shell.qml trong {DIR}",
     "error_unknown_command": "Lỗi: lệnh không xác định '{CMD}'.",
     "error_unknown_target": "Lỗi: mục tiêu không xác định '{TARGET}'.",
     "launch_help": {
-      "usage": "Cách dùng: serpantinum launch <start|widgetredactor> [đối số...]",
+      "usage": "Cách dùng: serpantinum launch <start|widgetredactor|lock-redactor> [đối số...]",
       "description": "Khởi chạy trực tiếp các thành phần độc lập ở chế độ chạy.",
       "available_targets": "Các mục tiêu khả dụng:",
       "target_start": "Khởi chạy giao diện thiết lập ban đầu",
-      "target_widgetredactor": "Khởi chạy giao diện chỉnh sửa tiện ích màn hình"
+      "target_widgetredactor": "Khởi chạy giao diện chỉnh sửa tiện ích màn hình",
+      "target_lock_redactor": "Bật/tắt, mở hoặc đóng trình chỉnh sửa bố cục màn hình khóa"
     },
     "msg_help": {
       "usage": "Cách dùng: serpantinum msg <lệnh|không_gian_làm_việc> [đối số...]",
@@ -1466,8 +1575,26 @@
       "monitors_detect": "Truy vấn các đầu ra màn hình đang hoạt động và tần số quét",
       "location_manual": "Đặt thủ công tọa độ địa lý và múi giờ",
       "blue_light_filter": "Điều chỉnh nhiệt độ màu và lịch trình ngày/đêm tự động",
-      "translate": "Trình dịch văn bản và vùng chọn tức thì"
-    }
+      "translate": "Trình dịch văn bản và vùng chọn tức thì",
+      "suspend": "Khóa màn hình và tạm dừng hệ thống",
+      "hibernate": "Ngủ đông hệ thống",
+      "reboot": "Khởi động lại hệ thống",
+      "poweroff": "Tắt hệ thống",
+      "redactor": "Mở hoặc bật/tắt trình chỉnh sửa bố cục widget màn hình nền"
+    },
+    "usage_label": "Cách dùng:",
+    "config_desc": "Đọc và thay đổi cài đặt (get, set, dump, path, edit)",
+    "error_unknown_language": "Lỗi: ngôn ngữ '{CODE}' không xác định.",
+    "update_available": "Có bản cập nhật: {LOCAL} -> {REMOTE}",
+    "up_to_date": "Serpantinum đã được cập nhật ({VERSION}).",
+    "state_on": "bật",
+    "state_off": "tắt",
+    "error_unknown_theme": "Lỗi: không rõ chủ đề '{NAME}'.",
+    "error_no_wallpapers": "Lỗi: không tìm thấy hình nền trong thư mục hình nền.",
+    "error_file_not_found": "Lỗi: không tìm thấy tệp: {PATH}",
+    "info_desc": "Hiển thị trạng thái hiện tại của một cài đặt (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
+    "set_desc": "Thay đổi một cài đặt (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
+    "trigger_desc": "Chạy một hành động một lần (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
   },
   "daemon": {
     "already_running": "Daemon đang chạy rồi. Đang thoát...",

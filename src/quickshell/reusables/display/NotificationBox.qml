@@ -258,7 +258,7 @@ Item {
                         anchors.centerIn: parent
                         visible: !root.showEmptyGraphic
                         text: "󰂚"
-                        font.family: "Iosevka Nerd Font"
+                        font.family: ThemeBackend.iconFont
                         font.pixelSize: root.s(40)
                         color: ThemeBackend.surface2
                     }
@@ -704,7 +704,7 @@ Item {
                                                     anchors.centerIn: parent
                                                     visible: groupWrapper.customType === "screenshot"
                                                     text: "󰄀"
-                                                    font.family: "Iosevka Nerd Font"
+                                                    font.family: ThemeBackend.iconFont
                                                     font.pixelSize: root.s(22)
                                                     color: ThemeBackend.mauve
                                                 }
@@ -713,7 +713,7 @@ Item {
                                                     anchors.centerIn: parent
                                                     visible: groupWrapper.customType === "weather"
                                                     text: "󰖕"
-                                                    font.family: "Iosevka Nerd Font"
+                                                    font.family: ThemeBackend.iconFont
                                                     font.pixelSize: root.s(22)
                                                     color: ThemeBackend.peach
                                                 }

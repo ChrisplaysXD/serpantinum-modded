@@ -306,7 +306,7 @@ SettingsRow {
                                     Text {
                                         anchors.centerIn: parent
                                         text: "󰂚"
-                                        font.family: "Iosevka Nerd Font"
+                                        font.family: ThemeBackend.iconFont
                                         font.pixelSize: rootObj.s(16)
                                         color: ThemeBackend.mauve
                                     }

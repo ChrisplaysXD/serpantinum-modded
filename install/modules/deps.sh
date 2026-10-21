@@ -146,7 +146,7 @@ configure_qt_icon_theme() {
 
     for qtct in qt5ct qt6ct; do
         local conf="$config_home/$qtct/$qtct.conf"
-        mkdir -p "$config_home/$qtct"
+        [ -d "$config_home/$qtct" ] || mkdir -p "$config_home/$qtct" 2>/dev/null || continue
         if [ ! -f "$conf" ]; then
             printf '[Appearance]\nicon_theme=%s\n' "$icon_theme" > "$conf"
         elif grep -q '^icon_theme=.\+' "$conf"; then

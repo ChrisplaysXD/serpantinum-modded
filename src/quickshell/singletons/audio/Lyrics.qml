@@ -257,13 +257,11 @@ Item {
 
     Timer {
         id: searchTimeoutTimer
-        interval: 3500
+        interval: 10000
         repeat: false
         onTriggered: {
             if (root.loading && root.activeSession && !root.activeSession.done) {
-                root.activeSession.netEaseDone = true;
-                root.activeSession.lrclibDone = true;
-                root.checkCompletion(root.activeSession);
+                root.loading = false;
             }
         }
     }

@@ -41,6 +41,7 @@ Item {
     property color overlay1: "#7f849c"
     property color overlay2: "#9399b2"
     property color blue: "#89b4fa"
+    readonly property color primary: blue
     property color sapphire: "#74c7ec"
     property color peach: "#fab387"
     property color green: "#a6e3a1"

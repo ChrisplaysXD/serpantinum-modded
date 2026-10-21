@@ -42,7 +42,8 @@
       "dock": "Док",
       "bar_general": "Общи",
       "bar_modules": "Модули",
-      "bar_side_modules": "Странични модули"
+      "bar_side_modules": "Странични модули",
+      "display_lockscreen": "Заключен екран"
     },
     "launcher": {
       "position": {
@@ -282,6 +283,36 @@
         },
         "preset_name_placeholder": "Въведете име на шаблона...",
         "screen_desc": "Конфигуриране и редактиране на уиджети на работния плот"
+      },
+      "lockscreen": {
+        "edit": {
+          "title": "Заключен екран",
+          "desc": "Персонализирайте оформлението на заключения екран",
+          "button": "Редактиране на заключения екран"
+        },
+        "limits": {
+          "title": "Ограничения на опитите",
+          "desc": "Временно блокиране на въвеждането на парола и изключване на четеца на отпечатъци след твърде много неуспешни опити"
+        },
+        "password_attempts": {
+          "title": "Опити с парола",
+          "desc": "Неуспешни опити, след които въвеждането на парола се блокира за 30 секунди"
+        },
+        "fingerprint_attempts": {
+          "title": "Опити с отпечатък",
+          "desc": "Неуспешни сканирания, след които четецът на отпечатъци се изключва до следващото отключване"
+        },
+        "fingerprint": {
+          "title": "Включване на вход с отпечатък",
+          "desc": "Разрешаване на отключване на заключения екран с отпечатък"
+        },
+        "background": {
+          "select": "Избор на фон",
+          "follow": "Следване на тапета",
+          "custom": "Персонализиран",
+          "follows_hint": "Следва тапета",
+          "none": "Не е избран фон"
+        }
       }
     },
     "bar": {
@@ -885,6 +916,10 @@
       },
       "window_menu": {
         "untitled": "Untitled"
+      },
+      "background": {
+        "title": "Показване на фон зад приложенията",
+        "desc": "Показване на панела на дока зад иконите на приложенията"
       }
     },
     "lyrics_picker": {
@@ -980,7 +1015,54 @@
       "power_off": "Изключване"
     },
     "default_user": "Потребител",
-    "unknown": "Неизвестно"
+    "unknown": "Неизвестно",
+    "redactor": {
+      "done": "Готово",
+      "element": {
+        "avatar": "Аватар",
+        "user": "Потребител",
+        "password": "Парола",
+        "fingerprint": "Отпечатък",
+        "notifications": "Известия",
+        "clock": "Часовник",
+        "lockstatus": "Състояние на заключването",
+        "keyboard": "Клавиатура",
+        "battery": "Батерия"
+      },
+      "variant": {
+        "avatar": {
+          "round": "Кръгъл",
+          "rounded": "Заоблен"
+        },
+        "user": {
+          "filled": "Запълнен",
+          "plain": "Обикновен"
+        },
+        "password": {
+          "filled": "Запълнен",
+          "glass": "Стъкло"
+        },
+        "fingerprint": {
+          "classic": "Класически",
+          "ring": "Пръстен",
+          "scanner": "Скенер",
+          "pulse": "Пулс",
+          "orbit": "Орбита",
+          "liquid": "Течност"
+        },
+        "notifications": {
+          "card": "Карта",
+          "plain": "Обикновен"
+        },
+        "lockstatus": {
+          "filled": "Запълнен",
+          "plain": "Обикновен"
+        }
+      },
+      "setting": {
+        "show_text": "Показване на текст"
+      }
+    }
   },
   "music": {
     "nothing_playing": "В момента нищо не се възпроизвежда",
@@ -1156,11 +1238,33 @@
       "pin": "Закачане",
       "unpin": "Откачане"
     },
+    "calculator": {
+      "history": "История",
+      "no_history": "Все още няма изчисления",
+      "clear_history": "Изчисти историята",
+      "copied": "Копирано",
+      "deg": "Град",
+      "rad": "Рад",
+      "grad": "Гон",
+      "inv": "Обр",
+      "mode": {
+        "normal": "Обикновен",
+        "advanced": "Разширен"
+      },
+      "clear": "AC",
+      "error": {
+        "syntax": "Невалиден израз",
+        "div0": "Не може да се дели на нула",
+        "domain": "Невалиден вход",
+        "paste": "Невалидно поставяне"
+      }
+    },
     "tabs": {
       "draw": "Рисуване",
       "system": "Система",
       "timer": "Таймер",
       "notes": "Бележки",
+      "calculator": "Калкулатор",
       "tab": "Раздел"
     }
   },
@@ -1375,6 +1479,8 @@
       "default": "По подразбиране",
       "material": "Material",
       "materialAnalog": "Material Аналогов",
+      "lockscreen": "Lockscreen",
+      "stretched": "Stretched",
       "lumen": "Lumen",
       "lyrics": "Текст",
       "simpleLyrics": "Опростен текст"
@@ -1416,29 +1522,32 @@
     "description": "Работна среда за wayland композитори.",
     "commands": "Команди:",
     "script_commands": "Скриптови команди:",
-    "launch_desc": "Стартиране на самостоятелни компоненти (start, widgetredactor)",
+    "launch_desc": "Стартиране на самостоятелни компоненти (start, widgetredactor, lock-redactor)",
     "msg_desc": "Изпращане на команди или смяна на работни пространства към мениджъра на интерфейса",
     "ipc_desc": "Препращане на IPC повиквания директно към обвивката",
     "kill_desc": "Чисто спиране на работещия демон",
+    "restart_desc": "Рестартиране на демона",
     "options": "Опции:",
     "verbose_desc": "Активиране на подробен изход в журнала",
     "version_desc": "Показване на информация за версията и изход",
     "help_desc": "Показване на това помощно съобщение и изход",
     "examples": "Примери:",
     "daemon_stopped": "Демонът на Serpantinum е спрян.",
+    "daemon_restarted": "Демонът на Serpantinum е рестартиран.",
     "starting_daemon": "Демонът не работи. Стартиране на serpantinumd във фонов режим...",
     "error_missing_qml": "Грешка: липсва цел за стартиране.",
-    "launch_usage": "Употреба: serpantinum launch <start|widgetredactor> [аргументи...]",
+    "launch_usage": "Употреба: serpantinum launch <start|widgetredactor|lock-redactor> [аргументи...]",
     "error_qml_not_found": "Грешка: {NAME}.qml не може да бъде намерен в {DIR}",
     "error_shell_qml_not_found": "Грешка: пътят до shell.qml не може да бъде намерен в {DIR}",
     "error_unknown_command": "Грешка: неизвестна команда '{CMD}'.",
     "error_unknown_target": "Грешка: неизвестна цел '{TARGET}'.",
     "launch_help": {
-      "usage": "Употреба: serpantinum launch <start|widgetredactor> [аргументи...]",
+      "usage": "Употреба: serpantinum launch <start|widgetredactor|lock-redactor> [аргументи...]",
       "description": "Стартиране на самостоятелни компоненти директно в режим на изпълнение.",
       "available_targets": "Налични цели:",
       "target_start": "Стартиране на интерфейса за начална настройка",
-      "target_widgetredactor": "Стартиране на редактора на уиджети на работния плот"
+      "target_widgetredactor": "Стартиране на редактора на уиджети на работния плот",
+      "target_lock_redactor": "Превключване, отваряне или затваряне на редактора на разположението на заключения екран"
     },
     "msg_help": {
       "usage": "Употреба: serpantinum msg <команда|работно_пространство> [аргументи...]",
@@ -1466,8 +1575,26 @@
       "monitors_detect": "Запитване за активните изходи на дисплея и честотите на опресняване",
       "location_manual": "Ръчно задаване на географски координати и часова зона",
       "blue_light_filter": "Регулиране на цветовата температура и автоматичен дневен/нощен график",
-      "translate": "Незабавен преводач на текст и маркирана селекция"
-    }
+      "translate": "Незабавен преводач на текст и маркирана селекция",
+      "suspend": "Заключване на екрана и приспиване на системата",
+      "hibernate": "Хибернация на системата",
+      "reboot": "Рестартиране на системата",
+      "poweroff": "Изключване на системата",
+      "redactor": "Отваряне или превключване на редактора на разположението на работния плот"
+    },
+    "usage_label": "Използване:",
+    "config_desc": "Четене и промяна на настройките (get, set, dump, path, edit)",
+    "error_unknown_language": "Грешка: непознат език '{CODE}'.",
+    "update_available": "Налична е актуализация: {LOCAL} -> {REMOTE}",
+    "up_to_date": "Serpantinum е актуален ({VERSION}).",
+    "state_on": "вкл.",
+    "state_off": "изкл.",
+    "error_unknown_theme": "Грешка: непозната тема '{NAME}'.",
+    "error_no_wallpapers": "Грешка: в директорията с тапети не са намерени тапети.",
+    "error_file_not_found": "Грешка: файлът не е намерен: {PATH}",
+    "info_desc": "Показване на текущото състояние на настройка (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
+    "set_desc": "Промяна на настройка (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
+    "trigger_desc": "Изпълнение на еднократно действие (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
   },
   "daemon": {
     "already_running": "Демонът вече работи. Изход...",

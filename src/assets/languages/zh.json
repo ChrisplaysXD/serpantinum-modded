@@ -42,7 +42,8 @@
       "dock": "程序坞",
       "bar_general": "通用",
       "bar_modules": "模块",
-      "bar_side_modules": "侧边模块"
+      "bar_side_modules": "侧边模块",
+      "display_lockscreen": "锁屏"
     },
     "launcher": {
       "position": {
@@ -282,6 +283,36 @@
         },
         "preset_name_placeholder": "输入预设名称...",
         "screen_desc": "配置并编辑桌面小组件"
+      },
+      "lockscreen": {
+        "edit": {
+          "title": "锁屏",
+          "desc": "自定义锁屏的布局",
+          "button": "编辑锁屏"
+        },
+        "limits": {
+          "title": "尝试次数限制",
+          "desc": "失败尝试过多后，暂时阻止密码输入并禁用指纹读取器"
+        },
+        "password_attempts": {
+          "title": "密码尝试次数",
+          "desc": "密码输入被阻止 30 秒之前允许的失败次数"
+        },
+        "fingerprint_attempts": {
+          "title": "指纹尝试次数",
+          "desc": "指纹读取器在下次解锁前被禁用之前允许的失败扫描次数"
+        },
+        "fingerprint": {
+          "title": "启用指纹登录",
+          "desc": "允许使用指纹解锁锁屏"
+        },
+        "background": {
+          "select": "选择背景",
+          "follow": "跟随壁纸",
+          "custom": "自定义",
+          "follows_hint": "跟随壁纸",
+          "none": "未选择背景"
+        }
       }
     },
     "bar": {
@@ -885,6 +916,10 @@
       },
       "window_menu": {
         "untitled": "Untitled"
+      },
+      "background": {
+        "title": "在应用后绘制背景",
+        "desc": "在应用图标后显示程序坞面板"
       }
     },
     "lyrics_picker": {
@@ -980,7 +1015,54 @@
       "power_off": "关机"
     },
     "default_user": "用户",
-    "unknown": "未知"
+    "unknown": "未知",
+    "redactor": {
+      "done": "完成",
+      "element": {
+        "avatar": "头像",
+        "user": "用户",
+        "password": "密码",
+        "fingerprint": "指纹",
+        "notifications": "通知",
+        "clock": "时钟",
+        "lockstatus": "锁定状态",
+        "keyboard": "键盘",
+        "battery": "电池"
+      },
+      "variant": {
+        "avatar": {
+          "round": "圆形",
+          "rounded": "圆角"
+        },
+        "user": {
+          "filled": "填充",
+          "plain": "简洁"
+        },
+        "password": {
+          "filled": "填充",
+          "glass": "玻璃"
+        },
+        "fingerprint": {
+          "classic": "经典",
+          "ring": "环形",
+          "scanner": "扫描仪",
+          "pulse": "脉冲",
+          "orbit": "轨道",
+          "liquid": "液态"
+        },
+        "notifications": {
+          "card": "卡片",
+          "plain": "简洁"
+        },
+        "lockstatus": {
+          "filled": "填充",
+          "plain": "简洁"
+        }
+      },
+      "setting": {
+        "show_text": "显示文字"
+      }
+    }
   },
   "music": {
     "nothing_playing": "未在播放",
@@ -1156,11 +1238,33 @@
       "pin": "固定",
       "unpin": "取消固定"
     },
+    "calculator": {
+      "history": "历史记录",
+      "no_history": "暂无计算记录",
+      "clear_history": "清除历史记录",
+      "copied": "已复制",
+      "deg": "度",
+      "rad": "弧度",
+      "grad": "百分度",
+      "inv": "反",
+      "mode": {
+        "normal": "标准",
+        "advanced": "高级"
+      },
+      "clear": "AC",
+      "error": {
+        "syntax": "表达式无效",
+        "div0": "不能除以零",
+        "domain": "输入无效",
+        "paste": "粘贴无效"
+      }
+    },
     "tabs": {
       "draw": "绘图",
       "system": "系统",
       "timer": "计时",
       "notes": "便签",
+      "calculator": "计算器",
       "tab": "标签"
     }
   },
@@ -1375,6 +1479,8 @@
       "default": "默认",
       "material": "Material",
       "materialAnalog": "Material 模拟指针",
+      "lockscreen": "锁屏",
+      "stretched": "Stretched",
       "lumen": "Lumen",
       "lyrics": "歌词",
       "simpleLyrics": "简易歌词"
@@ -1416,29 +1522,32 @@
     "description": "专为 Wayland 合成器打造的桌面 Shell。",
     "commands": "命令：",
     "script_commands": "脚本命令：",
-    "launch_desc": "启动独立组件（start、widgetredactor）",
+    "launch_desc": "启动独立组件（start、widgetredactor, lock-redactor）",
     "msg_desc": "向界面管理器发送命令或工作区切换",
     "ipc_desc": "直接向 Shell 转发 IPC 调用",
     "kill_desc": "干净地停止正在运行的守护进程",
+    "restart_desc": "重启守护进程",
     "options": "选项：",
     "verbose_desc": "启用详细日志输出",
     "version_desc": "显示版本信息并退出",
     "help_desc": "显示此帮助信息并退出",
     "examples": "示例：",
     "daemon_stopped": "Serpantinum 守护进程已停止。",
+    "daemon_restarted": "Serpantinum 守护进程已重启。",
     "starting_daemon": "守护进程未运行。正在后台启动 serpantinumd...",
     "error_missing_qml": "错误：缺少要启动的目标。",
-    "launch_usage": "Usage: serpantinum launch <start|widgetredactor> [args...]",
+    "launch_usage": "Usage: serpantinum launch <start|widgetredactor|lock-redactor> [args...]",
     "error_qml_not_found": "Error: could not resolve {NAME}.qml in {DIR}",
     "error_shell_qml_not_found": "Error: could not resolve path to shell.qml in {DIR}",
     "error_unknown_command": "Error: unknown command '{CMD}'.",
     "error_unknown_target": "Error: unknown target '{TARGET}'.",
     "launch_help": {
-      "usage": "Usage: serpantinum launch <start|widgetredactor> [arguments...]",
+      "usage": "Usage: serpantinum launch <start|widgetredactor|lock-redactor> [arguments...]",
       "description": "直接在运行器模式下启动独立组件。",
       "available_targets": "可用目标：",
       "target_start": "启动初始设置引导界面",
-      "target_widgetredactor": "启动桌面小组件编辑器界面"
+      "target_widgetredactor": "启动桌面小组件编辑器界面",
+      "target_lock_redactor": "切换、打开或关闭锁屏布局编辑器"
     },
     "msg_help": {
       "usage": "Usage: serpantinum msg <command|workspace> [arguments...]",
@@ -1466,8 +1575,26 @@
       "monitors_detect": "查询活动显示输出及刷新率",
       "location_manual": "手动设置地理坐标与时区",
       "blue_light_filter": "调节色温及自动昼夜计划",
-      "translate": "即时文本与选中文本翻译"
-    }
+      "translate": "即时文本与选中文本翻译",
+      "suspend": "锁定屏幕并挂起系统",
+      "hibernate": "休眠系统",
+      "reboot": "重启系统",
+      "poweroff": "关闭系统",
+      "redactor": "打开或切换桌面小部件布局编辑器"
+    },
+    "usage_label": "用法:",
+    "config_desc": "读取和更改设置 (get, set, dump, path, edit)",
+    "error_unknown_language": "错误：未知语言 '{CODE}'。",
+    "update_available": "有可用更新：{LOCAL} -> {REMOTE}",
+    "up_to_date": "Serpantinum 已是最新版本 ({VERSION})。",
+    "state_on": "开",
+    "state_off": "关",
+    "error_unknown_theme": "错误：未知主题“{NAME}”。",
+    "error_no_wallpapers": "错误：壁纸目录中未找到壁纸。",
+    "error_file_not_found": "错误：未找到文件：{PATH}",
+    "info_desc": "显示设置的当前状态 (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
+    "set_desc": "更改设置 (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
+    "trigger_desc": "执行一次性操作 (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
   },
   "daemon": {
     "already_running": "守护进程已在运行。正在退出...",

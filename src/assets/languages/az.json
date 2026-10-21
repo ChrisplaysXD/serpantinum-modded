@@ -42,7 +42,8 @@
       "dock": "Tətbiq rəfi",
       "bar_general": "Ümumi",
       "bar_modules": "Modullar",
-      "bar_side_modules": "Yan modullar"
+      "bar_side_modules": "Yan modullar",
+      "display_lockscreen": "Kilid ekranı"
     },
     "launcher": {
       "position": {
@@ -280,6 +281,36 @@
         },
         "preset_name_placeholder": "Presetin adını daxil edin...",
         "screen_desc": "Masaüstü vidjetlərini konfiqurasiya edin və redaktə edin"
+      },
+      "lockscreen": {
+        "edit": {
+          "title": "Kilid ekranı",
+          "desc": "Kilid ekranınızın düzənini fərdiləşdirin",
+          "button": "Kilid ekranını redaktə et"
+        },
+        "limits": {
+          "title": "Cəhd limitləri",
+          "desc": "Çox sayda uğursuz cəhddən sonra parol daxil etməni müvəqqəti blokla və barmaq izi oxuyucusunu söndür"
+        },
+        "password_attempts": {
+          "title": "Parol cəhdləri",
+          "desc": "Parol daxil etmə 30 saniyəlik bloklanana qədər uğursuz cəhdlər"
+        },
+        "fingerprint_attempts": {
+          "title": "Barmaq izi cəhdləri",
+          "desc": "Barmaq izi oxuyucusu növbəti kilid açılmasına qədər söndürülənə qədər uğursuz skanlar"
+        },
+        "fingerprint": {
+          "title": "Barmaq izi ilə girişi aktiv et",
+          "desc": "Kilid ekranını barmaq izi ilə açmağa icazə ver"
+        },
+        "background": {
+          "select": "Fon seç",
+          "follow": "Divar kağızını izlə",
+          "custom": "Fərdi",
+          "follows_hint": "Divar kağızını izləyir",
+          "none": "Fon seçilməyib"
+        }
       }
     },
     "bar": {
@@ -879,6 +910,10 @@
       },
       "window_menu": {
         "untitled": "Untitled"
+      },
+      "background": {
+        "title": "Tətbiqlərin arxasında fon çək",
+        "desc": "Tətbiq ikonalarının arxasında dok panelini göstər"
       }
     },
     "lyrics_picker": {
@@ -974,7 +1009,54 @@
       "power_off": "Söndür"
     },
     "default_user": "İstifadəçi",
-    "unknown": "Naməlum"
+    "unknown": "Naməlum",
+    "redactor": {
+      "done": "Hazırdır",
+      "element": {
+        "avatar": "Avatar",
+        "user": "İstifadəçi",
+        "password": "Parol",
+        "fingerprint": "Barmaq izi",
+        "notifications": "Bildirişlər",
+        "clock": "Saat",
+        "lockstatus": "Kilid vəziyyəti",
+        "keyboard": "Klaviatura",
+        "battery": "Batareya"
+      },
+      "variant": {
+        "avatar": {
+          "round": "Dairəvi",
+          "rounded": "Yumrulanmış"
+        },
+        "user": {
+          "filled": "Dolu",
+          "plain": "Sadə"
+        },
+        "password": {
+          "filled": "Dolu",
+          "glass": "Şüşə"
+        },
+        "fingerprint": {
+          "classic": "Klassik",
+          "ring": "Halqa",
+          "scanner": "Skaner",
+          "pulse": "Nəbz",
+          "orbit": "Orbit",
+          "liquid": "Maye"
+        },
+        "notifications": {
+          "card": "Kart",
+          "plain": "Sadə"
+        },
+        "lockstatus": {
+          "filled": "Dolu",
+          "plain": "Sadə"
+        }
+      },
+      "setting": {
+        "show_text": "Mətni göstər"
+      }
+    }
   },
   "music": {
     "nothing_playing": "Heç nə səsləndirilmir",
@@ -1147,11 +1229,33 @@
       "pin": "Bərkit",
       "unpin": "Bərkitməni sil"
     },
+    "calculator": {
+      "history": "Tarixçə",
+      "no_history": "Hələ hesablama yoxdur",
+      "clear_history": "Tarixçəni təmizlə",
+      "copied": "Kopyalandı",
+      "deg": "Der",
+      "rad": "Rad",
+      "grad": "Qrad",
+      "inv": "Tərs",
+      "mode": {
+        "normal": "Adi",
+        "advanced": "Qabaqcıl"
+      },
+      "clear": "AC",
+      "error": {
+        "syntax": "Yanlış ifadə",
+        "div0": "Sıfıra bölmək olmaz",
+        "domain": "Yanlış giriş",
+        "paste": "Yanlış yapışdırma"
+      }
+    },
     "tabs": {
       "draw": "Rəsm",
       "system": "Sistem",
       "timer": "Taymer",
       "notes": "Qeydlər",
+      "calculator": "Kalkulyator",
       "tab": "Vərəq"
     }
   },
@@ -1366,6 +1470,8 @@
       "default": "Standart",
       "material": "Material",
       "materialAnalog": "Material analoq",
+      "lockscreen": "Lockscreen",
+      "stretched": "Stretched",
       "lumen": "Lümen",
       "lyrics": "Mahnı sözləri",
       "simpleLyrics": "Sadə mahnı mətni"
@@ -1410,29 +1516,32 @@
     "description": "Wayland görüntü birləşdiriciləri üçün iş masası qabığı.",
     "commands": "Əmrlər:",
     "script_commands": "Skript əmrləri:",
-    "launch_desc": "Müstəqil tərkib hissələrini başlat (start, widgetredactor)",
+    "launch_desc": "Müstəqil tərkib hissələrini başlat (start, widgetredactor, lock-redactor)",
     "msg_desc": "İnterfeys idarəedicisinə əmrləri və ya iş sahəsi keçidlərini göndər",
     "ipc_desc": "IPC çağırışlarını birbaşa qabığa ötür",
     "kill_desc": "İşləyən arxa plan xidmətini düzgün şəkildə dayandır",
+    "restart_desc": "Arxa plan xidmətini yenidən başlat",
     "options": "Seçimlər:",
     "verbose_desc": "Ətraflı jurnal çıxışını aktivləşdir",
     "version_desc": "Versiya məlumatını göstər və çıx",
     "help_desc": "Bu kömək mətnini göstər və çıx",
     "examples": "Nümunələr:",
     "daemon_stopped": "Serpantinum arxa plan xidməti dayandırıldı.",
+    "daemon_restarted": "Serpantinum arxa plan xidməti yenidən başladıldı.",
     "starting_daemon": "Arxa plan xidməti işləmir. serpantinumd arxa planda başladılır...",
     "error_missing_qml": "Xəta: başladılacaq hədəf göstərilməyib.",
-    "launch_usage": "İstifadə: serpantinum launch <start|widgetredactor> [args...]",
+    "launch_usage": "İstifadə: serpantinum launch <start|widgetredactor|lock-redactor> [args...]",
     "error_qml_not_found": "Xəta: {DIR} daxilində {NAME}.qml tapılmadı",
     "error_shell_qml_not_found": "Xəta: {DIR} daxilində shell.qml yolu tapılmadı",
     "error_unknown_command": "Xəta: naməlum əmr '{CMD}'.",
     "error_unknown_target": "Xəta: naməlum hədəf '{TARGET}'.",
     "launch_help": {
-      "usage": "İstifadə: serpantinum launch <start|widgetredactor> [arguments...]",
+      "usage": "İstifadə: serpantinum launch <start|widgetredactor|lock-redactor> [arguments...]",
       "description": "Müstəqil tərkib hissələrini birbaşa icra rejimində başlat.",
       "available_targets": "Mövcud hədəflər:",
       "target_start": "İlkin quraşdırma interfeysini başlat",
-      "target_widgetredactor": "İş masası vidcetlərinə düzəliş etmək üçün interfeysi başlat"
+      "target_widgetredactor": "İş masası vidcetlərinə düzəliş etmək üçün interfeysi başlat",
+      "target_lock_redactor": "Kilid ekranı düzən redaktorunu dəyiş, aç və ya bağla"
     },
     "msg_help": {
       "usage": "İstifadə: serpantinum msg <command|workspace> [arguments...]",
@@ -1460,8 +1569,26 @@
       "monitors_detect": "Fəal ekran çıxışlarını və yenilənmə tezliklərini sorğula",
       "location_manual": "Coğrafi koordinatları və saat qurşağını əl ilə təyin et",
       "blue_light_filter": "Rəng temperaturunu və avtomatik gündüz/gecə cədvəlini tənzimlə",
-      "translate": "Mətn və seçilmiş hissə üçün ani tərcüməçi"
-    }
+      "translate": "Mətn və seçilmiş hissə üçün ani tərcüməçi",
+      "suspend": "Ekranı kilidlə və sistemi dayandır",
+      "hibernate": "Sistemi hibernasiyaya göndər",
+      "reboot": "Sistemi yenidən başlat",
+      "poweroff": "Sistemi söndür",
+      "redactor": "İş masası vidjet düzəni redaktorunu aç və ya dəyiş"
+    },
+    "usage_label": "İstifadə:",
+    "config_desc": "Ayarları oxu və dəyiş (get, set, dump, path, edit)",
+    "error_unknown_language": "Xəta: naməlum dil '{CODE}'.",
+    "update_available": "Yeniləmə mövcuddur: {LOCAL} -> {REMOTE}",
+    "up_to_date": "Serpantinum aktualdır ({VERSION}).",
+    "state_on": "aktiv",
+    "state_off": "deaktiv",
+    "error_unknown_theme": "Xəta: naməlum mövzu '{NAME}'.",
+    "error_no_wallpapers": "Xəta: divar kağızı qovluğunda divar kağızı tapılmadı.",
+    "error_file_not_found": "Xəta: fayl tapılmadı: {PATH}",
+    "info_desc": "Ayarın cari vəziyyətini göstərmək (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
+    "set_desc": "Ayarı dəyişmək (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
+    "trigger_desc": "Birdəfəlik əməliyyat icra etmək (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
   },
   "daemon": {
     "already_running": "Arxa plan xidməti artıq işləyir. Çıxılır...",

@@ -17,7 +17,7 @@ Item {
     property int iconFontSize: 18
 
     property color accentColor: ThemeBackend.surface0
-    property color textColor: "#11111b"
+    property color textColor: ThemeBackend.crust
     property real bgOpacity: 1.0
     property real glassShadow: 1
     readonly property color displayTextColor: (ThemeBackend.liquidGlass && (0.2126 * textColor.r + 0.7152 * textColor.g + 0.0722 * textColor.b) < 0.5) ? ThemeBackend.text : textColor
@@ -41,7 +41,7 @@ Item {
         id: btnContainer
         anchors.fill: parent
 
-        scale: (!root.enabled ? 1.0 : (btnMa.pressed ? 1.08 : (root.isHoveredOrHighlighted ? 1.04 : 1.0))) * root.popScale
+        scale: (!root.enabled ? 1.0 : (btnMa.pressed ? 0.96 : (root.isHoveredOrHighlighted ? 1.04 : 1.0))) * root.popScale
         Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutQuint } }
 
         SequentialAnimation {

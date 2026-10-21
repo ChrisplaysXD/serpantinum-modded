@@ -43,7 +43,8 @@
       "dock": "Dock",
       "bar_general": "General",
       "bar_modules": "Módulos",
-      "bar_side_modules": "Módulos laterales"
+      "bar_side_modules": "Módulos laterales",
+      "display_lockscreen": "Pantalla de bloqueo"
     },
     "launcher": {
       "position": {
@@ -283,6 +284,36 @@
         },
         "preset_name_placeholder": "Introduce el nombre del ajuste...",
         "screen_desc": "Configurar y editar widgets del escritorio"
+      },
+      "lockscreen": {
+        "edit": {
+          "title": "Pantalla de bloqueo",
+          "desc": "Personaliza el diseño de tu pantalla de bloqueo",
+          "button": "Editar pantalla de bloqueo"
+        },
+        "limits": {
+          "title": "Límites de intentos",
+          "desc": "Bloquea temporalmente la entrada de contraseña y desactiva el lector de huellas tras demasiados intentos fallidos"
+        },
+        "password_attempts": {
+          "title": "Intentos de contraseña",
+          "desc": "Intentos fallidos antes de bloquear la entrada de contraseña durante 30 segundos"
+        },
+        "fingerprint_attempts": {
+          "title": "Intentos de huella",
+          "desc": "Lecturas fallidas antes de desactivar el lector de huellas hasta el próximo desbloqueo"
+        },
+        "fingerprint": {
+          "title": "Activar inicio con huella dactilar",
+          "desc": "Permitir desbloquear la pantalla de bloqueo con una huella dactilar"
+        },
+        "background": {
+          "select": "Seleccionar fondo",
+          "follow": "Seguir fondo de pantalla",
+          "custom": "Personalizado",
+          "follows_hint": "Sigue el fondo de pantalla",
+          "none": "Ningún fondo seleccionado"
+        }
       }
     },
     "bar": {
@@ -929,6 +960,10 @@
       },
       "window_menu": {
         "untitled": "Untitled"
+      },
+      "background": {
+        "title": "Dibujar un fondo detrás de las apps",
+        "desc": "Mostrar el panel del dock detrás de los iconos de las apps"
       }
     },
     "lyrics_picker": {
@@ -1024,7 +1059,54 @@
       "power_off": "Apagar"
     },
     "default_user": "Usuario",
-    "unknown": "Desconocido"
+    "unknown": "Desconocido",
+    "redactor": {
+      "done": "Listo",
+      "element": {
+        "avatar": "Avatar",
+        "user": "Usuario",
+        "password": "Contraseña",
+        "fingerprint": "Huella dactilar",
+        "notifications": "Notificaciones",
+        "clock": "Reloj",
+        "lockstatus": "Estado de bloqueo",
+        "keyboard": "Teclado",
+        "battery": "Batería"
+      },
+      "variant": {
+        "avatar": {
+          "round": "Redondo",
+          "rounded": "Redondeado"
+        },
+        "user": {
+          "filled": "Relleno",
+          "plain": "Simple"
+        },
+        "password": {
+          "filled": "Relleno",
+          "glass": "Cristal"
+        },
+        "fingerprint": {
+          "classic": "Clásico",
+          "ring": "Anillo",
+          "scanner": "Escáner",
+          "pulse": "Pulso",
+          "orbit": "Órbita",
+          "liquid": "Líquido"
+        },
+        "notifications": {
+          "card": "Tarjeta",
+          "plain": "Simple"
+        },
+        "lockstatus": {
+          "filled": "Relleno",
+          "plain": "Simple"
+        }
+      },
+      "setting": {
+        "show_text": "Mostrar texto"
+      }
+    }
   },
   "music": {
     "nothing_playing": "No hay nada reproduciéndose",
@@ -1197,11 +1279,33 @@
       "pin": "Fijar",
       "unpin": "Desfijar"
     },
+    "calculator": {
+      "history": "Historial",
+      "no_history": "Aún no hay cálculos",
+      "clear_history": "Borrar historial",
+      "copied": "Copiado",
+      "deg": "Deg",
+      "rad": "Rad",
+      "grad": "Grad",
+      "inv": "Inv",
+      "mode": {
+        "normal": "Normal",
+        "advanced": "Avanzado"
+      },
+      "clear": "AC",
+      "error": {
+        "syntax": "Expresión no válida",
+        "div0": "No se puede dividir entre cero",
+        "domain": "Entrada no válida",
+        "paste": "Pegado no válido"
+      }
+    },
     "tabs": {
       "draw": "Dibujo",
       "system": "Sistema",
       "timer": "Temporizador",
       "notes": "Notas",
+      "calculator": "Calculadora",
       "tab": "Pestaña"
     }
   },
@@ -1416,6 +1520,8 @@
       "default": "Predeterminado",
       "material": "Material",
       "materialAnalog": "Material analógico",
+      "lockscreen": "Pantalla de bloqueo",
+      "stretched": "Estirado",
       "lumen": "Lumen",
       "lyrics": "Letra",
       "simpleLyrics": "Letra simple"
@@ -1460,29 +1566,32 @@
     "description": "Un entorno de escritorio para compositores de wayland.",
     "commands": "Comandos:",
     "script_commands": "Comandos de scripts:",
-    "launch_desc": "Lanzar componentes independientes (start, widgetredactor)",
+    "launch_desc": "Lanzar componentes independientes (start, widgetredactor, lock-redactor)",
     "msg_desc": "Enviar comandos o cambios de espacio de trabajo al gestor de UI",
     "ipc_desc": "Reenviar llamadas IPC directamente al shell",
     "kill_desc": "Detener limpiamente el demonio en ejecución",
+    "restart_desc": "Reiniciar el demonio",
     "options": "Opciones:",
     "verbose_desc": "Habilitar registro detallado (verbose)",
     "version_desc": "Mostrar información de versión y salir",
     "help_desc": "Mostrar este mensaje de ayuda y salir",
     "examples": "Ejemplos:",
     "daemon_stopped": "Demonio de serpantinum detenido.",
+    "daemon_restarted": "Demonio de serpantinum reiniciado.",
     "starting_daemon": "El demonio no está en ejecución. Iniciando serpantinumd en segundo plano...",
     "error_missing_qml": "Error: falta el destino a ejecutar.",
-    "launch_usage": "Uso: serpantinum launch <start|widgetredactor> [argumentos...]",
+    "launch_usage": "Uso: serpantinum launch <start|widgetredactor|lock-redactor> [argumentos...]",
     "error_qml_not_found": "Error: no se pudo encontrar {NAME}.qml en {DIR}",
     "error_shell_qml_not_found": "Error: no se pudo resolver la ruta a shell.qml en {DIR}",
     "error_unknown_command": "Error: comando desconocido '{CMD}'.",
     "error_unknown_target": "Error: destino desconocido '{TARGET}'.",
     "launch_help": {
-      "usage": "Uso: serpantinum launch <start|widgetredactor> [argumentos...]",
+      "usage": "Uso: serpantinum launch <start|widgetredactor|lock-redactor> [argumentos...]",
       "description": "Lanzar componentes independientes directamente en modo runner.",
       "available_targets": "Destinos disponibles:",
       "target_start": "Lanzar la interfaz de configuración inicial",
-      "target_widgetredactor": "Lanzar el editor de widgets de escritorio"
+      "target_widgetredactor": "Lanzar el editor de widgets de escritorio",
+      "target_lock_redactor": "Alternar, abrir o cerrar el editor de diseño de la pantalla de bloqueo"
     },
     "msg_help": {
       "usage": "Uso: serpantinum msg <comando|espaciodetrabajo> [argumentos...]",
@@ -1510,8 +1619,26 @@
       "monitors_detect": "Consultar salidas de pantalla activas y frecuencias de actualización",
       "location_manual": "Establecer coordenadas geográficas y zona horaria manualmente",
       "blue_light_filter": "Ajustar la temperatura de color y el horario automático día/noche",
-      "translate": "Traducción instantánea de texto y selecciones"
-    }
+      "translate": "Traducción instantánea de texto y selecciones",
+      "suspend": "Bloquear la pantalla y suspender el sistema",
+      "hibernate": "Hibernar el sistema",
+      "reboot": "Reiniciar el sistema",
+      "poweroff": "Apagar el sistema",
+      "redactor": "Abrir o alternar el editor de diseño de widgets del escritorio"
+    },
+    "usage_label": "Uso:",
+    "config_desc": "Leer y cambiar la configuración (get, set, dump, path, edit)",
+    "error_unknown_language": "Error: idioma desconocido '{CODE}'.",
+    "update_available": "Actualización disponible: {LOCAL} -> {REMOTE}",
+    "up_to_date": "Serpantinum está actualizado ({VERSION}).",
+    "state_on": "activado",
+    "state_off": "desactivado",
+    "error_unknown_theme": "Error: tema desconocido '{NAME}'.",
+    "error_no_wallpapers": "Error: no se encontraron fondos de pantalla en el directorio de fondos.",
+    "error_file_not_found": "Error: archivo no encontrado: {PATH}",
+    "info_desc": "Mostrar el estado actual de un ajuste (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
+    "set_desc": "Cambiar un ajuste (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
+    "trigger_desc": "Ejecutar una acción puntual (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
   },
   "daemon": {
     "already_running": "El demonio ya está en ejecución. Saliendo...",

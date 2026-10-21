@@ -42,7 +42,8 @@
       "dock": "Dok",
       "bar_general": "Umum",
       "bar_modules": "Modul",
-      "bar_side_modules": "Modul samping"
+      "bar_side_modules": "Modul samping",
+      "display_lockscreen": "Layar kunci"
     },
     "launcher": {
       "position": {
@@ -282,6 +283,36 @@
         },
         "preset_name_placeholder": "Masukkan nama prasetel...",
         "screen_desc": "Konfigurasikan dan edit widget desktop"
+      },
+      "lockscreen": {
+        "edit": {
+          "title": "Layar kunci",
+          "desc": "Sesuaikan tata letak layar kunci Anda",
+          "button": "Edit layar kunci"
+        },
+        "limits": {
+          "title": "Batas percobaan",
+          "desc": "Blokir sementara input kata sandi dan nonaktifkan pembaca sidik jari setelah terlalu banyak percobaan gagal"
+        },
+        "password_attempts": {
+          "title": "Percobaan kata sandi",
+          "desc": "Percobaan gagal sebelum input kata sandi diblokir selama 30 detik"
+        },
+        "fingerprint_attempts": {
+          "title": "Percobaan sidik jari",
+          "desc": "Pemindaian gagal sebelum pembaca sidik jari dinonaktifkan hingga pembukaan kunci berikutnya"
+        },
+        "fingerprint": {
+          "title": "Aktifkan login sidik jari",
+          "desc": "Izinkan membuka layar kunci dengan sidik jari"
+        },
+        "background": {
+          "select": "Pilih latar belakang",
+          "follow": "Ikuti wallpaper",
+          "custom": "Kustom",
+          "follows_hint": "Mengikuti wallpaper",
+          "none": "Tidak ada latar belakang dipilih"
+        }
       }
     },
     "bar": {
@@ -885,6 +916,10 @@
       },
       "window_menu": {
         "untitled": "Untitled"
+      },
+      "background": {
+        "title": "Gambar latar di belakang aplikasi",
+        "desc": "Tampilkan panel dock di belakang ikon aplikasi"
       }
     },
     "lyrics_picker": {
@@ -980,7 +1015,54 @@
       "power_off": "Matikan daya"
     },
     "default_user": "Pengguna",
-    "unknown": "Tidak diketahui"
+    "unknown": "Tidak diketahui",
+    "redactor": {
+      "done": "Selesai",
+      "element": {
+        "avatar": "Avatar",
+        "user": "Pengguna",
+        "password": "Kata sandi",
+        "fingerprint": "Sidik jari",
+        "notifications": "Notifikasi",
+        "clock": "Jam",
+        "lockstatus": "Status kunci",
+        "keyboard": "Papan ketik",
+        "battery": "Baterai"
+      },
+      "variant": {
+        "avatar": {
+          "round": "Bulat",
+          "rounded": "Membulat"
+        },
+        "user": {
+          "filled": "Terisi",
+          "plain": "Polos"
+        },
+        "password": {
+          "filled": "Terisi",
+          "glass": "Kaca"
+        },
+        "fingerprint": {
+          "classic": "Klasik",
+          "ring": "Cincin",
+          "scanner": "Pemindai",
+          "pulse": "Denyut",
+          "orbit": "Orbit",
+          "liquid": "Cair"
+        },
+        "notifications": {
+          "card": "Kartu",
+          "plain": "Polos"
+        },
+        "lockstatus": {
+          "filled": "Terisi",
+          "plain": "Polos"
+        }
+      },
+      "setting": {
+        "show_text": "Tampilkan teks"
+      }
+    }
   },
   "music": {
     "nothing_playing": "Tidak ada yang diputar",
@@ -1156,11 +1238,33 @@
       "pin": "Sematkan",
       "unpin": "Lepas sematan"
     },
+    "calculator": {
+      "history": "Riwayat",
+      "no_history": "Belum ada perhitungan",
+      "clear_history": "Hapus riwayat",
+      "copied": "Disalin",
+      "deg": "Deg",
+      "rad": "Rad",
+      "grad": "Grad",
+      "inv": "Inv",
+      "mode": {
+        "normal": "Normal",
+        "advanced": "Lanjutan"
+      },
+      "clear": "AC",
+      "error": {
+        "syntax": "Ekspresi tidak valid",
+        "div0": "Tidak dapat membagi dengan nol",
+        "domain": "Masukan tidak valid",
+        "paste": "Tempel tidak valid"
+      }
+    },
     "tabs": {
       "draw": "Gambar",
       "system": "Sistem",
       "timer": "Timer",
       "notes": "Catatan",
+      "calculator": "Kalkulator",
       "tab": "Tab"
     }
   },
@@ -1375,6 +1479,8 @@
       "default": "Default",
       "material": "Material",
       "materialAnalog": "Material Analog",
+      "lockscreen": "Lockscreen",
+      "stretched": "Stretched",
       "lumen": "Lumen",
       "lyrics": "Lirik",
       "simpleLyrics": "Lirik Sederhana"
@@ -1416,29 +1522,32 @@
     "description": "Shell desktop untuk kompositor Wayland.",
     "commands": "Perintah:",
     "script_commands": "Perintah skrip:",
-    "launch_desc": "Luncurkan komponen mandiri (start, widgetredactor)",
+    "launch_desc": "Luncurkan komponen mandiri (start, widgetredactor, lock-redactor)",
     "msg_desc": "Kirim perintah atau peralihan ruang kerja ke pengelola UI",
     "ipc_desc": "Teruskan panggilan IPC langsung ke shell",
     "kill_desc": "Hentikan daemon yang sedang berjalan secara bersih",
+    "restart_desc": "Mulai ulang daemon",
     "options": "Opsi:",
     "verbose_desc": "Aktifkan keluaran log verbose",
     "version_desc": "Tampilkan informasi versi lalu keluar",
     "help_desc": "Tampilkan pesan bantuan ini lalu keluar",
     "examples": "Contoh:",
     "daemon_stopped": "Daemon Serpantinum dihentikan.",
+    "daemon_restarted": "Daemon Serpantinum dimulai ulang.",
     "starting_daemon": "Daemon tidak berjalan. Memulai serpantinumd di latar belakang...",
     "error_missing_qml": "Kesalahan: target untuk diluncurkan tidak ada.",
-    "launch_usage": "Penggunaan: serpantinum launch <start|widgetredactor> [arg...]",
+    "launch_usage": "Penggunaan: serpantinum launch <start|widgetredactor|lock-redactor> [arg...]",
     "error_qml_not_found": "Kesalahan: tidak dapat menemukan {NAME}.qml di {DIR}",
     "error_shell_qml_not_found": "Kesalahan: tidak dapat menemukan jalur ke shell.qml di {DIR}",
     "error_unknown_command": "Kesalahan: perintah tidak dikenal '{CMD}'.",
     "error_unknown_target": "Kesalahan: target tidak dikenal '{TARGET}'.",
     "launch_help": {
-      "usage": "Penggunaan: serpantinum launch <start|widgetredactor> [argumen...]",
+      "usage": "Penggunaan: serpantinum launch <start|widgetredactor|lock-redactor> [argumen...]",
       "description": "Luncurkan komponen mandiri langsung dalam mode eksekusi.",
       "available_targets": "Target yang tersedia:",
       "target_start": "Luncurkan antarmuka pengaturan awal",
-      "target_widgetredactor": "Luncurkan antarmuka editor widget desktop"
+      "target_widgetredactor": "Luncurkan antarmuka editor widget desktop",
+      "target_lock_redactor": "Alihkan, buka, atau tutup editor tata letak layar kunci"
     },
     "msg_help": {
       "usage": "Penggunaan: serpantinum msg <command|workspace> [argumen...]",
@@ -1466,8 +1575,26 @@
       "monitors_detect": "Kueri output layar aktif dan laju penyegaran",
       "location_manual": "Atur koordinat geografis dan zona waktu secara manual",
       "blue_light_filter": "Sesuaikan suhu warna dan jadwal otomatis siang/malam",
-      "translate": "Penerjemah teks dan pilihan teks instan"
-    }
+      "translate": "Penerjemah teks dan pilihan teks instan",
+      "suspend": "Kunci layar dan tangguhkan sistem",
+      "hibernate": "Hibernasi sistem",
+      "reboot": "Mulai ulang sistem",
+      "poweroff": "Matikan sistem",
+      "redactor": "Buka atau alihkan editor tata letak widget desktop"
+    },
+    "usage_label": "Penggunaan:",
+    "config_desc": "Baca dan ubah pengaturan (get, set, dump, path, edit)",
+    "error_unknown_language": "Kesalahan: bahasa '{CODE}' tidak dikenal.",
+    "update_available": "Pembaruan tersedia: {LOCAL} -> {REMOTE}",
+    "up_to_date": "Serpantinum sudah yang terbaru ({VERSION}).",
+    "state_on": "aktif",
+    "state_off": "nonaktif",
+    "error_unknown_theme": "Kesalahan: tema tidak dikenal '{NAME}'.",
+    "error_no_wallpapers": "Kesalahan: tidak ada wallpaper di direktori wallpaper.",
+    "error_file_not_found": "Kesalahan: berkas tidak ditemukan: {PATH}",
+    "info_desc": "Tampilkan status pengaturan saat ini (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
+    "set_desc": "Ubah pengaturan (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
+    "trigger_desc": "Jalankan tindakan sekali jalan (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
   },
   "daemon": {
     "already_running": "Daemon sudah berjalan. Keluar...",

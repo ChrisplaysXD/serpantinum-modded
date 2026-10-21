@@ -468,7 +468,7 @@ GuideTab {
                                                     Text {
                                                         anchors.centerIn: parent
                                                         text: "󰕾"
-                                                        font.family: "Iosevka Nerd Font"
+                                                        font.family: ThemeBackend.iconFont
                                                         font.pixelSize: rootObj.s(18)
                                                         color: Qt.lighter(ThemeBackend.sapphire, 1.5)
                                                     }
@@ -517,7 +517,7 @@ GuideTab {
                                                     Text {
                                                         anchors.centerIn: parent
                                                         text: "󰕾"
-                                                        font.family: "Iosevka Nerd Font"
+                                                        font.family: ThemeBackend.iconFont
                                                         font.pixelSize: rootObj.s(18)
                                                         color: Qt.lighter(ThemeBackend.sapphire, 1.5)
                                                     }

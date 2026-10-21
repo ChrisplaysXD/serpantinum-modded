@@ -40,7 +40,8 @@
       "display_widgets": "Віджети",
       "display_general": "Загальні",
       "osd": "OSD",
-      "dock": "Док"
+      "dock": "Док",
+      "display_lockscreen": "Екран блокування"
     },
     "launcher": {
       "position": {
@@ -280,6 +281,36 @@
         },
         "preset_name_placeholder": "Введіть назву пресету...",
         "screen_desc": "Налаштування та редагування віджетів робочого столу"
+      },
+      "lockscreen": {
+        "edit": {
+          "title": "Екран блокування",
+          "desc": "Налаштуйте вигляд екрана блокування",
+          "button": "Редагувати екран блокування"
+        },
+        "limits": {
+          "title": "Ліміти спроб",
+          "desc": "Тимчасово блокувати введення пароля та вимикати сканер відбитків після надто великої кількості невдалих спроб"
+        },
+        "password_attempts": {
+          "title": "Спроби введення пароля",
+          "desc": "Невдалі спроби, після яких введення пароля блокується на 30 секунд"
+        },
+        "fingerprint_attempts": {
+          "title": "Спроби за відбитком",
+          "desc": "Невдалі сканування, після яких сканер відбитків вимикається до наступного розблокування"
+        },
+        "fingerprint": {
+          "title": "Увімкнути вхід за відбитком пальця",
+          "desc": "Дозволити розблокування екрана блокування за відбитком пальця"
+        },
+        "background": {
+          "select": "Вибрати тло",
+          "follow": "Слідувати шпалерам",
+          "custom": "Власне",
+          "follows_hint": "Слідує шпалерам",
+          "none": "Тло не вибрано"
+        }
       }
     },
     "bar": {
@@ -908,6 +939,10 @@
       },
       "window_menu": {
         "untitled": "Untitled"
+      },
+      "background": {
+        "title": "Малювати фон за застосунками",
+        "desc": "Показувати панель дока за значками застосунків"
       }
     },
     "lyrics_picker": {
@@ -1003,7 +1038,54 @@
       "power_off": "Вимкнення"
     },
     "default_user": "Користувач",
-    "unknown": "Невідомо"
+    "unknown": "Невідомо",
+    "redactor": {
+      "done": "Готово",
+      "element": {
+        "avatar": "Аватар",
+        "user": "Користувач",
+        "password": "Пароль",
+        "fingerprint": "Відбиток пальця",
+        "notifications": "Сповіщення",
+        "clock": "Годинник",
+        "lockstatus": "Стан блокування",
+        "keyboard": "Клавіатура",
+        "battery": "Батарея"
+      },
+      "variant": {
+        "avatar": {
+          "round": "Круглий",
+          "rounded": "Закруглений"
+        },
+        "user": {
+          "filled": "Заливка",
+          "plain": "Простий"
+        },
+        "password": {
+          "filled": "Заливка",
+          "glass": "Скло"
+        },
+        "fingerprint": {
+          "classic": "Класика",
+          "ring": "Кільце",
+          "scanner": "Сканер",
+          "pulse": "Пульс",
+          "orbit": "Орбіта",
+          "liquid": "Рідина"
+        },
+        "notifications": {
+          "card": "Картка",
+          "plain": "Простий"
+        },
+        "lockstatus": {
+          "filled": "Заливка",
+          "plain": "Простий"
+        }
+      },
+      "setting": {
+        "show_text": "Показувати текст"
+      }
+    }
   },
   "music": {
     "nothing_playing": "Нічого не відтворюється",
@@ -1176,11 +1258,33 @@
       "pin": "Закріпити",
       "unpin": "Відкріпити"
     },
+    "calculator": {
+      "history": "Історія",
+      "no_history": "Обчислень поки немає",
+      "clear_history": "Очистити історію",
+      "copied": "Скопійовано",
+      "deg": "Град",
+      "rad": "Рад",
+      "grad": "Гон",
+      "inv": "Обр",
+      "mode": {
+        "normal": "Звичайний",
+        "advanced": "Розширений"
+      },
+      "clear": "AC",
+      "error": {
+        "syntax": "Недійсний вираз",
+        "div0": "Ділення на нуль неможливе",
+        "domain": "Недійсне значення",
+        "paste": "Не вдалося вставити"
+      }
+    },
     "tabs": {
       "draw": "Малювання",
       "system": "Система",
       "timer": "Таймер",
       "notes": "Нотатки",
+      "calculator": "Калькулятор",
       "tab": "Вкладка"
     }
   },
@@ -1395,6 +1499,8 @@
       "default": "Типовий",
       "material": "Матеріал",
       "materialAnalog": "Матеріал Аналоговий",
+      "lockscreen": "Екран блокування",
+      "stretched": "Розтягнутий",
       "lumen": "Люмен",
       "lyrics": "Текст пісні",
       "simpleLyrics": "Простий текст пісні"
@@ -1439,29 +1545,32 @@
     "description": "Оболонка робочого столу для композиторів wayland.",
     "commands": "Команди:",
     "script_commands": "Команди скриптів:",
-    "launch_desc": "Запуск автономних компонентів (start, widgetredactor)",
+    "launch_desc": "Запуск автономних компонентів (start, widgetredactor, lock-redactor)",
     "msg_desc": "Надсилання команд або перемикання робочих просторів менеджеру інтерфейсу",
     "ipc_desc": "Передавання викликів IPC напряму оболонці",
     "kill_desc": "Коректна зупинка запущеної служби",
+    "restart_desc": "Перезапуск служби",
     "options": "Опції:",
     "verbose_desc": "Увімкнути докладний вивід логів",
     "version_desc": "Показати інформацію про версію і вийти",
     "help_desc": "Показати цю довідку і вийти",
     "examples": "Приклади:",
     "daemon_stopped": "Службу serpantinum зупинено.",
+    "daemon_restarted": "Службу serpantinum перезапущено.",
     "starting_daemon": "Службу не запущено. Запуск serpantinumd у фоновому режимі...",
     "error_missing_qml": "Помилка: не вказано ціль для запуску.",
-    "launch_usage": "Використання: serpantinum launch <start|widgetredactor> [аргументи...]",
+    "launch_usage": "Використання: serpantinum launch <start|widgetredactor|lock-redactor> [аргументи...]",
     "error_qml_not_found": "Помилка: не вдалося знайти {NAME}.qml у {DIR}",
     "error_shell_qml_not_found": "Помилка: не вдалося визначити шлях до shell.qml у {DIR}",
     "error_unknown_command": "Помилка: невідома команда '{CMD}'.",
     "error_unknown_target": "Помилка: невідома ціль '{TARGET}'.",
     "launch_help": {
-      "usage": "Використання: serpantinum launch <start|widgetredactor> [аргументи...]",
+      "usage": "Використання: serpantinum launch <start|widgetredactor|lock-redactor> [аргументи...]",
       "description": "Запуск автономних компонентів напряму в режимі runner.",
       "available_targets": "Доступні цілі:",
       "target_start": "Запустити інтерфейс початкового налаштування",
-      "target_widgetredactor": "Запустити інтерфейс редактора віджетів робочого столу"
+      "target_widgetredactor": "Запустити інтерфейс редактора віджетів робочого столу",
+      "target_lock_redactor": "Перемкнути, відкрити або закрити редактор макета екрана блокування"
     },
     "msg_help": {
       "usage": "Використання: serpantinum msg <команда|робочийпростір> [аргументи...]",
@@ -1489,8 +1598,26 @@
       "monitors_detect": "Визначити активні монітори та частоту оновлення",
       "location_manual": "Встановити географічні координати та часовий пояс вручну",
       "blue_light_filter": "Налаштування колірної температури та автоматичного розкладу дня і ночі",
-      "translate": "Миттєвий переклад тексту та виділень"
-    }
+      "translate": "Миттєвий переклад тексту та виділень",
+      "suspend": "Заблокувати екран і призупинити систему",
+      "hibernate": "Перевести систему в режим глибокого сну",
+      "reboot": "Перезавантажити систему",
+      "poweroff": "Вимкнути систему",
+      "redactor": "Відкрити або перемкнути редактор макета віджетів стільниці"
+    },
+    "usage_label": "Використання:",
+    "config_desc": "Читання та зміна налаштувань (get, set, dump, path, edit)",
+    "error_unknown_language": "Помилка: невідома мова '{CODE}'.",
+    "update_available": "Доступне оновлення: {LOCAL} -> {REMOTE}",
+    "up_to_date": "Serpantinum актуальний ({VERSION}).",
+    "state_on": "увімк.",
+    "state_off": "вимк.",
+    "error_unknown_theme": "Помилка: невідома тема '{NAME}'.",
+    "error_no_wallpapers": "Помилка: у каталозі шпалер не знайдено шпалер.",
+    "error_file_not_found": "Помилка: файл не знайдено: {PATH}",
+    "info_desc": "Показати поточний стан налаштування (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
+    "set_desc": "Змінити налаштування (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
+    "trigger_desc": "Виконати одноразову дію (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
   },
   "daemon": {
     "already_running": "Службу вже запущено. Вихід...",

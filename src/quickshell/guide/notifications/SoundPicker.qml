@@ -77,7 +77,7 @@ FilePicker {
                         Text {
                             anchors.centerIn: parent
                             text: "󰎈"
-                            font.family: "Iosevka Nerd Font"
+                            font.family: ThemeBackend.iconFont
                             font.pixelSize: soundPickerRoot.s(36)
                             color: soundPickerRoot.selectedFilePath !== "" ? ThemeBackend.mauve : ThemeBackend.subtext0
                         }

@@ -11,7 +11,7 @@ Item {
 
     property int requestedLayoutTemplate: 1
     property bool isActiveTab: typeof isCurrentTarget !== "undefined" ? isCurrentTarget : true
-    property string nerdFont: "Iosevka Nerd Font"
+    property string nerdFont: ThemeBackend.iconFont
     property string safeActiveEdge: typeof activeEdge !== "undefined" ? activeEdge : "left"
 
     property bool stateLoaded: false
@@ -151,12 +151,12 @@ Item {
         }
 
         if (diffSec < 60) {
-            return "Just now";
+            return I18n.t("datetime.just_now");
         }
 
         let diffMin = Math.floor(diffSec / 60);
         if (diffMin < 60) {
-            return diffMin + " min ago";
+            return I18n.t("datetime.minutes_ago", { mins: diffMin });
         }
 
         let isSameDay = now.getFullYear() === notifDate.getFullYear() &&
@@ -174,7 +174,7 @@ Item {
         if (isSameDay) {
             return timePart;
         } else if (isYesterday) {
-            return "Yesterday " + timePart;
+            return I18n.t("datetime.yesterday", { time: timePart });
         } else if (diffDays < 7) {
             let dayName = Qt.formatDateTime(notifDate, "dddd");
             return dayName + " " + timePart;
