@@ -1541,29 +1541,32 @@
     "description": "A desktop shell for wayland compositors.",
     "commands": "Commands:",
     "script_commands": "Script commands:",
-    "launch_desc": "Launch standalone components (start, widgetredactor)",
+    "launch_desc": "Launch standalone components (start, widgetredactor, lock-redactor)",
     "msg_desc": "Dispatch commands or workspace switches to the UI manager",
     "ipc_desc": "Forward IPC calls directly to the shell",
     "kill_desc": "Cleanly stop the running daemon",
+    "restart_desc": "Stop and start the daemon again",
     "options": "Options:",
     "verbose_desc": "Enable verbose logging output",
     "version_desc": "Display version information and exit",
     "help_desc": "Show this help message and exit",
     "examples": "Examples:",
     "daemon_stopped": "Serpantinum daemon stopped.",
+    "daemon_restarted": "Serpantinum daemon restarted.",
     "starting_daemon": "Daemon not running. Starting serpantinumd in the background...",
     "error_missing_qml": "Error: missing target to launch.",
-    "launch_usage": "Usage: serpantinum launch <start|widgetredactor> [args...]",
+    "launch_usage": "Usage: serpantinum launch <start|widgetredactor|lock-redactor> [args...]",
     "error_qml_not_found": "Error: could not resolve {NAME}.qml in {DIR}",
     "error_shell_qml_not_found": "Error: could not resolve path to shell.qml in {DIR}",
     "error_unknown_command": "Error: unknown command '{CMD}'.",
     "error_unknown_target": "Error: unknown target '{TARGET}'.",
     "launch_help": {
-      "usage": "Usage: serpantinum launch <start|widgetredactor> [arguments...]",
+      "usage": "Usage: serpantinum launch <start|widgetredactor|lock-redactor> [arguments...]",
       "description": "Launch standalone components directly in runner mode.",
       "available_targets": "Available targets:",
       "target_start": "Launch the start setup interface",
-      "target_widgetredactor": "Launch the desktop widget editor interface"
+      "target_widgetredactor": "Launch the desktop widget editor interface",
+      "target_lock_redactor": "Toggle, open or close the lock screen layout editor"
     },
     "msg_help": {
       "usage": "Usage: serpantinum msg <command|workspace> [arguments...]",
@@ -1591,8 +1594,26 @@
       "monitors_detect": "Query active display outputs and refresh rates",
       "location_manual": "Set geographic coordinates and timezone manually",
       "blue_light_filter": "Adjust color temperature and automatic day/night schedule",
-      "translate": "Instant text and selection translator"
-    }
+      "translate": "Instant text and selection translator",
+      "suspend": "Lock the screen and suspend the system",
+      "hibernate": "Hibernate the system",
+      "reboot": "Reboot the system",
+      "poweroff": "Power off the system",
+      "redactor": "Open or toggle the desktop widget layout editor"
+    },
+    "usage_label": "Usage:",
+    "config_desc": "Read and change settings (get, set, dump, path, edit)",
+    "error_unknown_language": "Error: unknown language '{CODE}'.",
+    "update_available": "Update available: {LOCAL} -> {REMOTE}",
+    "up_to_date": "Serpantinum is up to date ({VERSION}).",
+    "state_on": "on",
+    "state_off": "off",
+    "error_unknown_theme": "Error: unknown theme '{NAME}'.",
+    "error_no_wallpapers": "Error: no wallpapers found in the wallpaper directory.",
+    "error_file_not_found": "Error: file not found: {PATH}",
+    "info_desc": "Show the current state of a setting (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
+    "set_desc": "Change a setting (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
+    "trigger_desc": "Run a one-off action (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
   },
   "daemon": {
     "already_running": "Daemon is already running. Exiting...",
@@ -1729,6 +1750,12 @@
     "keep_clipboard_sub": "If disabled — original clipboard content is restored after paste"
   },
   "datetime": {
-    "full_date": "dddd, MMMM dd"
+    "full_date": "dddd, MMMM dd",
+    "just_now": "Just now",
+    "minutes_ago": "{mins} min ago",
+    "yesterday": "Yesterday {time}"
+  },
+  "common": {
+    "select": "Select..."
   }
 }

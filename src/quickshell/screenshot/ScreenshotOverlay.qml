@@ -859,7 +859,7 @@ PanelWindow {
 
                             Text {
                                 text: modelData.icon
-                                font.family: "Iosevka Nerd Font"
+                                font.family: ThemeBackend.iconFont
                                 font.pixelSize: s(15)
                                 color: root.videoBackend === modelData.id ? ThemeBackend.mauve : ThemeBackend.subtext0
                             }
@@ -980,7 +980,7 @@ PanelWindow {
 
                             Text {
                                 text: "󰍬"
-                                font.family: "Iosevka Nerd Font"
+                                font.family: ThemeBackend.iconFont
                                 font.pixelSize: s(15)
                                 color: root.micDevice === modelData.name ? ThemeBackend.mauve : ThemeBackend.subtext0
                             }
@@ -1206,7 +1206,7 @@ PanelWindow {
 
                             Text {
                                 text: root.videoBackend === "wf-recorder" ? "󰕧" : "󰢮"
-                                font.family: "Iosevka Nerd Font"
+                                font.family: ThemeBackend.iconFont
                                 font.pixelSize: s(15)
                                 color: ThemeBackend.mauve
                                 verticalAlignment: Text.AlignVCenter
@@ -1225,7 +1225,7 @@ PanelWindow {
 
                             Text {
                                 text: toolbar.fitsOutsideBottom ? (backendDropdown.showMenu ? "󰅃" : "󰅀") : (backendDropdown.showMenu ? "󰅀" : "󰅃")
-                                font.family: "Iosevka Nerd Font"
+                                font.family: ThemeBackend.iconFont
                                 font.pixelSize: s(13)
                                 color: backendDropdown.showMenu ? ThemeBackend.mauve : ThemeBackend.subtext0
                                 verticalAlignment: Text.AlignVCenter

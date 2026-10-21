@@ -168,7 +168,7 @@ GuideTab {
 
                 ClickButton {
                     implicitHeight: rootObj.s(32)
-                    buttonText: "Copy settings"
+                    buttonText: I18n.t("guide.general.copysettings.title") || "Copy settings"
                     buttonIcon: "󰆏"
                     accentColor: ThemeBackend.surface0
                     textColor: ThemeBackend.text

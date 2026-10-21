@@ -15,22 +15,22 @@ Item {
     property var options: []
     property int currentIndex: 0
     readonly property string currentValue: currentIndex >= 0 && currentIndex < options.length ? options[currentIndex] : ""
-    property string placeholderText: "Select..."
+    property string placeholderText: I18n.t("common.select")
     property string fontFamily: ThemeBackend.fontFamily
     property bool useOptionAsFontFamily: false
 
     property bool fuzzySearch: true
     property bool isPathSelector: false
 
-    property color accentColor: "#89b4fa"
-    property color baseColor: "#313244"
+    property color accentColor: ThemeBackend.blue
+    property color baseColor: ThemeBackend.surface0
     property color hoverColor: Qt.lighter(baseColor, 1.2)
-    property color dropdownColor: "#1e1e2e"
-    property color borderColor: "#45475a"
-    property color textColor: "#cdd6f4"
+    property color dropdownColor: ThemeBackend.base
+    property color borderColor: ThemeBackend.surface1
+    property color textColor: ThemeBackend.text
     property color iconColor: textColor
-    property color activeTextColor: "#11111b"
-    property color subTextColor: "#a6adc8"
+    property color activeTextColor: ThemeBackend.crust
+    property color subTextColor: ThemeBackend.subtext0
 
     property real cornerRadius: ThemeBackend.clampedBorderRadius
     property int fontPixelSize: 11

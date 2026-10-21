@@ -149,7 +149,7 @@ PanelWindow {
                             if (name.indexOf("network") !== -1) return "󰖩";
                             return "󰌾";
                         }
-                        font.family: "Iosevka Nerd Font"
+                        font.family: ThemeBackend.iconFont
                         font.pixelSize: polkitWindow.s(22)
                         color: ThemeBackend.mauve
                     }
@@ -218,7 +218,7 @@ PanelWindow {
 
                     Text {
                         text: "󰅚"
-                        font.family: "Iosevka Nerd Font"
+                        font.family: ThemeBackend.iconFont
                         font.pixelSize: polkitWindow.s(14)
                         color: ThemeBackend.red
                     }

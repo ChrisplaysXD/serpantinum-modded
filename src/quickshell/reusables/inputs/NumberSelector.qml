@@ -20,15 +20,15 @@ Item {
     property string suffix: ""
     property string specialZeroText: ""
 
-    property color baseColor: "#313244"
-    property color accentColor: "#89b4fa"
-    property color buttonColor: "#45475a"
-    property color buttonTextColor: "#cdd6f4"
-    property color textColor: "#cdd6f4"
-    property color subTextColor: "#a6adc8"
-    property color borderColor: "#45475a"
-    property color activeTextColor: "#11111b"
-    property color errorColor: "#f38ba8"
+    property color baseColor: ThemeBackend.surface0
+    property color accentColor: ThemeBackend.blue
+    property color buttonColor: ThemeBackend.surface1
+    property color buttonTextColor: ThemeBackend.text
+    property color textColor: ThemeBackend.text
+    property color subTextColor: ThemeBackend.subtext0
+    property color borderColor: ThemeBackend.surface1
+    property color activeTextColor: ThemeBackend.crust
+    property color errorColor: ThemeBackend.red
 
     property int cornerRadius: 10
     property int horizontalPadding: 4
@@ -36,9 +36,9 @@ Item {
     property int buttonSize: root.height - (root.verticalPadding * 2)
     property int buttonCornerRadius: Math.max(2, root.cornerRadius - 2)
 
-    property string fontFamily: "JetBrains Mono"
+    property string fontFamily: ThemeBackend.fontFamily
     property int fontPixelSize: 12
-    property string iconFont: "Iosevka Nerd Font"
+    property string iconFont: ThemeBackend.iconFont
     property int iconFontSize: 14
     property string leftIcon: "󰅁"
     property string rightIcon: "󰅂"

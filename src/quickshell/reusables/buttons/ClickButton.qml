@@ -34,8 +34,8 @@ Item {
 
     property real availableTextWidth: Math.max(0, root.width - (root.horizontalPadding * 2) - (iconLabel.visible ? (iconLabel.implicitWidth + mainRow.spacing) : 0))
 
-    property color accentColor: "#313244"
-    property color textColor: "#cdd6f4"
+    property color accentColor: ThemeBackend.surface0
+    property color textColor: ThemeBackend.text
 
     property bool action_highlight: false
     property string clickSound: "reusables/clickbutton/click.wav"
@@ -135,7 +135,7 @@ Item {
                     id: subLabel
                     visible: root.subText !== ""
                     text: root.subText
-                    font.family: "JetBrains Mono"
+                    font.family: ThemeBackend.fontFamily
                     font.pixelSize: Math.max(10, root.textFontSize - 6)
                     color: root.displayTextColor
                     horizontalAlignment: root.contentAlignment === Qt.AlignHCenter ? Text.AlignHCenter : I18n.textAlignment

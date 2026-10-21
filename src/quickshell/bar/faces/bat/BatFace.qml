@@ -238,7 +238,7 @@ Item {
                 id: textIcon
                 anchors.centerIn: parent
                 text: root.batIcon
-                font.family: root.isVertical ? ThemeBackend.fontFamily : ThemeBackend.iconFont
+                font.family: ThemeBackend.iconFont
                 font.pixelSize: root.isVertical ? (root.isDesktop ? s(root.isCompact ? 15 : 16) : s(root.isCompact ? 13 : 14)) : s(root.isCompact ? 14 : 15)
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter

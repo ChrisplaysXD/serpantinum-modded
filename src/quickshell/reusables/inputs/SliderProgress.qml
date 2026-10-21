@@ -11,7 +11,7 @@ Item {
     property real to: 100.0
     property real value: 0.0
 
-    property color backgroundColor: "#1e1e2e"
+    property color backgroundColor: ThemeBackend.base
     property color gradColor1: "#89b4fa"
     property color gradColor2: Qt.lighter(gradColor1, 1.05)
     property color gradColor3: Qt.lighter(gradColor1, 1.10)

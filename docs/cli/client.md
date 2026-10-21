@@ -9,6 +9,20 @@ slug: /cli/client
 
 `serpantinum` is the command-line client for the desktop shell.
 
+## Overview
+
+| Command | Purpose |
+| --- | --- |
+| `msg` | Open, close or toggle panels and switch workspaces. |
+| `launch` | Run standalone components such as the setup wizard or the layout editors. |
+| `config` | Read and write raw settings. |
+| `info` | Print the current state of a setting. |
+| `set` | Change a setting. |
+| `trigger` | Run a one-off action. |
+| `ipc` | Send raw IPC calls to the running shell. |
+| `kill`, `restart` | Stop or restart the daemon. |
+| [Script shortcuts](#script-shortcuts) | Wrappers around the bundled scripts, such as `lock`, `volume` or `reboot`. |
+
 ## Options
 
 - `-v, --verbose`: Enable verbose logging output.
@@ -55,6 +69,7 @@ Runs standalone interface components in runner mode:
 
 - `serpantinum launch start [args...]`: Launch first-time setup and onboarding wizard.
 - `serpantinum launch widgetredactor [args...]`: Launch desktop widget editor.
+- `serpantinum launch lock-redactor [toggle|open [monitor]|close]`: Toggle the lock screen layout editor in the running shell.
 
 ### `ipc`
 
@@ -70,6 +85,64 @@ Sends raw IPC calls directly to the running shell:
 ### `kill`
 
 Stops the daemon and terminates all background shell workers (`focus_daemon.py`, `quickshell`, `serpantinumd`).
+
+### `restart`
+
+Stops the daemon and starts it again.
+
+## Settings and state
+
+### `config`
+
+Reads and writes `settings.json`. Keys use dots to reach nested values and changes apply live:
+
+- `serpantinum config get <key> [fallback]`: Print a setting.
+- `serpantinum config set <key> <value>`: Set a setting. Values are parsed as JSON and fall back to plain strings.
+- `serpantinum config dump`: Print the whole settings file.
+- `serpantinum config path`: Print the settings file path.
+- `serpantinum config edit`: Open the settings file in `$VISUAL` or `$EDITOR`.
+
+### `info`
+
+Prints the current state of something. Switches print `on` or `off`:
+
+- `serpantinum info dnd`: Do not disturb.
+- `serpantinum info caffeine`: Idle actions paused.
+- `serpantinum info dock`: Dock visibility.
+- `serpantinum info dock-autohide`: Dock autohide.
+- `serpantinum info sfx-mute`: Interface sound effects muted.
+- `serpantinum info matugen`: Wallpaper-derived colors.
+- `serpantinum info lang`: Active language code.
+- `serpantinum info languages`: Available language codes.
+- `serpantinum info theme`: Active theme preset.
+- `serpantinum info themes`: Bundled theme presets.
+- `serpantinum info wallpaper [screen]`: Current wallpaper path.
+- `serpantinum info monitors [--json]`: Active outputs, with width, height and refresh rate as JSON.
+- `serpantinum info updates [--json]`: Installed version compared with the latest release.
+
+### `set`
+
+Changes a setting. Switches take `on`, `off` or `toggle` and default to `toggle`:
+
+- `serpantinum set dnd [on|off|toggle]`
+- `serpantinum set caffeine [on|off|toggle]`
+- `serpantinum set dock [on|off|toggle]`
+- `serpantinum set dock-autohide [on|off|toggle]`
+- `serpantinum set sfx-mute [on|off|toggle]`
+- `serpantinum set matugen [on|off|toggle]`
+- `serpantinum set lang <code>`
+- `serpantinum set theme <preset>`: Apply a bundled preset and turn Matugen off.
+- `serpantinum set wallpaper <path|random|next|prev|play|pause|clear> [screen]`: `screen` is a monitor name and defaults to `all`. A path may also take a transition after the screen.
+
+### `trigger`
+
+Runs a one-off action:
+
+- `serpantinum trigger idle <dim|dpms|lock|suspend>`: Run an idle action now.
+- `serpantinum trigger notifications-clear`: Clear all notifications.
+- `serpantinum trigger firstlaunch <trigger|reset>`: Run or reset the first launch setup.
+- `serpantinum trigger theme-reload`: Reload colors.
+- `serpantinum trigger theme-generate <image> [mode] [scheme]`: Generate colors from an image.
 
 ## Script shortcuts
 
@@ -185,3 +258,26 @@ Reloads shell:
 Terminates desktop session:
 
 - `serpantinum exit`: Cleanly terminate graphical session and exit active compositor.
+
+### `suspend`, `hibernate`, `reboot`, `poweroff`
+
+- `serpantinum suspend`: Lock the screen and suspend the system.
+- `serpantinum hibernate`: Hibernate the system.
+- `serpantinum reboot`: Reboot the system.
+- `serpantinum poweroff`: Power off the system.
+
+## Keybinding examples
+
+Panels and workspaces go through `msg`, everything else through `set`, `trigger` or the script shortcuts:
+
+```
+serpantinum msg toggle launcher
+serpantinum msg toggle clipboard
+serpantinum msg toggle calendar
+serpantinum set dnd toggle
+serpantinum set wallpaper random
+serpantinum set caffeine toggle
+serpantinum trigger notifications-clear
+serpantinum volume raise
+serpantinum screenshot --full
+```
