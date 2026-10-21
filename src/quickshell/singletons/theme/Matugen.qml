@@ -293,7 +293,7 @@ Item {
 
                 if (matugenProcess.reqType === "image") {
                     let stateDir = (typeof Caching !== "undefined" && Caching.stateDir) ? Caching.stateDir : (Quickshell.env("HOME") + "/.local/state/serpantinum");
-                    Quickshell.execDetached(["bash", "-c", "mkdir -p \"" + stateDir + "\" && cp -f \"" + stateDir + "/qs_colors.json\" \"" + stateDir + "/qs_matugen_colors.json\" 2>/dev/null || true; killall -USR1 .kitty-wrapped 2>/dev/null || pkill -SIGUSR1 kitty 2>/dev/null || true"]);
+                    Quickshell.execDetached(["bash", "-c", "mkdir -p \"" + stateDir + "\" && cp -f \"" + stateDir + "/qs_colors.json\" \"" + stateDir + "/qs_matugen_colors.json\" 2>/dev/null || true; killall -USR1 .kitty-wrapped 2>/dev/null || pkill -SIGUSR1 kitty 2>/dev/null || true; if command -v wal >/dev/null 2>&1; then wal -i \"" + root._lastGeneratedImagePath + "\" -n -s -t 2>/dev/null || true; fi"]);
                 } else {
                     Quickshell.execDetached(["bash", "-c", "killall -USR1 .kitty-wrapped 2>/dev/null || pkill -SIGUSR1 kitty 2>/dev/null || true"]);
                 }

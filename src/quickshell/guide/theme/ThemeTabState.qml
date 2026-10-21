@@ -15,6 +15,7 @@ GuideTab {
         "blurStyle": "blur",
         "activePreset": "Matugen",
         "matugen": true,
+        "themeSource": "wallpaper",
         "colors": {}
     }
 
@@ -31,6 +32,7 @@ GuideTab {
     property bool currentBlurBackground: themeSettings.blurBackground !== undefined ? Boolean(themeSettings.blurBackground) : false
     property string currentPreset: themeSettings.activePreset !== undefined ? themeSettings.activePreset : "Matugen"
     property bool useMatugen: themeSettings.matugen !== undefined ? themeSettings.matugen : true
+    property string currentThemeSource: themeSettings.themeSource !== undefined ? themeSettings.themeSource : "wallpaper"
 
     property string currentWallpaperDir: Config.getSetting("wallpaperDir", "") || Config.getSetting("wallpaper_dir", "") || Quickshell.env("WALLPAPER_DIR") || (Quickshell.env("HOME") + "/Pictures/Wallpapers")
     property var availableWallpaperDirs: []
@@ -556,6 +558,18 @@ GuideTab {
         Config.setSetting("theme", current);
     }
 
+    function updateThemeSourceSetting(val) {
+        themeTabRoot.currentThemeSource = val;
+        let current = Config.getSetting("theme", themeTabRoot.defaultThemeSettings);
+        current.themeSource = val;
+        Config.setSetting("theme", current);
+        if (typeof ThemeBackend !== "undefined" && typeof ThemeBackend.applyThemeSource === "function") {
+            ThemeBackend.applyThemeSource();
+        } else if (typeof ThemeBackend !== "undefined") {
+            ThemeBackend.updateColors();
+        }
+    }
+
     function applyPreset(modelData) {
         if (!modelData) return;
 
@@ -580,7 +594,9 @@ GuideTab {
                 }
             }
 
-            if (themeTabRoot.currentWallpaperPath && themeTabRoot.currentWallpaperPath !== "") {
+            if (typeof ThemeBackend !== "undefined" && typeof ThemeBackend.applyThemeSource === "function") {
+                ThemeBackend.applyThemeSource();
+            } else if (themeTabRoot.currentWallpaperPath && themeTabRoot.currentWallpaperPath !== "") {
                 if (typeof Matugen !== "undefined" && typeof Matugen.generate === "function") {
                     Matugen.generate(themeTabRoot.currentWallpaperPath, current.mode, current.schemeType);
                 }

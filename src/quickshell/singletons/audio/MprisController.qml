@@ -75,6 +75,73 @@ Singleton {
         }
         return "";
     }
+
+    readonly property bool isMusicService: {
+        if (!activePlayer) return false;
+
+        let bus = (activePlayer.busName || "").toLowerCase();
+        let ident = (activePlayer.identity || "").toLowerCase();
+        let art = (root.currentArtUrl || "").toLowerCase();
+        let trackUrl = "";
+        if (activePlayer.metadata && activePlayer.metadata["xesam:url"]) {
+            trackUrl = String(activePlayer.metadata["xesam:url"]).toLowerCase();
+        }
+
+        let isYouTubeVideo = (trackUrl.indexOf("youtube.com/watch") !== -1 || trackUrl.indexOf("youtu.be/") !== -1 || art.indexOf("ytimg.com") !== -1)
+            && trackUrl.indexOf("music.youtube.com") === -1;
+        let isTwitch = trackUrl.indexOf("twitch.tv") !== -1 || art.indexOf("jtvnw.net") !== -1 || art.indexOf("ttvnw.net") !== -1;
+        let isKick = trackUrl.indexOf("kick.com") !== -1;
+
+        if (isYouTubeVideo || isTwitch || isKick) {
+            return false;
+        }
+
+        let musicAppTokens = [
+            "spotify", "amberol", "rhythmbox", "clementine", "strawberry",
+            "audacious", "deadbeef", "elisa", "lollypop", "cider",
+            "apple-music", "applemusic", "tidal", "deezer", "youtube-music",
+            "youtube music", "cmus", "mpd", "feishin", "supersonic",
+            "quodlibet", "gmusicbrowser", "tauon", "cantata", "pragha",
+            "sayonara", "musique", "mopidy", "plexamp", "substreamer"
+        ];
+        for (let i = 0; i < musicAppTokens.length; i++) {
+            if (bus.indexOf(musicAppTokens[i]) !== -1 || ident.indexOf(musicAppTokens[i]) !== -1) {
+                return true;
+            }
+        }
+
+        let musicDomains = [
+            "open.spotify.com", "music.youtube.com", "soundcloud.com",
+            "listen.tidal.com", "deezer.com", "bandcamp.com", "music.apple.com",
+            "music.amazon.com", "pandora.com", "qobuz.com"
+        ];
+        for (let j = 0; j < musicDomains.length; j++) {
+            if (trackUrl.indexOf(musicDomains[j]) !== -1 || art.indexOf(musicDomains[j]) !== -1) {
+                return true;
+            }
+        }
+        if (art.indexOf("scdn.co") !== -1 || art.indexOf("sndcdn.com") !== -1 || art.indexOf("mzstatic.com") !== -1) {
+            return true;
+        }
+
+        if (trackUrl.startsWith("file://") || (trackUrl === "" && art.startsWith("file://"))) {
+            let audioExts = [".mp3", ".flac", ".ogg", ".opus", ".m4a", ".wav", ".aac", ".alac", ".wma", ".aiff"];
+            for (let k = 0; k < audioExts.length; k++) {
+                if (trackUrl.endsWith(audioExts[k])) return true;
+            }
+            let videoExts = [".mp4", ".mkv", ".webm", ".avi", ".mov", ".flv"];
+            for (let v = 0; v < videoExts.length; v++) {
+                if (trackUrl.endsWith(videoExts[v])) return false;
+            }
+        }
+
+        if (bus.indexOf("firefox") !== -1 || bus.indexOf("chrome") !== -1 || bus.indexOf("chromium") !== -1 || bus.indexOf("brave") !== -1 || bus.indexOf("edge") !== -1 || bus.indexOf("opera") !== -1 || bus.indexOf("vivaldi") !== -1) {
+            return false;
+        }
+
+        return Boolean(root.trackTitle && root.trackArtist);
+    }
+
     property real livePosition: activePlayer ? activePlayer.position : 0
 
     property string artUrl: ""

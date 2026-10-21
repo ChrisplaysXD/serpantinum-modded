@@ -638,6 +638,12 @@
         "title": "Element opacity",
         "desc": "Opacity of the bar, dock, widgets and every other shell element"
       },
+      "source": {
+        "title": "Theme color source",
+        "desc": "Extract colors from wallpaper or active album cover",
+        "wallpaper": "Wallpaper",
+        "album": "Album"
+      },
       "blur_background": {
         "title": "Add a blurred wallpaper background",
         "desc": "Blur the wallpaper behind every element that uses transparency",

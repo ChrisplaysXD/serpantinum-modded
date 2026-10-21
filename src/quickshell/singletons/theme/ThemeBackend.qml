@@ -241,6 +241,68 @@ Item {
         return false;
     }
 
+    function getEffectiveThemeImage() {
+        let themeConfig = Config.getSetting("theme", {});
+        let source = themeConfig.themeSource || "wallpaper";
+        if (source === "album"
+            && typeof MprisController !== "undefined"
+            && MprisController.isMusicService
+            && MprisController.artUrl
+            && MprisController.artUrl !== "") {
+            return MprisController.artUrl;
+        }
+
+        if (typeof Wallpaper !== "undefined" && typeof Wallpaper.getWallpaperPath === "function") {
+            let wp = Wallpaper.getWallpaperPath("");
+            if (wp && wp !== "") return wp;
+        }
+        if (themeConfig.wallpaper && themeConfig.wallpaper !== "") {
+            return themeConfig.wallpaper;
+        }
+        if (typeof Caching !== "undefined") {
+            let snap = Caching.getCacheDir("wallpaper") + "/current_wallpaper.png";
+            return snap;
+        }
+        return Config.getSetting("wallpaper", "");
+    }
+
+    function applyThemeSource() {
+        if (!root.isMatugenTheme()) return;
+        let themeConfig = Config.getSetting("theme", {});
+        let targetImg = root.getEffectiveThemeImage();
+        if (targetImg && targetImg !== "" && typeof Matugen !== "undefined" && typeof Matugen.generate === "function") {
+            let clean = targetImg.startsWith("file://") ? targetImg.substring(7) : targetImg;
+            let alreadyGen = (Matugen._hasGeneratedSuccessfully
+                && Matugen._lastGeneratedReqType === "image"
+                && Matugen._lastGeneratedImagePath === clean
+                && !Matugen.isRunning);
+
+            Matugen.generate(targetImg, themeConfig.mode, themeConfig.schemeType);
+
+            if (alreadyGen) {
+                root.applyMatugenColors();
+            }
+        } else {
+            root.applyMatugenColors();
+        }
+    }
+
+    Connections {
+        target: MprisController
+        function onArtUrlChanged() {
+            let themeConfig = Config.getSetting("theme", {});
+            if ((themeConfig.themeSource === "album") && root.isMatugenTheme()) {
+                root.applyThemeSource();
+            }
+        }
+        function onIsMusicServiceChanged() {
+            let themeConfig = Config.getSetting("theme", {});
+            if ((themeConfig.themeSource === "album") && root.isMatugenTheme()) {
+                root.applyThemeSource();
+            }
+        }
+    }
+
     function faded(c) {
         return Qt.alpha(c, root.elementOpacity);
     }
@@ -268,9 +330,9 @@ Item {
 
         if (root.isMatugenTheme()) {
             root.applyMatugenColors();
-            let wp = themeConfig.wallpaper || Config.getSetting("wallpaper", "");
-            if (typeof Matugen !== "undefined" && typeof Matugen.generate === "function") {
-                Matugen.generate(wp, themeConfig.mode, themeConfig.schemeType);
+            let targetImg = root.getEffectiveThemeImage();
+            if (targetImg && targetImg !== "" && typeof Matugen !== "undefined" && typeof Matugen.generate === "function") {
+                Matugen.generate(targetImg, themeConfig.mode, themeConfig.schemeType);
             }
             root._readInProgress = false;
         } else {

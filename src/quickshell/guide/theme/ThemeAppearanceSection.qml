@@ -164,6 +164,41 @@ SettingsBlob {
 
     SettingsRow {
         rootObj: section.tab.rootObj
+        settingId: "theme_source"
+        icon: "󰆼"
+        title: {
+            let t = I18n.t("guide.theme.source.title");
+            return (!t || t === "guide.theme.source.title") ? "Theme color source" : t;
+        }
+        description: {
+            let d = I18n.t("guide.theme.source.desc");
+            return (!d || d === "guide.theme.source.desc") ? "Extract colors from wallpaper or active album cover" : d;
+        }
+        searchKeywords: "theme source wallpaper album music art matugen color pywal"
+
+        Switch {
+            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+            implicitWidth: rootObj.s(200)
+            implicitHeight: rootObj.s(32)
+            cornerRadius: ThemeBackend.borderRadius
+            fontPixelSize: rootObj.s(11)
+            options: [
+                (!I18n.t("guide.theme.source.wallpaper") || I18n.t("guide.theme.source.wallpaper") === "guide.theme.source.wallpaper") ? "Wallpaper" : I18n.t("guide.theme.source.wallpaper"),
+                (!I18n.t("guide.theme.source.album") || I18n.t("guide.theme.source.album") === "guide.theme.source.album") ? "Album" : I18n.t("guide.theme.source.album")
+            ]
+            currentIndex: section.tab.currentThemeSource === "album" ? 1 : 0
+            accentColor: ThemeBackend.mauve
+            baseColor: ThemeBackend.surface1
+            textColor: ThemeBackend.text
+            activeTextColor: ThemeBackend.crust
+            onValueChanged: function(index, value) {
+                section.tab.updateThemeSourceSetting(index === 1 ? "album" : "wallpaper");
+            }
+        }
+    }
+
+    SettingsRow {
+        rootObj: section.tab.rootObj
         settingId: "blur_background"
         icon: "󰂵"
         title: I18n.t("guide.theme.blur_background.title", "Add a blurred wallpaper background")
