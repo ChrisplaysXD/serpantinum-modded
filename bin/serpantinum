@@ -85,6 +85,7 @@ show_help() {
     echo ""
     echo "$(t "cli.commands")"
     echo "  launch <target> [args...]   $(t "cli.launch_desc")"
+    echo "  settings [tab]               $(t "cli.settings_desc")"
     echo "  msg <action|workspace> ...  $(t "cli.msg_desc")"
     echo "  ipc ...                      $(t "cli.ipc_desc")"
     echo "  kill                         $(t "cli.kill_desc")"
@@ -121,6 +122,7 @@ show_help() {
     echo "$(t "cli.examples")"
     echo "  serpantinum launch start"
     echo "  serpantinum launch widgetredactor"
+    echo "  serpantinum settings theme"
     echo "  serpantinum msg workspace 1"
     echo "  serpantinum msg workspace 2 move"
     echo "  serpantinum msg open network wifi"
@@ -635,6 +637,11 @@ if [[ "$1" == "launch" ]]; then
         echo "$(t "cli.error_qml_not_found" NAME="${QML_NAME}" DIR="$SERPANTINUM_DIR/quickshell/")"
         exit 1
     fi
+fi
+
+if [[ "$1" == "settings" ]]; then
+    shift
+    exec "$SERPANTINUM_DIR/scripts/settings.sh" "$@"
 fi
 
 if [[ "$1" == "msg" ]]; then

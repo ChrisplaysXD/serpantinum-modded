@@ -43,7 +43,8 @@
       "bar_general": "Général",
       "bar_modules": "Modules",
       "bar_side_modules": "Modules latéraux",
-      "display_lockscreen": "Écran de verrouillage"
+      "display_lockscreen": "Écran de verrouillage",
+      "screenshot": "Capture d'écran"
     },
     "launcher": {
       "position": {
@@ -71,7 +72,11 @@
         "title": "Tri intelligent des éléments dans le lanceur",
         "desc": "Trier les applications selon l'utilisation et le temps passé"
       },
-      "test": "Ouvrir le lanceur"
+      "test": "Ouvrir le lanceur",
+      "search": {
+        "title": "Moteur de recherche web",
+        "desc": "Moteur utilisé lorsque la requête commence par ?"
+      }
     },
     "notifications": {
       "dnd": {
@@ -213,6 +218,10 @@
       "quickactions": {
         "title": "Actions rapides",
         "desc": "Activer le volet flottant d'actions rapides"
+      },
+      "separatewindow": {
+        "title": "Ouvrir les paramètres dans une fenêtre séparée",
+        "desc": "Ouvrir les paramètres comme une fenêtre d'application redimensionnable au lieu d'un panneau intégré au shell"
       },
       "location": {
         "title": "Localisation",
@@ -768,7 +777,23 @@
         "app_limits": "Limites d'utilisation des applications",
         "app_limits_desc": "Définir la durée quotidienne maximale par application",
         "excluded_apps": "Applications exclues",
-        "excluded_apps_desc": "Exclure des applications du suivi global à l'avenir"
+        "excluded_apps_desc": "Exclure des applications du suivi global à l'avenir",
+        "overall_limit_desc": "Me prévenir lorsque le temps d'écran total atteint cette durée",
+        "no_limits": "Aucune limite d'application définie",
+        "no_excluded": "Aucune application exclue",
+        "picker_search": "Rechercher des applications...",
+        "picker_empty": "Aucune application correspondante",
+        "picker_apply": "Appliquer",
+        "picker_cancel": "Annuler"
+      },
+      "notify": {
+        "title": "Bien-être numérique",
+        "overall_reached": "Votre limite quotidienne globale est atteinte",
+        "app_reached": "Votre limite quotidienne pour {app} est atteinte"
+      },
+      "limit_overlay": {
+        "title": "Limite quotidienne atteinte",
+        "hold": "Maintenez pour continuer"
       }
     },
     "update_available": "Mise à jour disponible",
@@ -931,6 +956,21 @@
       "placeholder": "Rechercher dans les paramètres...",
       "prompt": "Tapez pour rechercher dans les paramètres...",
       "no_results": "Aucun paramètre trouvé"
+    },
+    "screenshot": {
+      "ocr": {
+        "title": "Langues OCR",
+        "desc": "La reconnaissance de texte détecte automatiquement la langue parmi celles que vous installez",
+        "search": "Rechercher des langues...",
+        "install": "Installer",
+        "installing": "Installation...",
+        "remove": "Supprimer",
+        "removing": "Suppression...",
+        "installed": "Installée",
+        "failed": "Échec du téléchargement. Vérifiez votre connexion.",
+        "offline": "Impossible d'accéder à la liste des langues. Seules les langues installées sont affichées.",
+        "loading": "Chargement des langues..."
+      }
     }
   },
   "sysnotif": {
@@ -966,7 +1006,9 @@
     "tab_files": "Fichiers",
     "placeholder_files": "Rechercher des fichiers ou entrer un chemin...",
     "tab_emojis": "Émojis",
-    "placeholder_emojis": "Rechercher des émojis par nom ou mot-clé..."
+    "placeholder_emojis": "Rechercher des émojis par nom ou mot-clé...",
+    "search_run": "Rechercher avec {provider}",
+    "search_hint": "Saisissez pour rechercher avec {provider}"
   },
   "calendar": {
     "loading": "Chargement...",
@@ -1249,7 +1291,8 @@
       "inv": "Inv",
       "mode": {
         "normal": "Normal",
-        "advanced": "Avancé"
+        "advanced": "Avancé",
+        "converter": "Convertisseur"
       },
       "clear": "AC",
       "error": {
@@ -1257,6 +1300,20 @@
         "div0": "Division par zéro impossible",
         "domain": "Entrée invalide",
         "paste": "Collage invalide"
+      },
+      "converter": {
+        "currency": "Devise",
+        "length": "Longueur",
+        "mass": "Masse",
+        "temperature": "Température",
+        "volume": "Volume",
+        "area": "Surface",
+        "speed": "Vitesse",
+        "time": "Temps",
+        "data": "Données",
+        "updated": "Taux mis à jour {time}",
+        "updating": "Mise à jour des taux...",
+        "offline": "Taux indisponibles"
       }
     },
     "tabs": {
@@ -1288,7 +1345,15 @@
       "recording_started_title": "Enregistrement démarré",
       "recording_started_body": "Appuyez à nouveau sur votre raccourci de capture pour arrêter.",
       "screenshot_saved_title": "Capture d'écran enregistrée",
-      "screenshot_saved_body": "Fichier : {file}\nDossier : {folder}"
+      "screenshot_saved_body": "Fichier : {file}\nDossier : {folder}",
+      "ocr_copied_title": "Texte copié",
+      "ocr_empty_title": "Aucun texte trouvé",
+      "ocr_empty_body": "Aucun texte n'a pu être reconnu dans la zone sélectionnée",
+      "ocr_missing_title": "Données de langue OCR manquantes",
+      "ocr_missing_body": "Ouvrez les paramètres de capture d'écran pour installer une langue.",
+      "ocr_uncertain_title": "Texte copié, mais il peut être inexact",
+      "ocr_language_hint": "Le texte est peut-être dans une langue non installée. Ajoutez des langues dans les paramètres de capture d'écran.",
+      "ocr_open_settings": "Ouvrir les paramètres"
     }
   },
   "start": {
@@ -1463,7 +1528,8 @@
       "usage": "Utilisation",
       "battery": "Batterie",
       "github": "Github",
-      "time": "Heure"
+      "time": "Heure",
+      "notes": "Notes"
     },
     "variants": {
       "digital": "Numérique",
@@ -1515,6 +1581,9 @@
       "left": "Gauche",
       "center": "Centre",
       "right": "Droite"
+    },
+    "notes": {
+      "empty": "Aucune note pour l'instant"
     }
   },
   "cli": {
@@ -1594,7 +1663,8 @@
     "error_file_not_found": "Erreur : fichier introuvable : {PATH}",
     "info_desc": "Afficher l'état actuel d'un réglage (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
     "set_desc": "Modifier un réglage (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "Exécuter une action ponctuelle (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
+    "trigger_desc": "Exécuter une action ponctuelle (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "settings_desc": "Ouvrir la fenêtre des paramètres (éventuellement sur un onglet)"
   },
   "daemon": {
     "already_running": "Le démon est déjà en cours d'exécution. Arrêt...",

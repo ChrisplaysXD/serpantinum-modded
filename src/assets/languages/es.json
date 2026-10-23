@@ -44,7 +44,8 @@
       "bar_general": "General",
       "bar_modules": "Módulos",
       "bar_side_modules": "Módulos laterales",
-      "display_lockscreen": "Pantalla de bloqueo"
+      "display_lockscreen": "Pantalla de bloqueo",
+      "screenshot": "Captura de pantalla"
     },
     "launcher": {
       "position": {
@@ -72,7 +73,11 @@
         "title": "Ordenación inteligente de elementos en el lanzador",
         "desc": "Ordenar aplicaciones según su uso y el tiempo que se pasa en ellas"
       },
-      "test": "Abrir lanzador"
+      "test": "Abrir lanzador",
+      "search": {
+        "title": "Proveedor de búsqueda web",
+        "desc": "Buscador usado cuando la consulta empieza con ?"
+      }
     },
     "notifications": {
       "dnd": {
@@ -214,6 +219,10 @@
       "quickactions": {
         "title": "Acciones rápidas",
         "desc": "Habilitar panel flotante de acciones rápidas"
+      },
+      "separatewindow": {
+        "title": "Abrir los ajustes en una ventana separada",
+        "desc": "Abrir los ajustes como una ventana de aplicación redimensionable en lugar de un panel dentro del shell"
       },
       "location": {
         "title": "Ubicación",
@@ -769,7 +778,23 @@
         "app_limits": "Límites de uso de aplicaciones",
         "app_limits_desc": "Establecer límite diario máximo por aplicación",
         "excluded_apps": "Aplicaciones excluidas",
-        "excluded_apps_desc": "Excluir aplicaciones del seguimiento general de ahora en adelante"
+        "excluded_apps_desc": "Excluir aplicaciones del seguimiento general de ahora en adelante",
+        "overall_limit_desc": "Avisarme cuando el tiempo total de pantalla alcance este valor",
+        "no_limits": "No hay límites de aplicaciones",
+        "no_excluded": "No hay aplicaciones excluidas",
+        "picker_search": "Buscar aplicaciones...",
+        "picker_empty": "No hay aplicaciones coincidentes",
+        "picker_apply": "Aplicar",
+        "picker_cancel": "Cancelar"
+      },
+      "notify": {
+        "title": "Bienestar digital",
+        "overall_reached": "Has alcanzado tu límite diario total",
+        "app_reached": "Has alcanzado tu límite diario de {app}"
+      },
+      "limit_overlay": {
+        "title": "Límite diario alcanzado",
+        "hold": "Mantén pulsado para continuar"
       }
     },
     "update_available": "Actualización disponible",
@@ -975,6 +1000,21 @@
       "placeholder": "Buscar ajustes...",
       "prompt": "Escribe para buscar ajustes...",
       "no_results": "No se encontraron ajustes"
+    },
+    "screenshot": {
+      "ocr": {
+        "title": "Idiomas de OCR",
+        "desc": "El reconocimiento de texto detecta el idioma automáticamente entre los que instales",
+        "search": "Buscar idiomas...",
+        "install": "Instalar",
+        "installing": "Instalando...",
+        "remove": "Quitar",
+        "removing": "Quitando...",
+        "installed": "Instalado",
+        "failed": "Falló la descarga. Comprueba tu conexión.",
+        "offline": "No se puede acceder a la lista de idiomas. Solo se muestran los idiomas instalados.",
+        "loading": "Cargando idiomas..."
+      }
     }
   },
   "sysnotif": {
@@ -1010,7 +1050,9 @@
     "tab_files": "Archivos",
     "placeholder_files": "Buscar archivos o escribir ruta...",
     "tab_emojis": "Emojis",
-    "placeholder_emojis": "Buscar emojis o escribir palabra clave..."
+    "placeholder_emojis": "Buscar emojis o escribir palabra clave...",
+    "search_run": "Buscar en {provider}",
+    "search_hint": "Escribe para buscar con {provider}"
   },
   "calendar": {
     "loading": "Cargando...",
@@ -1290,7 +1332,8 @@
       "inv": "Inv",
       "mode": {
         "normal": "Normal",
-        "advanced": "Avanzado"
+        "advanced": "Avanzado",
+        "converter": "Conversor"
       },
       "clear": "AC",
       "error": {
@@ -1298,6 +1341,20 @@
         "div0": "No se puede dividir entre cero",
         "domain": "Entrada no válida",
         "paste": "Pegado no válido"
+      },
+      "converter": {
+        "currency": "Moneda",
+        "length": "Longitud",
+        "mass": "Masa",
+        "temperature": "Temperatura",
+        "volume": "Volumen",
+        "area": "Área",
+        "speed": "Velocidad",
+        "time": "Tiempo",
+        "data": "Datos",
+        "updated": "Tasas actualizadas {time}",
+        "updating": "Actualizando tasas...",
+        "offline": "Tasas no disponibles"
       }
     },
     "tabs": {
@@ -1329,7 +1386,15 @@
       "recording_started_title": "Grabación iniciada",
       "recording_started_body": "Presiona el atajo de captura de pantalla nuevamente para detener.",
       "screenshot_saved_title": "Captura guardada",
-      "screenshot_saved_body": "Archivo: {file}\nCarpeta: {folder}"
+      "screenshot_saved_body": "Archivo: {file}\nCarpeta: {folder}",
+      "ocr_copied_title": "Texto copiado",
+      "ocr_empty_title": "No se encontró texto",
+      "ocr_empty_body": "No se pudo reconocer texto en el área seleccionada",
+      "ocr_missing_title": "Faltan datos de idioma para OCR",
+      "ocr_missing_body": "Abre los ajustes de captura de pantalla para instalar un idioma.",
+      "ocr_uncertain_title": "Texto copiado, pero puede ser inexacto",
+      "ocr_language_hint": "El texto puede estar en un idioma que no está instalado. Añade idiomas en los ajustes de captura de pantalla.",
+      "ocr_open_settings": "Abrir ajustes"
     }
   },
   "start": {
@@ -1504,7 +1569,8 @@
       "usage": "Uso",
       "battery": "Batería",
       "github": "Github",
-      "time": "Hora"
+      "time": "Hora",
+      "notes": "Notas"
     },
     "variants": {
       "digital": "Digital",
@@ -1559,6 +1625,9 @@
       "left": "Izquierda",
       "center": "Centro",
       "right": "Derecha"
+    },
+    "notes": {
+      "empty": "Aún no hay notas"
     }
   },
   "cli": {
@@ -1638,7 +1707,8 @@
     "error_file_not_found": "Error: archivo no encontrado: {PATH}",
     "info_desc": "Mostrar el estado actual de un ajuste (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
     "set_desc": "Cambiar un ajuste (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "Ejecutar una acción puntual (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
+    "trigger_desc": "Ejecutar una acción puntual (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "settings_desc": "Abrir la ventana de ajustes (opcionalmente en una pestaña)"
   },
   "daemon": {
     "already_running": "El demonio ya está en ejecución. Saliendo...",

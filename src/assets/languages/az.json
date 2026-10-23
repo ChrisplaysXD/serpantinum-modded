@@ -43,7 +43,8 @@
       "bar_general": "Ümumi",
       "bar_modules": "Modullar",
       "bar_side_modules": "Yan modullar",
-      "display_lockscreen": "Kilid ekranı"
+      "display_lockscreen": "Kilid ekranı",
+      "screenshot": "Ekran görüntüsü"
     },
     "launcher": {
       "position": {
@@ -71,7 +72,11 @@
         "title": "Başladıcıdakı elementlərin ağıllı sıralanması",
         "desc": "Tətbiqləri istifadə tezliyinə və istifadə müddətinə görə sırala"
       },
-      "test": "Başladıcını aç"
+      "test": "Başladıcını aç",
+      "search": {
+        "title": "Veb axtarış provayderi",
+        "desc": "? ilə başlayan sorğular üçün istifadə olunan axtarış sistemi"
+      }
     },
     "notifications": {
       "dnd": {
@@ -211,6 +216,10 @@
       "quickactions": {
         "title": "Sürətli əməliyyatlar",
         "desc": "Üzən sürətli əməliyyatlar qatını aktivləşdir"
+      },
+      "separatewindow": {
+        "title": "Ayarları ayrıca pəncərədə aç",
+        "desc": "Ayarları shell daxilindəki panel əvəzinə ölçüsü dəyişdirilə bilən adi tətbiq pəncərəsi kimi aç"
       },
       "location": {
         "title": "Məkan",
@@ -766,7 +775,23 @@
         "app_limits": "Tətbiq istifadəsi hədləri",
         "app_limits_desc": "Hər tətbiq üçün gündəlik istifadə müddətinin yuxarı həddini təyin edin",
         "excluded_apps": "İstisna edilmiş tətbiqlər",
-        "excluded_apps_desc": "Seçilmiş tətbiqlərin bundan sonrakı istifadəsini ümumi hesablamaya daxil etmə"
+        "excluded_apps_desc": "Seçilmiş tətbiqlərin bundan sonrakı istifadəsini ümumi hesablamaya daxil etmə",
+        "overall_limit_desc": "Ümumi ekran vaxtı bu həddə çatanda mənə bildir",
+        "no_limits": "Tətbiq limiti təyin edilməyib",
+        "no_excluded": "İstisna edilmiş tətbiq yoxdur",
+        "picker_search": "Tətbiq axtar...",
+        "picker_empty": "Uyğun tətbiq yoxdur",
+        "picker_apply": "Tətbiq et",
+        "picker_cancel": "Ləğv et"
+      },
+      "notify": {
+        "title": "Rəqəmsal rifah",
+        "overall_reached": "Ümumi gündəlik limitinizə çatdınız",
+        "app_reached": "{app} üçün gündəlik limitinizə çatdınız"
+      },
+      "limit_overlay": {
+        "title": "Gündəlik limitə çatıldı",
+        "hold": "Davam etmək üçün basılı saxlayın"
       }
     },
     "update_available": "Yeniləmə mövcuddur",
@@ -925,6 +950,21 @@
       "placeholder": "Tənzimləmələri axtarın...",
       "prompt": "Axtarmaq üçün yazın...",
       "no_results": "Tənzimləmə tapılmadı"
+    },
+    "screenshot": {
+      "ocr": {
+        "title": "OCR dilləri",
+        "desc": "Mətn tanıma quraşdırdığınız dillər arasından dili avtomatik aşkar edir",
+        "search": "Dil axtar...",
+        "install": "Quraşdır",
+        "installing": "Quraşdırılır...",
+        "remove": "Sil",
+        "removing": "Silinir...",
+        "installed": "Quraşdırılıb",
+        "failed": "Yükləmə uğursuz oldu. Bağlantını yoxlayın.",
+        "offline": "Dil siyahısına çatmaq mümkün deyil. Yalnız quraşdırılmış dillər göstərilir.",
+        "loading": "Dillər yüklənir..."
+      }
     }
   },
   "sysnotif": {
@@ -960,7 +1000,9 @@
     "tab_files": "Fayllar",
     "placeholder_files": "Faylları axtarın və ya yol daxil edin...",
     "tab_emojis": "Emojilər",
-    "placeholder_emojis": "Emojiləri axtarın və ya açar söz daxil edin..."
+    "placeholder_emojis": "Emojiləri axtarın və ya açar söz daxil edin...",
+    "search_run": "{provider} ilə axtar",
+    "search_hint": "{provider} ilə axtarmaq üçün yazın"
   },
   "calendar": {
     "loading": "Yüklənir...",
@@ -1240,7 +1282,8 @@
       "inv": "Tərs",
       "mode": {
         "normal": "Adi",
-        "advanced": "Qabaqcıl"
+        "advanced": "Qabaqcıl",
+        "converter": "Çevirici"
       },
       "clear": "AC",
       "error": {
@@ -1248,6 +1291,20 @@
         "div0": "Sıfıra bölmək olmaz",
         "domain": "Yanlış giriş",
         "paste": "Yanlış yapışdırma"
+      },
+      "converter": {
+        "currency": "Valyuta",
+        "length": "Uzunluq",
+        "mass": "Kütlə",
+        "temperature": "Temperatur",
+        "volume": "Həcm",
+        "area": "Sahə",
+        "speed": "Sürət",
+        "time": "Vaxt",
+        "data": "Məlumat",
+        "updated": "Məzənnələr yeniləndi {time}",
+        "updating": "Məzənnələr yenilənir...",
+        "offline": "Məzənnələr əlçatan deyil"
       }
     },
     "tabs": {
@@ -1279,7 +1336,15 @@
       "recording_started_title": "Video çəkilişi başladı",
       "recording_started_body": "Dayandırmaq üçün ekran şəkli qısayolunu yenidən basın.",
       "screenshot_saved_title": "Ekran şəkli saxlanıldı",
-      "screenshot_saved_body": "Fayl: {file}\nQovluq: {folder}"
+      "screenshot_saved_body": "Fayl: {file}\nQovluq: {folder}",
+      "ocr_copied_title": "Mətn kopyalandı",
+      "ocr_empty_title": "Mətn tapılmadı",
+      "ocr_empty_body": "Seçilmiş sahədə mətn tanına bilmədi",
+      "ocr_missing_title": "OCR dil məlumatları çatışmır",
+      "ocr_missing_body": "Dil quraşdırmaq üçün ekran görüntüsü ayarlarını açın.",
+      "ocr_uncertain_title": "Mətn kopyalandı, lakin qeyri-dəqiq ola bilər",
+      "ocr_language_hint": "Mətn quraşdırılmamış dildə ola bilər. Ekran görüntüsü ayarlarında dil əlavə edin.",
+      "ocr_open_settings": "Ayarları aç"
     }
   },
   "start": {
@@ -1454,7 +1519,8 @@
       "usage": "İstifadə",
       "battery": "Batareya",
       "github": "Github",
-      "time": "Vaxt"
+      "time": "Vaxt",
+      "notes": "Qeydlər"
     },
     "variants": {
       "digital": "Rəqəmsal",
@@ -1509,6 +1575,9 @@
       "left": "Sol",
       "center": "Mərkəz",
       "right": "Sağ"
+    },
+    "notes": {
+      "empty": "Hələ qeyd yoxdur"
     }
   },
   "cli": {
@@ -1588,7 +1657,8 @@
     "error_file_not_found": "Xəta: fayl tapılmadı: {PATH}",
     "info_desc": "Ayarın cari vəziyyətini göstərmək (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
     "set_desc": "Ayarı dəyişmək (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "Birdəfəlik əməliyyat icra etmək (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
+    "trigger_desc": "Birdəfəlik əməliyyat icra etmək (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "settings_desc": "Ayarlar pəncərəsini aç (istəyə görə müəyyən tabda)"
   },
   "daemon": {
     "already_running": "Arxa plan xidməti artıq işləyir. Çıxılır...",

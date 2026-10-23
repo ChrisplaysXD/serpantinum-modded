@@ -14,6 +14,7 @@ slug: /cli/client
 | Command | Purpose |
 | --- | --- |
 | `msg` | Open, close or toggle panels and switch workspaces. |
+| `settings` | Open the settings window, optionally on a given tab. |
 | `launch` | Run standalone components such as the setup wizard or the layout editors. |
 | `config` | Read and write raw settings. |
 | `info` | Print the current state of a setting. |
@@ -51,9 +52,10 @@ Dispatches layout, workspace, and overlay actions to the shell:
   - `network wifi`: Open directly on WiFi tab.
   - `network ethernet`: Open directly on Ethernet tab.
 - `volume`: Audio mixer and device picker.
-- `guide`: Settings and documentation hub.
-  - `guide keybinds`: Open shortcut cheat sheet tab.
-  - `guide appearance`: Open appearance and styling tab.
+- `settings`: Settings panel or window (same as [`serpantinum settings`](#settings)).
+  - `settings keybinds`: Open shortcut cheat sheet tab.
+  - `settings appearance`: Open appearance and styling tab.
+  - `guide` is a deprecated alias for `settings` and prints a warning.
 - `calendar`: Calendar, clock, and schedule panel.
 - `music`: Media player controls and track artwork.
 - `wallpaper`: Wallpaper picker and live preview.
@@ -62,6 +64,17 @@ Dispatches layout, workspace, and overlay actions to the shell:
 - `autohide`: Toggle bar autohide setting live.
 - `airplane` (alias: `flight`): Toggle airplane mode (WiFi and Bluetooth).
 - `clearNotifications` (aliases: `clear_notifications`, `clearNotifs`): Clear all notifications.
+
+### `settings`
+
+Opens the settings. By default they open as a fixed-size panel inside the shell, like other popups. Enable **Make settings a separate window** in **General** (`general.settingsSeparateWindow`) to open them as a regular application window instead. The window runs as its own process, so it can be moved, resized and tiled like any other window. The settings are also available from your application launcher as **Serpantinum settings**.
+
+- `serpantinum settings`: Open the settings, or focus them if they are already open.
+- `serpantinum settings <tab> [subtab]`: Open directly on a tab, for example `serpantinum settings theme`.
+- `serpantinum settings toggle [tab]`: Close the settings if they are open, otherwise open them.
+- `serpantinum settings close`: Close the settings.
+
+In separate window mode, the window class is `serpantinum-settings`. To open it floating and centered, add a window rule for the class `serpantinum-settings` in your compositor configuration.
 
 ### `launch`
 

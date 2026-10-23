@@ -35,7 +35,9 @@
     "tab_files": "Pliki",
     "placeholder_files": "Szukaj plików lub wpisz ścieżkę...",
     "tab_emojis": "Emoji",
-    "placeholder_emojis": "Szukaj emoji według nazwy lub słowa kluczowego..."
+    "placeholder_emojis": "Szukaj emoji według nazwy lub słowa kluczowego...",
+    "search_run": "Szukaj w {provider}",
+    "search_hint": "Wpisz, aby szukać w {provider}"
   },
   "calendar": {
     "loading": "Ładowanie...",
@@ -318,7 +320,8 @@
       "inv": "Inv",
       "mode": {
         "normal": "Zwykły",
-        "advanced": "Zaawansowany"
+        "advanced": "Zaawansowany",
+        "converter": "Konwerter"
       },
       "clear": "AC",
       "error": {
@@ -326,6 +329,20 @@
         "div0": "Nie można dzielić przez zero",
         "domain": "Nieprawidłowe dane",
         "paste": "Nieprawidłowe wklejanie"
+      },
+      "converter": {
+        "currency": "Waluta",
+        "length": "Długość",
+        "mass": "Masa",
+        "temperature": "Temperatura",
+        "volume": "Objętość",
+        "area": "Powierzchnia",
+        "speed": "Prędkość",
+        "time": "Czas",
+        "data": "Dane",
+        "updated": "Kursy zaktualizowano {time}",
+        "updating": "Aktualizowanie kursów...",
+        "offline": "Kursy niedostępne"
       }
     },
     "tabs": {
@@ -357,7 +374,15 @@
       "recording_started_title": "Rozpoczęto nagrywanie",
       "recording_started_body": "Naciśnij ponownie skrót zrzutu ekranu, aby zatrzymać.",
       "screenshot_saved_title": "Zrzut ekranu zapisany",
-      "screenshot_saved_body": "Plik: {file}\nFolder: {folder}"
+      "screenshot_saved_body": "Plik: {file}\nFolder: {folder}",
+      "ocr_copied_title": "Skopiowano tekst",
+      "ocr_empty_title": "Nie znaleziono tekstu",
+      "ocr_empty_body": "Nie udało się rozpoznać tekstu w zaznaczonym obszarze",
+      "ocr_missing_title": "Brak danych języka OCR",
+      "ocr_missing_body": "Otwórz ustawienia zrzutów ekranu, aby zainstalować język.",
+      "ocr_uncertain_title": "Skopiowano tekst, ale może być niedokładny",
+      "ocr_language_hint": "Tekst może być w języku, który nie jest zainstalowany. Dodaj języki w ustawieniach zrzutów ekranu.",
+      "ocr_open_settings": "Otwórz ustawienia"
     }
   },
   "start": {
@@ -532,7 +557,8 @@
       "usage": "Użycie zasobów",
       "battery": "Bateria",
       "github": "GitHub",
-      "time": "Czas"
+      "time": "Czas",
+      "notes": "Notatki"
     },
     "variants": {
       "digital": "Cyfrowy",
@@ -584,6 +610,9 @@
       "left": "Do lewej",
       "center": "Środek",
       "right": "Do prawej"
+    },
+    "notes": {
+      "empty": "Brak notatek"
     }
   },
   "cli": {
@@ -663,7 +692,8 @@
     "error_file_not_found": "Błąd: nie znaleziono pliku: {PATH}",
     "info_desc": "Pokaż bieżący stan ustawienia (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
     "set_desc": "Zmień ustawienie (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "Uruchom jednorazową akcję (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
+    "trigger_desc": "Uruchom jednorazową akcję (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "settings_desc": "Otwórz okno ustawień (opcjonalnie na wybranej karcie)"
   },
   "daemon": {
     "already_running": "Demon jest już uruchomiony. Kończenie pracy...",
@@ -841,7 +871,8 @@
       "bar_general": "Ogólne",
       "bar_modules": "Moduły",
       "bar_side_modules": "Moduły boczne",
-      "display_lockscreen": "Ekran blokady"
+      "display_lockscreen": "Ekran blokady",
+      "screenshot": "Zrzut ekranu"
     },
     "launcher": {
       "position": {
@@ -869,7 +900,11 @@
         "title": "Inteligentne sortowanie elementów w aktywatorze",
         "desc": "Sortuj aplikacje według częstotliwości używania i spędzonego w nich czasu"
       },
-      "test": "Otwórz aktywator"
+      "test": "Otwórz aktywator",
+      "search": {
+        "title": "Wyszukiwarka internetowa",
+        "desc": "Wyszukiwarka używana, gdy zapytanie zaczyna się od ?"
+      }
     },
     "notifications": {
       "dnd": {
@@ -1011,6 +1046,10 @@
       "quickactions": {
         "title": "Szybkie akcje",
         "desc": "Włącz pływającą nakładkę szybkich akcji"
+      },
+      "separatewindow": {
+        "title": "Otwieraj ustawienia w osobnym oknie",
+        "desc": "Otwieraj ustawienia jako zwykłe okno aplikacji o zmiennym rozmiarze zamiast panelu w powłoce"
       },
       "location": {
         "title": "Lokalizacja",
@@ -1566,7 +1605,23 @@
         "app_limits": "Limity użycia aplikacji",
         "app_limits_desc": "Ustaw maksymalny dzienny czas dla aplikacji",
         "excluded_apps": "Wykluczone aplikacje",
-        "excluded_apps_desc": "Wyklucz aplikacje ze śledzenia"
+        "excluded_apps_desc": "Wyklucz aplikacje ze śledzenia",
+        "overall_limit_desc": "Powiadom mnie, gdy łączny czas przed ekranem osiągnie tę wartość",
+        "no_limits": "Nie ustawiono limitów aplikacji",
+        "no_excluded": "Brak wykluczonych aplikacji",
+        "picker_search": "Szukaj aplikacji...",
+        "picker_empty": "Brak pasujących aplikacji",
+        "picker_apply": "Zastosuj",
+        "picker_cancel": "Anuluj"
+      },
+      "notify": {
+        "title": "Cyfrowa równowaga",
+        "overall_reached": "Osiągnięto ogólny dzienny limit",
+        "app_reached": "Osiągnięto dzienny limit dla {app}"
+      },
+      "limit_overlay": {
+        "title": "Osiągnięto dzienny limit",
+        "hold": "Przytrzymaj, aby kontynuować"
       }
     },
     "update_available": "Dostępna aktualizacja",
@@ -1729,6 +1784,21 @@
       "placeholder": "Szukaj w ustawieniach...",
       "prompt": "Wpisz, aby wyszukać w ustawieniach...",
       "no_results": "Nie znaleziono ustawień"
+    },
+    "screenshot": {
+      "ocr": {
+        "title": "Języki OCR",
+        "desc": "Rozpoznawanie tekstu automatycznie wykrywa język spośród zainstalowanych",
+        "search": "Szukaj języków...",
+        "install": "Zainstaluj",
+        "installing": "Instalowanie...",
+        "remove": "Usuń",
+        "removing": "Usuwanie...",
+        "installed": "Zainstalowano",
+        "failed": "Pobieranie nie powiodło się. Sprawdź połączenie.",
+        "offline": "Nie można połączyć się z listą języków. Wyświetlane są tylko zainstalowane języki.",
+        "loading": "Ładowanie języków..."
+      }
     }
   }
 }

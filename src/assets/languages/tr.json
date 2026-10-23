@@ -43,7 +43,8 @@
       "bar_general": "Genel",
       "bar_modules": "Modüller",
       "bar_side_modules": "Yan modüller",
-      "display_lockscreen": "Kilit ekranı"
+      "display_lockscreen": "Kilit ekranı",
+      "screenshot": "Ekran görüntüsü"
     },
     "launcher": {
       "position": {
@@ -71,7 +72,11 @@
         "title": "Başlatıcıdaki ögelerin akıllı sıralanması",
         "desc": "Uygulamaları kullanım sıklığına ve içlerinde harcanan süreye göre sıralayın"
       },
-      "test": "Başlatıcıyı aç"
+      "test": "Başlatıcıyı aç",
+      "search": {
+        "title": "Web arama sağlayıcısı",
+        "desc": "? ile başlayan sorgularda kullanılan arama motoru"
+      }
     },
     "notifications": {
       "dnd": {
@@ -213,6 +218,10 @@
       "quickactions": {
         "title": "Hızlı işlemler",
         "desc": "Kayan hızlı işlemler katmanını etkinleştirin"
+      },
+      "separatewindow": {
+        "title": "Ayarları ayrı pencerede aç",
+        "desc": "Ayarları kabuk içindeki bir panel yerine yeniden boyutlandırılabilir normal bir uygulama penceresi olarak aç"
       },
       "location": {
         "title": "Konum",
@@ -768,7 +777,23 @@
         "app_limits": "Uygulama kullanım sınırları",
         "app_limits_desc": "Uygulama başına günlük maksimum kullanım süresi belirleyin",
         "excluded_apps": "Hariç tutulan uygulamalar",
-        "excluded_apps_desc": "Bundan sonra uygulamaları genel takipten hariç tutun"
+        "excluded_apps_desc": "Bundan sonra uygulamaları genel takipten hariç tutun",
+        "overall_limit_desc": "Toplam ekran süresi bu değere ulaştığında bildir",
+        "no_limits": "Uygulama sınırı ayarlanmadı",
+        "no_excluded": "Hariç tutulan uygulama yok",
+        "picker_search": "Uygulama ara...",
+        "picker_empty": "Eşleşen uygulama yok",
+        "picker_apply": "Uygula",
+        "picker_cancel": "İptal"
+      },
+      "notify": {
+        "title": "Dijital refah",
+        "overall_reached": "Genel günlük sınırınıza ulaşıldı",
+        "app_reached": "{app} için günlük sınırınıza ulaşıldı"
+      },
+      "limit_overlay": {
+        "title": "Günlük sınıra ulaşıldı",
+        "hold": "Devam etmek için basılı tutun"
       }
     },
     "update_available": "Güncelleme mevcut",
@@ -931,6 +956,21 @@
       "placeholder": "Ayarlarda ara...",
       "prompt": "Ayarlarda aramak için yazın...",
       "no_results": "Ayar bulunamadı"
+    },
+    "screenshot": {
+      "ocr": {
+        "title": "OCR dilleri",
+        "desc": "Metin tanıma, yüklediğiniz diller arasından dili otomatik olarak algılar",
+        "search": "Dil ara...",
+        "install": "Yükle",
+        "installing": "Yükleniyor...",
+        "remove": "Kaldır",
+        "removing": "Kaldırılıyor...",
+        "installed": "Yüklü",
+        "failed": "İndirme başarısız. Bağlantınızı kontrol edin.",
+        "offline": "Dil listesine ulaşılamıyor. Yalnızca yüklü diller gösteriliyor.",
+        "loading": "Diller yükleniyor..."
+      }
     }
   },
   "sysnotif": {
@@ -966,7 +1006,9 @@
     "tab_files": "Dosyalar",
     "placeholder_files": "Dosyaları arayın veya yol girin...",
     "tab_emojis": "Emojiler",
-    "placeholder_emojis": "Emojileri ada veya anahtar kelimeye göre arayın..."
+    "placeholder_emojis": "Emojileri ada veya anahtar kelimeye göre arayın...",
+    "search_run": "{provider} ile ara",
+    "search_hint": "{provider} ile aramak için yazın"
   },
   "calendar": {
     "loading": "Yükleniyor...",
@@ -1249,7 +1291,8 @@
       "inv": "Ters",
       "mode": {
         "normal": "Normal",
-        "advanced": "Gelişmiş"
+        "advanced": "Gelişmiş",
+        "converter": "Dönüştürücü"
       },
       "clear": "AC",
       "error": {
@@ -1257,6 +1300,20 @@
         "div0": "Sıfıra bölünemez",
         "domain": "Geçersiz giriş",
         "paste": "Geçersiz yapıştırma"
+      },
+      "converter": {
+        "currency": "Para birimi",
+        "length": "Uzunluk",
+        "mass": "Kütle",
+        "temperature": "Sıcaklık",
+        "volume": "Hacim",
+        "area": "Alan",
+        "speed": "Hız",
+        "time": "Zaman",
+        "data": "Veri",
+        "updated": "Kurlar güncellendi {time}",
+        "updating": "Kurlar güncelleniyor...",
+        "offline": "Kurlar kullanılamıyor"
       }
     },
     "tabs": {
@@ -1288,7 +1345,15 @@
       "recording_started_title": "Kayıt başladı",
       "recording_started_body": "Durdurmak için ekran görüntüsü kısayolunuza tekrar basın.",
       "screenshot_saved_title": "Ekran görüntüsü kaydedildi",
-      "screenshot_saved_body": "Dosya: {file}\nKlasör: {folder}"
+      "screenshot_saved_body": "Dosya: {file}\nKlasör: {folder}",
+      "ocr_copied_title": "Metin kopyalandı",
+      "ocr_empty_title": "Metin bulunamadı",
+      "ocr_empty_body": "Seçilen alanda metin tanınamadı",
+      "ocr_missing_title": "OCR dil verisi eksik",
+      "ocr_missing_body": "Bir dil yüklemek için ekran görüntüsü ayarlarını açın.",
+      "ocr_uncertain_title": "Metin kopyalandı ancak hatalı olabilir",
+      "ocr_language_hint": "Metin yüklü olmayan bir dilde olabilir. Ekran görüntüsü ayarlarından dil ekleyin.",
+      "ocr_open_settings": "Ayarları aç"
     }
   },
   "start": {
@@ -1463,7 +1528,8 @@
       "usage": "Kullanım",
       "battery": "Pil",
       "github": "Github",
-      "time": "Saat"
+      "time": "Saat",
+      "notes": "Notlar"
     },
     "variants": {
       "digital": "Dijital",
@@ -1515,6 +1581,9 @@
       "left": "Sol",
       "center": "Orta",
       "right": "Sağ"
+    },
+    "notes": {
+      "empty": "Henüz not yok"
     }
   },
   "cli": {
@@ -1594,7 +1663,8 @@
     "error_file_not_found": "Hata: dosya bulunamadı: {PATH}",
     "info_desc": "Bir ayarın geçerli durumunu göster (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
     "set_desc": "Bir ayarı değiştir (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "Tek seferlik bir eylem çalıştır (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
+    "trigger_desc": "Tek seferlik bir eylem çalıştır (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "settings_desc": "Ayarlar penceresini aç (isteğe bağlı olarak belirli bir sekmede)"
   },
   "daemon": {
     "already_running": "Arka plan programı zaten çalışıyor. Çıkılıyor...",

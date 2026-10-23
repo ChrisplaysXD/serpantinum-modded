@@ -43,7 +43,8 @@
       "bar_general": "Chung",
       "bar_modules": "Mô-đun",
       "bar_side_modules": "Mô-đun bên cạnh",
-      "display_lockscreen": "Màn hình khóa"
+      "display_lockscreen": "Màn hình khóa",
+      "screenshot": "Ảnh chụp màn hình"
     },
     "launcher": {
       "position": {
@@ -71,7 +72,11 @@
         "title": "Sắp xếp thông minh trong trình khởi chạy",
         "desc": "Sắp xếp ứng dụng dựa trên tần suất sử dụng và thời gian mở"
       },
-      "test": "Mở trình khởi chạy"
+      "test": "Mở trình khởi chạy",
+      "search": {
+        "title": "Công cụ tìm kiếm web",
+        "desc": "Công cụ tìm kiếm dùng khi truy vấn bắt đầu bằng ?"
+      }
     },
     "notifications": {
       "dnd": {
@@ -213,6 +218,10 @@
       "quickactions": {
         "title": "Thao tác nhanh",
         "desc": "Bật lớp phủ thao tác nhanh nổi"
+      },
+      "separatewindow": {
+        "title": "Mở cài đặt trong cửa sổ riêng",
+        "desc": "Mở cài đặt dưới dạng cửa sổ ứng dụng có thể thay đổi kích thước thay vì bảng bên trong shell"
       },
       "location": {
         "title": "Vị trí",
@@ -768,7 +777,23 @@
         "app_limits": "Giới hạn sử dụng ứng dụng",
         "app_limits_desc": "Đặt mức sử dụng tối đa hàng ngày cho mỗi ứng dụng",
         "excluded_apps": "Ứng dụng bị loại trừ",
-        "excluded_apps_desc": "Loại trừ ứng dụng khỏi việc theo dõi tổng thể từ bây giờ"
+        "excluded_apps_desc": "Loại trừ ứng dụng khỏi việc theo dõi tổng thể từ bây giờ",
+        "overall_limit_desc": "Thông báo khi tổng thời gian sử dụng màn hình đạt mức này",
+        "no_limits": "Chưa đặt giới hạn ứng dụng",
+        "no_excluded": "Không có ứng dụng bị loại trừ",
+        "picker_search": "Tìm ứng dụng...",
+        "picker_empty": "Không có ứng dụng phù hợp",
+        "picker_apply": "Áp dụng",
+        "picker_cancel": "Hủy"
+      },
+      "notify": {
+        "title": "Sức khỏe kỹ thuật số",
+        "overall_reached": "Bạn đã đạt giới hạn hằng ngày tổng thể",
+        "app_reached": "Bạn đã đạt giới hạn hằng ngày của {app}"
+      },
+      "limit_overlay": {
+        "title": "Đã đạt giới hạn hằng ngày",
+        "hold": "Nhấn giữ để tiếp tục"
       }
     },
     "update_available": "Có bản cập nhật mới",
@@ -931,6 +956,21 @@
       "placeholder": "Tìm kiếm cài đặt...",
       "prompt": "Nhập để tìm kiếm cài đặt...",
       "no_results": "Không tìm thấy cài đặt"
+    },
+    "screenshot": {
+      "ocr": {
+        "title": "Ngôn ngữ OCR",
+        "desc": "Nhận dạng văn bản tự động phát hiện ngôn ngữ trong số các ngôn ngữ bạn đã cài",
+        "search": "Tìm ngôn ngữ...",
+        "install": "Cài đặt",
+        "installing": "Đang cài đặt...",
+        "remove": "Gỡ bỏ",
+        "removing": "Đang gỡ bỏ...",
+        "installed": "Đã cài đặt",
+        "failed": "Tải xuống thất bại. Hãy kiểm tra kết nối của bạn.",
+        "offline": "Không thể truy cập danh sách ngôn ngữ. Chỉ hiển thị các ngôn ngữ đã cài.",
+        "loading": "Đang tải ngôn ngữ..."
+      }
     }
   },
   "sysnotif": {
@@ -966,7 +1006,9 @@
     "tab_files": "Tệp",
     "placeholder_files": "Tìm kiếm tệp hoặc nhập đường dẫn...",
     "tab_emojis": "Biểu tượng cảm xúc",
-    "placeholder_emojis": "Tìm kiếm biểu tượng cảm xúc hoặc nhập từ khóa..."
+    "placeholder_emojis": "Tìm kiếm biểu tượng cảm xúc hoặc nhập từ khóa...",
+    "search_run": "Tìm kiếm với {provider}",
+    "search_hint": "Nhập để tìm kiếm với {provider}"
   },
   "calendar": {
     "loading": "Đang tải...",
@@ -1246,7 +1288,8 @@
       "inv": "Ngược",
       "mode": {
         "normal": "Thường",
-        "advanced": "Nâng cao"
+        "advanced": "Nâng cao",
+        "converter": "Bộ chuyển đổi"
       },
       "clear": "AC",
       "error": {
@@ -1254,6 +1297,20 @@
         "div0": "Không thể chia cho không",
         "domain": "Đầu vào không hợp lệ",
         "paste": "Dán không hợp lệ"
+      },
+      "converter": {
+        "currency": "Tiền tệ",
+        "length": "Chiều dài",
+        "mass": "Khối lượng",
+        "temperature": "Nhiệt độ",
+        "volume": "Thể tích",
+        "area": "Diện tích",
+        "speed": "Tốc độ",
+        "time": "Thời gian",
+        "data": "Dữ liệu",
+        "updated": "Tỷ giá cập nhật {time}",
+        "updating": "Đang cập nhật tỷ giá...",
+        "offline": "Không có tỷ giá"
       }
     },
     "tabs": {
@@ -1285,7 +1342,15 @@
       "recording_started_title": "Đã bắt đầu ghi hình",
       "recording_started_body": "Nhấn phím tắt chụp màn hình một lần nữa để dừng.",
       "screenshot_saved_title": "Đã lưu ảnh chụp màn hình",
-      "screenshot_saved_body": "Tệp: {file}\nThư mục: {folder}"
+      "screenshot_saved_body": "Tệp: {file}\nThư mục: {folder}",
+      "ocr_copied_title": "Đã sao chép văn bản",
+      "ocr_empty_title": "Không tìm thấy văn bản",
+      "ocr_empty_body": "Không thể nhận dạng văn bản trong vùng đã chọn",
+      "ocr_missing_title": "Thiếu dữ liệu ngôn ngữ OCR",
+      "ocr_missing_body": "Mở cài đặt ảnh chụp màn hình để cài đặt một ngôn ngữ.",
+      "ocr_uncertain_title": "Đã sao chép văn bản, nhưng có thể không chính xác",
+      "ocr_language_hint": "Văn bản có thể thuộc ngôn ngữ chưa được cài đặt. Hãy thêm ngôn ngữ trong cài đặt ảnh chụp màn hình.",
+      "ocr_open_settings": "Mở cài đặt"
     }
   },
   "start": {
@@ -1460,7 +1525,8 @@
       "usage": "Mức sử dụng",
       "battery": "Pin",
       "github": "Github",
-      "time": "Thời gian"
+      "time": "Thời gian",
+      "notes": "Ghi chú"
     },
     "variants": {
       "digital": "Điện tử",
@@ -1515,6 +1581,9 @@
       "left": "Trái",
       "center": "Giữa",
       "right": "Phải"
+    },
+    "notes": {
+      "empty": "Chưa có ghi chú"
     }
   },
   "cli": {
@@ -1594,7 +1663,8 @@
     "error_file_not_found": "Lỗi: không tìm thấy tệp: {PATH}",
     "info_desc": "Hiển thị trạng thái hiện tại của một cài đặt (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
     "set_desc": "Thay đổi một cài đặt (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "Chạy một hành động một lần (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)"
+    "trigger_desc": "Chạy một hành động một lần (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "settings_desc": "Mở cửa sổ cài đặt (có thể chọn tab cụ thể)"
   },
   "daemon": {
     "already_running": "Daemon đang chạy rồi. Đang thoát...",
