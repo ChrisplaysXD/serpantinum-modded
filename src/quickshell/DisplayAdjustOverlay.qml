@@ -27,9 +27,8 @@ ShaderEffect {
         }
     }
 
-    ShaderEffectSource {
-        id: screenSource
-        sourceItem: root.parent ? root.parent : null
+    property variant screenSource: ShaderEffectSource {
+        sourceItem: root.parent ? (root.parent.children && root.parent.children.length > 0 ? root.parent.children[0] : root.parent) : null
         visible: false
         live: true
         hideSource: true
