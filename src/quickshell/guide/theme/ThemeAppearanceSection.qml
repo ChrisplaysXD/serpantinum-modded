@@ -199,6 +199,44 @@ SettingsBlob {
 
     SettingsRow {
         rootObj: section.tab.rootObj
+        settingId: "screen_vibrance"
+        icon: "󰏘"
+        title: "Screen vibrance"
+        description: "Screen color saturation via Hyprland shader (hyprshade)"
+        searchKeywords: "vibrance saturation screen shader hyprshade color display vivid"
+
+        Draggable {
+            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+            Layout.rightMargin: rootObj.s(8)
+            implicitWidth: rootObj.s(220)
+            implicitHeight: rootObj.s(18)
+            from: 0
+            to: 100
+            stepSize: 1
+            defaultValue: 65
+            showValueBubble: true
+            valueFormatter: function(v) { return Math.round(v) + "%" }
+            value: section.tab.currentVibrance
+            backgroundColor: ThemeBackend.surface0
+            accentColor: ThemeBackend.mauve
+            handleColor: ThemeBackend.text
+            handleBorderColor: ThemeBackend.mantle
+            onMoved: function(val) {
+                let rounded = Math.round(val);
+                if (section.tab.currentVibrance !== rounded) {
+                    section.tab.currentVibrance = rounded;
+                    section.tab.vibranceDebounceTimer.restart();
+                }
+            }
+            onDragFinished: {
+                section.tab.vibranceDebounceTimer.stop();
+                section.tab.updateVibranceSetting();
+            }
+        }
+    }
+
+    SettingsRow {
+        rootObj: section.tab.rootObj
         settingId: "blur_background"
         icon: "󰂵"
         title: I18n.t("guide.theme.blur_background.title", "Add a blurred wallpaper background")

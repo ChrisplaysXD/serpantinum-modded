@@ -23,6 +23,7 @@ GuideTab {
     property alias wallpaperDirScanner: wallpaperDirScanner
     property alias borderRadiusDebounceTimer: borderRadiusDebounceTimer
     property alias elementOpacityDebounceTimer: elementOpacityDebounceTimer
+    property alias vibranceDebounceTimer: vibranceDebounceTimer
 
     property var themeSettings: Config.getSetting("theme", defaultThemeSettings)
     property string currentFontFamily: themeSettings.fontFamily !== undefined ? themeSettings.fontFamily : ThemeBackend.fontFamily
@@ -33,6 +34,7 @@ GuideTab {
     property string currentPreset: themeSettings.activePreset !== undefined ? themeSettings.activePreset : "Matugen"
     property bool useMatugen: themeSettings.matugen !== undefined ? themeSettings.matugen : true
     property string currentThemeSource: themeSettings.themeSource !== undefined ? themeSettings.themeSource : "wallpaper"
+    property int currentVibrance: themeSettings.vibrance !== undefined ? Number(themeSettings.vibrance) : 65
 
     property string currentWallpaperDir: Config.getSetting("wallpaperDir", "") || Config.getSetting("wallpaper_dir", "") || Quickshell.env("WALLPAPER_DIR") || (Quickshell.env("HOME") + "/Pictures/Wallpapers")
     property var availableWallpaperDirs: []
@@ -458,6 +460,13 @@ GuideTab {
     }
 
     Timer {
+        id: vibranceDebounceTimer
+        interval: 250
+        repeat: false
+        onTriggered: themeTabRoot.updateVibranceSetting();
+    }
+
+    Timer {
         id: reloadThemesTimer
         interval: 150
         repeat: false
@@ -512,6 +521,7 @@ GuideTab {
             themeTabRoot.currentPreset = ts.activePreset !== undefined ? ts.activePreset : "Matugen";
             themeTabRoot.useMatugen = ts.matugen !== undefined ? ts.matugen : true;
             themeTabRoot.currentThemeSource = ts.themeSource !== undefined ? ts.themeSource : "wallpaper";
+            themeTabRoot.currentVibrance = ts.vibrance !== undefined ? Number(ts.vibrance) : 65;
 
             let wpDir = Config.getSetting("wallpaperDir", "") || Config.getSetting("wallpaper_dir", "");
             if (wpDir && wpDir !== "") {
@@ -557,6 +567,14 @@ GuideTab {
         let current = Config.getSetting("theme", themeTabRoot.defaultThemeSettings);
         current.blurStyle = val;
         Config.setSetting("theme", current);
+    }
+
+    function updateVibranceSetting() {
+        let current = Config.getSetting("theme", themeTabRoot.defaultThemeSettings);
+        current.vibrance = themeTabRoot.currentVibrance;
+        Config.setSetting("theme", current);
+        let scriptPath = Caching.serpantinumDir ? (Caching.serpantinumDir + "/scripts/vibrance.sh") : (Quickshell.env("HOME") + "/.local/share/serpantinum/src/scripts/vibrance.sh");
+        Quickshell.execDetached(["bash", scriptPath, (themeTabRoot.currentVibrance / 100).toFixed(2)]);
     }
 
     function updateThemeSourceSetting(val) {
