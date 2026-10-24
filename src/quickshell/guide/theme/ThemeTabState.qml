@@ -580,11 +580,13 @@ GuideTab {
         let current = Config.getSetting("theme", themeTabRoot.defaultThemeSettings);
         current.saturation = themeTabRoot.currentSaturation;
         Config.setSetting("theme", current);
+        Quickshell.execDetached(["bash", "-c", Caching.serpantinumDir ? (Caching.serpantinumDir + "/src/scripts/display_adjust.sh --saturation " + themeTabRoot.currentSaturation) : (Quickshell.env("HOME") + "/.local/share/serpantinum/src/scripts/display_adjust.sh --saturation " + themeTabRoot.currentSaturation)]);
     }
     function updateContrastSetting() {
         let current = Config.getSetting("theme", themeTabRoot.defaultThemeSettings);
         current.contrast = themeTabRoot.currentContrast;
         Config.setSetting("theme", current);
+        Quickshell.execDetached(["bash", "-c", Caching.serpantinumDir ? (Caching.serpantinumDir + "/src/scripts/display_adjust.sh --contrast " + themeTabRoot.currentContrast) : (Quickshell.env("HOME") + "/.local/share/serpantinum/src/scripts/display_adjust.sh --contrast " + themeTabRoot.currentContrast)]);
     }
     function updateThemeSourceSetting(val) {
         themeTabRoot.currentThemeSource = val;

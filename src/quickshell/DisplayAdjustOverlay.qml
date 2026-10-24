@@ -11,6 +11,14 @@ ShaderEffect {
     anchors.fill: parent
     visible: true
 
+    Rectangle {
+        anchors.fill: parent
+        color: "transparent"
+        border.color: (root.saturation !== 1.0 || root.contrast !== 1.0) ? Qt.rgba(ThemeBackend.mauve.r, ThemeBackend.mauve.g, ThemeBackend.mauve.b, 0.15) : "transparent"
+        border.width: (root.saturation !== 1.0 || root.contrast !== 1.0) ? 4 : 0
+        opacity: 0.05
+    }
+
     fragmentShader: "file://" + (typeof Caching !== "undefined" && Caching.serpantinumDir ? Caching.serpantinumDir : Quickshell.env("HOME") + "/.local/share/serpantinum") + "/src/assets/shaders/effects/display_adjust.frag"
 
     Connections {
