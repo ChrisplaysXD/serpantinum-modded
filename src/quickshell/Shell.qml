@@ -80,11 +80,6 @@ ShellRoot {
         active: !performanceMode && quickactionsEnabled
         sourceComponent: Floating {}
     }
-    Loader {
-        id: displayAdjustLoader
-        active: true
-        sourceComponent: DisplayAdjustOverlay {}
-    }
 
     Component.onCompleted: {
         Qt.application.organization = "serpantinum";

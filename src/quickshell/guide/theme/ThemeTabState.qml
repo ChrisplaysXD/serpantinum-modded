@@ -33,8 +33,6 @@ GuideTab {
     property string currentPreset: themeSettings.activePreset !== undefined ? themeSettings.activePreset : "Matugen"
     property bool useMatugen: themeSettings.matugen !== undefined ? themeSettings.matugen : true
     property string currentThemeSource: themeSettings.themeSource !== undefined ? themeSettings.themeSource : "wallpaper"
-    property int currentSaturation: themeSettings.saturation !== undefined ? Number(themeSettings.saturation) : 100
-    property int currentContrast: themeSettings.contrast !== undefined ? Number(themeSettings.contrast) : 100
 
     property string currentWallpaperDir: Config.getSetting("wallpaperDir", "") || Config.getSetting("wallpaper_dir", "") || Quickshell.env("WALLPAPER_DIR") || (Quickshell.env("HOME") + "/Pictures/Wallpapers")
     property var availableWallpaperDirs: []
@@ -460,18 +458,6 @@ GuideTab {
     }
 
     Timer {
-        id: saturationTimer
-        interval: 150
-        repeat: false
-        onTriggered: themeTabRoot.updateSaturationSetting();
-    }
-    Timer {
-        id: contrastTimer
-        interval: 150
-        repeat: false
-        onTriggered: themeTabRoot.updateContrastSetting();
-    }
-    Timer {
         id: reloadThemesTimer
         interval: 150
         repeat: false
@@ -526,9 +512,6 @@ GuideTab {
             themeTabRoot.currentPreset = ts.activePreset !== undefined ? ts.activePreset : "Matugen";
             themeTabRoot.useMatugen = ts.matugen !== undefined ? ts.matugen : true;
             themeTabRoot.currentThemeSource = ts.themeSource !== undefined ? ts.themeSource : "wallpaper";
-            themeTabRoot.currentSaturation = ts.saturation !== undefined ? Number(ts.saturation) : 100;
-            themeTabRoot.currentContrast = ts.contrast !== undefined ? Number(ts.contrast) : 100;
-            themeTabRoot.themeSettings = ts;
 
             let wpDir = Config.getSetting("wallpaperDir", "") || Config.getSetting("wallpaper_dir", "");
             if (wpDir && wpDir !== "") {
@@ -576,18 +559,6 @@ GuideTab {
         Config.setSetting("theme", current);
     }
 
-    function updateSaturationSetting() {
-        let current = Config.getSetting("theme", themeTabRoot.defaultThemeSettings);
-        current.saturation = themeTabRoot.currentSaturation;
-        Config.setSetting("theme", current);
-        Quickshell.execDetached(["bash", "-c", Caching.serpantinumDir ? (Caching.serpantinumDir + "/src/scripts/display_adjust.sh --saturation " + themeTabRoot.currentSaturation) : (Quickshell.env("HOME") + "/.local/share/serpantinum/src/scripts/display_adjust.sh --saturation " + themeTabRoot.currentSaturation)]);
-    }
-    function updateContrastSetting() {
-        let current = Config.getSetting("theme", themeTabRoot.defaultThemeSettings);
-        current.contrast = themeTabRoot.currentContrast;
-        Config.setSetting("theme", current);
-        Quickshell.execDetached(["bash", "-c", Caching.serpantinumDir ? (Caching.serpantinumDir + "/src/scripts/display_adjust.sh --contrast " + themeTabRoot.currentContrast) : (Quickshell.env("HOME") + "/.local/share/serpantinum/src/scripts/display_adjust.sh --contrast " + themeTabRoot.currentContrast)]);
-    }
     function updateThemeSourceSetting(val) {
         themeTabRoot.currentThemeSource = val;
         let current = Config.getSetting("theme", themeTabRoot.defaultThemeSettings);
