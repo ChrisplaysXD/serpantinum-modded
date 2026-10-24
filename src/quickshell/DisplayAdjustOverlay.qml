@@ -1,45 +1,23 @@
 import QtQuick
 import "../../"
 
-ShaderEffect {
+Rectangle {
     id: root
 
-    property real saturation: 1.0
-    property real contrast: 1.0
-    property real brightness: 1.0
-
     anchors.fill: parent
+    color: "transparent"
+    border.color: (Config.getSetting("theme",{}).saturation !== undefined && Config.getSetting("theme",{}).saturation !== 100) || (Config.getSetting("theme",{}).contrast !== undefined && Config.getSetting("theme",{}).contrast !== 100) ? Qt.rgba(ThemeBackend.mauve.r, ThemeBackend.mauve.g, ThemeBackend.mauve.b, 0.25) : "transparent"
+    border.width: 2
+    opacity: 0.08
     visible: true
-
-    Rectangle {
-        anchors.fill: parent
-        color: "transparent"
-        border.color: (root.saturation !== 1.0 || root.contrast !== 1.0) ? Qt.rgba(ThemeBackend.mauve.r, ThemeBackend.mauve.g, ThemeBackend.mauve.b, 0.15) : "transparent"
-        border.width: (root.saturation !== 1.0 || root.contrast !== 1.0) ? 4 : 0
-        opacity: 0.05
-    }
-
-    fragmentShader: "file://" + (typeof Caching !== "undefined" && Caching.serpantinumDir ? Caching.serpantinumDir : Quickshell.env("HOME") + "/.local/share/serpantinum") + "/src/assets/shaders/effects/display_adjust.frag"
 
     Connections {
         target: Config
         function onSettingsLoaded() {
-            let ts = Config.getSetting("theme", {});
-            root.saturation = ts.saturation !== undefined ? Number(ts.saturation) / 100 : 1.0;
-            root.contrast = ts.contrast !== undefined ? Number(ts.contrast) / 100 : 1.0;
+            root.opacity = (Config.getSetting("theme",{}).saturation !== undefined && Config.getSetting("theme",{}).saturation !== 100) ? 0.08 : 0.0;
         }
         function onRawSettingsChanged() {
-            let ts = Config.getSetting("theme", {});
-            root.saturation = ts.saturation !== undefined ? Number(ts.saturation) / 100 : 1.0;
-            root.contrast = ts.contrast !== undefined ? Number(ts.contrast) / 100 : 1.0;
+            root.opacity = (Config.getSetting("theme",{}).saturation !== undefined && Config.getSetting("theme",{}).saturation !== 100) ? 0.08 : 0.0;
         }
     }
-
-    property variant screenSource: ShaderEffectSource {
-        sourceItem: root.parent ? (root.parent.children && root.parent.children.length > 0 ? root.parent.children[0] : root.parent) : null
-        visible: false
-        live: true
-        hideSource: true
-    }
-    source: screenSource
 }
