@@ -1046,7 +1046,7 @@ Item {
                 property: "introSidebar"
                 from: 0.0
                 to: 1.0
-                duration: 240
+                duration: 250
                 easing.type: Easing.OutCubic
             }
         }
@@ -1057,7 +1057,7 @@ Item {
                 property: "introTabs"
                 from: 0.0
                 to: 1.0
-                duration: 320
+                duration: 250
                 easing.type: Easing.Linear
             }
         }

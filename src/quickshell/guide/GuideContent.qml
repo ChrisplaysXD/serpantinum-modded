@@ -44,7 +44,7 @@ Item {
             opacity: isCurrent ? 1.0 : 0.0
 
             Behavior on opacity {
-                NumberAnimation { duration: 140; easing.type: Easing.OutCubic }
+                NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
             }
 
             Binding {
@@ -139,7 +139,7 @@ Item {
                     opacity: isSubCurrent ? 1.0 : 0.0
 
                     Behavior on opacity {
-                        NumberAnimation { duration: 140; easing.type: Easing.OutCubic }
+                        NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
                     }
 
                     function ensureLoaded() {

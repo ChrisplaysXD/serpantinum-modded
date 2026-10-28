@@ -187,8 +187,6 @@ Popup {
             tintColor: ThemeBackend.base
             tintAmount: 0.25
         }
-        border.color: ThemeBackend.surface0
-        border.width: 1
     }
 
     contentItem: ColumnLayout {
@@ -318,8 +316,6 @@ Popup {
             Rectangle {
                 anchors.fill: parent
                 color: "transparent"
-                border.width: 1
-                border.color: Qt.alpha(ThemeBackend.surface2, 0.4)
                 radius: ThemeBackend.borderRadius
             }
         }

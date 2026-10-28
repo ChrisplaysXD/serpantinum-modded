@@ -62,7 +62,7 @@ Item {
             id: headAnim
             target: root
             property: "secondHeadAngle"
-            duration: 320
+            duration: 250
             easing.type: Easing.OutCubic
         }
 
@@ -72,7 +72,7 @@ Item {
                 id: tailAnim
                 target: root
                 property: "secondTailAngle"
-                duration: 320
+                duration: 250
                 easing.type: Easing.OutCubic
             }
         }
@@ -196,7 +196,7 @@ Item {
 
             Behavior on rotation {
                 RotationAnimation {
-                    duration: 350
+                    duration: 400
                     direction: RotationAnimation.Clockwise
                     easing.type: Easing.OutCubic
                 }
@@ -222,7 +222,7 @@ Item {
 
             Behavior on rotation {
                 RotationAnimation {
-                    duration: 350
+                    duration: 400
                     direction: RotationAnimation.Clockwise
                     easing.type: Easing.OutCubic
                 }

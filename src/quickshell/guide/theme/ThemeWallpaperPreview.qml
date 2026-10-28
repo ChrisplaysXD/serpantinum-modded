@@ -226,9 +226,7 @@ Item {
         color: ThemeBackend.mauve
         opacity: wpPreviewContainer.highlightFlash * 0.2
         visible: opacity > 0.001
-        border.color: ThemeBackend.mauve
-        border.width: wpPreviewContainer.highlightFlash > 0.01 ? 2 : 0
-        Behavior on opacity { NumberAnimation { duration: 180 } }
+        Behavior on opacity { NumberAnimation { duration: 150 } }
     }
 
     IconButton {

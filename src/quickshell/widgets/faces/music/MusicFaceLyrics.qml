@@ -285,7 +285,7 @@ Item {
 
                 Behavior on opacity {
                     NumberAnimation {
-                        duration: 350
+                        duration: 400
                         easing.type: Easing.OutQuad
                     }
                 }
