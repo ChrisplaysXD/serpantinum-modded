@@ -237,40 +237,6 @@ SettingsBlob {
 
     SettingsRow {
         rootObj: section.tab.rootObj
-        settingId: "screen_gamma"
-        icon: "󰢫"
-        title: "Screen gamma"
-        description: "Brightness multiplier via hyprsunset (100% = neutral, 200% max)"
-        searchKeywords: "gamma screen display shader curve"
-
-        Draggable {
-            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-            Layout.rightMargin: rootObj.s(8)
-            implicitWidth: rootObj.s(220)
-            implicitHeight: rootObj.s(18)
-            from: 50
-            to: 200
-            stepSize: 5
-            defaultValue: 100
-            showValueBubble: true
-            valueFormatter: function(v) { return Math.round(v) + "%" }
-            value: (section.tab.currentGamma !== undefined ? section.tab.currentGamma : 100)
-            onMoved: function(val) {
-                let rounded = Math.round(val);
-                if (section.tab.currentGamma !== rounded) {
-                    section.tab.currentGamma = rounded;
-                    section.tab.gammaDebounceTimer.restart();
-                }
-            }
-            onDragFinished: {
-                section.tab.gammaDebounceTimer.stop();
-                section.tab.updateGammaSetting();
-            }
-        }
-    }
-
-    SettingsRow {
-        rootObj: section.tab.rootObj
         settingId: "blur_background"
         icon: "󰂵"
         title: I18n.t("guide.theme.blur_background.title", "Add a blurred wallpaper background")
