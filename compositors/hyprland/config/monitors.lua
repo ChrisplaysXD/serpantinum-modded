@@ -3,5 +3,5 @@ hl.monitor({
   mode = "preferred",
   position = "auto",
   scale = 1.0,
-  profile = "srgb",
+  profile = "bt2020",
 })

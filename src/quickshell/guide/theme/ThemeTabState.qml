@@ -35,6 +35,7 @@ GuideTab {
     property bool useMatugen: themeSettings.matugen !== undefined ? themeSettings.matugen : true
     property string currentThemeSource: themeSettings.themeSource !== undefined ? themeSettings.themeSource : "wallpaper"
     property int currentVibrance: themeSettings.vibrance !== undefined ? Number(themeSettings.vibrance) : 65
+    property int currentGamma: themeSettings.gamma !== undefined ? Number(themeSettings.gamma) : 100
 
     property string currentWallpaperDir: Config.getSetting("wallpaperDir", "") || Config.getSetting("wallpaper_dir", "") || Quickshell.env("WALLPAPER_DIR") || (Quickshell.env("HOME") + "/Pictures/Wallpapers")
     property var availableWallpaperDirs: []
@@ -467,6 +468,12 @@ GuideTab {
     }
 
     Timer {
+        id: gammaDebounceTimer
+        interval: 250
+        repeat: false
+        onTriggered: themeTabRoot.updateGammaSetting();
+    }
+    Timer {
         id: reloadThemesTimer
         interval: 150
         repeat: false
@@ -522,6 +529,8 @@ GuideTab {
             themeTabRoot.useMatugen = ts.matugen !== undefined ? ts.matugen : true;
             themeTabRoot.currentThemeSource = ts.themeSource !== undefined ? ts.themeSource : "wallpaper";
             themeTabRoot.currentVibrance = ts.vibrance !== undefined ? Number(ts.vibrance) : 65;
+            themeTabRoot.currentGamma = ts.gamma !== undefined ? Number(ts.gamma) : 100;
+            themeTabRoot.currentGamma = ts.gamma !== undefined ? Number(ts.gamma) : 100;
 
             let wpDir = Config.getSetting("wallpaperDir", "") || Config.getSetting("wallpaper_dir", "");
             if (wpDir && wpDir !== "") {
@@ -574,7 +583,13 @@ GuideTab {
         current.vibrance = themeTabRoot.currentVibrance;
         Config.setSetting("theme", current);
         let scriptPath = Caching.serpantinumDir ? (Caching.serpantinumDir + "/scripts/vibrance.sh") : (Quickshell.env("HOME") + "/.local/share/serpantinum/src/scripts/vibrance.sh");
-        Quickshell.execDetached(["bash", scriptPath, (themeTabRoot.currentVibrance / 100).toFixed(2)]);
+        Quickshell.execDetached(["bash", scriptPath, (themeTabRoot.currentVibrance / 100).toFixed(2), (themeTabRoot.currentGamma / 100).toFixed(2)]);
+    }
+    function updateGammaSetting() {
+        let current = Config.getSetting("theme", themeTabRoot.defaultThemeSettings);
+        current.gamma = themeTabRoot.currentGamma;
+        Config.setSetting("theme", current);
+        Quickshell.execDetached(["bash", "-c", "hyprsunset --gamma " + themeTabRoot.currentGamma]);
     }
 
     function updateThemeSourceSetting(val) {
