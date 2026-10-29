@@ -24,6 +24,7 @@ GuideTab {
     property alias borderRadiusDebounceTimer: borderRadiusDebounceTimer
     property alias elementOpacityDebounceTimer: elementOpacityDebounceTimer
     property alias vibranceDebounceTimer: vibranceDebounceTimer
+    property alias gammaDebounceTimer: gammaDebounceTimer
 
     property var themeSettings: Config.getSetting("theme", defaultThemeSettings)
     property string currentFontFamily: themeSettings.fontFamily !== undefined ? themeSettings.fontFamily : ThemeBackend.fontFamily

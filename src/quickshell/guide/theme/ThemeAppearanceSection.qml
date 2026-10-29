@@ -240,7 +240,7 @@ SettingsBlob {
         settingId: "screen_gamma"
         icon: "󰢫"
         title: "Screen gamma"
-        description: "Gamma curve multiplier via shader (1.0 = neutral)"
+        description: "Display gamma via hyprsunset (100% = neutral; ~65% ≈ gamma 2.4)"
         searchKeywords: "gamma screen display shader curve"
 
         Draggable {
