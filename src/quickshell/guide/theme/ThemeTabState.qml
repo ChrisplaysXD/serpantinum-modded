@@ -586,11 +586,34 @@ GuideTab {
         let scriptPath = Caching.serpantinumDir ? (Caching.serpantinumDir + "/scripts/vibrance.sh") : (Quickshell.env("HOME") + "/.local/share/serpantinum/src/scripts/vibrance.sh");
         Quickshell.execDetached(["bash", scriptPath, (themeTabRoot.currentVibrance / 100).toFixed(2), (themeTabRoot.currentGamma / 100).toFixed(2)]);
     }
+    Process {
+        id: hyprsunsetGammaProcess
+        running: false
+        command: []
+        stdout: StdioCollector {
+            onStreamFinished: {
+                if (this.text.trim() !== "") console.log("[gamma] hyprctl:", this.text.trim());
+            }
+        }
+    }
+
     function updateGammaSetting() {
         let current = Config.getSetting("theme", themeTabRoot.defaultThemeSettings);
         current.gamma = themeTabRoot.currentGamma;
         Config.setSetting("theme", current);
-        Quickshell.execDetached(["bash", "-c", "hyprsunset --gamma " + themeTabRoot.currentGamma]);
+
+        let pct = Math.round(themeTabRoot.currentGamma);
+        let confGamma = (pct / 100).toFixed(2);
+        let confPath = (Quickshell.env("HOME") || "") + "/.config/hypr/hyprsunset.conf";
+        let escapeSed = function(str) { return String(str).replace(/([\/&])/g, '\\$1'); };
+        let cmd =
+            "hyprctl hyprsunset gamma " + pct + " || " +
+            "(systemctl --user start hyprsunset.service && sleep 0.3 && hyprctl hyprsunset gamma " + pct + "); " +
+            "if [ -f \"" + confPath + "\" ]; then " +
+            "sed -i 's/^  gamma = .*/  gamma = " + escapeSed(confGamma) + "/' \"" + confPath + "\"; " +
+            "fi";
+        hyprsunsetGammaProcess.command = ["bash", "-c", cmd];
+        hyprsunsetGammaProcess.running = true;
     }
 
     function updateThemeSourceSetting(val) {
