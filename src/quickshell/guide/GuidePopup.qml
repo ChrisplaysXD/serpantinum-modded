@@ -20,6 +20,7 @@ Item {
     readonly property bool compact: width < s(780)
 
     signal requestLoad(int order)
+    signal releaseTabs()
     signal exitRequested()
 
     property int activationCounter: 0
@@ -841,7 +842,22 @@ Item {
         onTriggered: root.rebuildSearchIndex()
     }
 
+    Timer {
+        id: tabReleaseTimer
+        interval: 600000
+        repeat: false
+        onTriggered: {
+            if (root.visible || root.standalone) return;
+            root.searchLoadCursor = 0;
+            root.releaseTabs();
+        }
+    }
+
     onVisibleChanged: {
+        if (!standalone) {
+            if (visible) tabReleaseTimer.stop();
+            else tabReleaseTimer.restart();
+        }
         if (visible) {
             forceActiveFocus();
             focusTimer.restart();

@@ -107,6 +107,9 @@ Item {
                     function onRequestLoad(order) {
                         if (order === popup.tabLoadOrder(tabContentWrapper.parentTabIndex, -1)) singleTabLoader.ensureLoaded();
                     }
+                    function onReleaseTabs() {
+                        if (popup.currentTab !== tabContentWrapper.parentTabIndex && singleTabLoader.status !== Loader.Null) singleTabLoader.source = "";
+                    }
                 }
 
                 Connections {
@@ -187,6 +190,9 @@ Item {
                         }
                         function onRequestLoad(order) {
                             if (order === popup.tabLoadOrder(tabContentWrapper.parentTabIndex, subIndex)) subTabLoader.ensureLoaded();
+                        }
+                        function onReleaseTabs() {
+                            if (!subTabLoader.isSubCurrent && subTabLoader.status !== Loader.Null) subTabLoader.source = "";
                         }
                     }
 

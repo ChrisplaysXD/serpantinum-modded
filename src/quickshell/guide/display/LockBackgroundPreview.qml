@@ -56,7 +56,7 @@ Item {
             color: ThemeBackend.surface0
         }
 
-        Image {
+        BoundedImage {
             anchors.fill: parent
             visible: opacity > 0 && source !== ""
             opacity: preview.tab.customBackgroundActive ? 0.0 : 1.0
@@ -65,11 +65,10 @@ Item {
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             smooth: true
-            mipmap: true
             cache: false
         }
 
-        Image {
+        BoundedImage {
             anchors.fill: parent
             visible: opacity > 0 && source !== ""
             opacity: preview.tab.customBackgroundActive && !preview.customVideo ? 1.0 : 0.0
@@ -78,7 +77,6 @@ Item {
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             smooth: true
-            mipmap: true
             cache: false
         }
 

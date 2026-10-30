@@ -10,7 +10,6 @@ import Quickshell.Io
 import "../"
 import "../reusables"
 import "../WindowRegistry.js" as WindowRegistry
-import "./EmojiData.js" as EmojiData
 import "./SearchProviders.js" as SearchProviders
 
 PanelWindow {
@@ -756,11 +755,26 @@ PanelWindow {
         emojiDebounceTimer.restart();
     }
 
+    property var emojiSearch: null
+
+    function ensureEmojiSearch() {
+        if (!emojiSearch) {
+            let component = Qt.createComponent(Qt.resolvedUrl("EmojiSearch.qml"));
+            if (component.status === Component.Ready) {
+                emojiSearch = component.createObject(launcherWindow);
+            } else {
+                console.warn("Failed to load emoji search:", component.errorString());
+            }
+        }
+        return emojiSearch;
+    }
+
     function executeEmojiFilter(query) {
         launcherWindow.isKeyboardNav = false;
         if (keyboardNavTimer.running) keyboardNavTimer.stop();
 
-        let results = EmojiData.search(query ? query.trim() : "", 150);
+        let search = ensureEmojiSearch();
+        let results = search ? search.search(query ? query.trim() : "", 150) : [];
         applyEmojiModelItems(results);
     }
 

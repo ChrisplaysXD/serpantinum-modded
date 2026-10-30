@@ -151,7 +151,7 @@ PanelWindow {
     Process {
         id: clipWatcher
         running: true
-        command: ["sh", "-c", "wl-paste --watch echo 1 & w=$!; trap 'kill $w 2>/dev/null' EXIT TERM; while kill -0 $PPID 2>/dev/null && kill -0 $w 2>/dev/null; do sleep 1; done"]
+        command: ["wl-paste", "--watch", "sh", "-c", "trap '' PIPE; echo 1 2>/dev/null || kill \"$PPID\""]
         stdout: SplitParser {
             onRead: (data) => {
                 if (clipboardWindow.isVisible) {

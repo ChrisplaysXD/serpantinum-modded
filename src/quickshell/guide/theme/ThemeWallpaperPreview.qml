@@ -187,14 +187,13 @@ Item {
             }
         }
 
-        Image {
+        BoundedImage {
             id: wpCardImage
             anchors.fill: parent
             source: wpPreviewContainer.tab.isWallpaperVideo ? ("file://" + Caching.getCacheDir("wallpaper") + "/current_wallpaper.png?rev=" + wpPreviewContainer.tab.wallpaperRevision) : (wpPreviewContainer.tab.currentWallpaperPath ? "file://" + wpPreviewContainer.tab.currentWallpaperPath : "")
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             smooth: true
-            mipmap: true
             cache: false
             visible: source !== ""
         }

@@ -134,8 +134,9 @@ Rectangle {
 
     Timer {
         interval: 10000
-        running: true
+        running: typeRoot.visible && (!typeRoot.Window.window || typeRoot.Window.window.visible)
         repeat: true
+        triggeredOnStart: true
         onTriggered: updateTimeText()
     }
 

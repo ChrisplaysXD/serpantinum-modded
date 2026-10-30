@@ -115,7 +115,7 @@ Item {
         anchors.fill: parent
         visible: dockButton.isBeingDragged
         radius: dockButton.cornerRadius
-        color: Qt.alpha(ThemeBackend.surface0, 0.25)
+        color: Qt.alpha(ThemeBackend.mauve, 0.18)
     }
 
     Rectangle {
@@ -123,8 +123,8 @@ Item {
         anchors.fill: parent
         anchors.margins: -dockWindow.s(3)
         radius: dockButton.cornerRadius + dockWindow.s(3)
-        color: "transparent"
-        visible: dockButton.isDropTarget
+        color: Qt.alpha(ThemeBackend.mauve, 0.35)
+        visible: opacity > 0
         opacity: dockButton.isDropTarget ? 1.0 : 0.0
         Behavior on opacity { NumberAnimation { duration: 150 } }
     }

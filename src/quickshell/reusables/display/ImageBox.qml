@@ -89,11 +89,10 @@ Item {
 
         Component {
             id: staticComponent
-            Image {
+            BoundedImage {
                 anchors.fill: parent
                 source: root.source
                 fillMode: root.fillMode
-                sourceSize: Qt.size(parent.width, parent.height)
                 asynchronous: true
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter

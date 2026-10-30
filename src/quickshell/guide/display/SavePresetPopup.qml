@@ -239,8 +239,9 @@ Popup {
                     scale: (currentPreviewBox.width > 0 ? currentPreviewBox.width : 1) / currentPreviewBox.sWidth
                     enabled: false
 
-                    Image {
+                    BoundedImage {
                         anchors.fill: parent
+                        devicePixelRatio: ((Screen.devicePixelRatio && Screen.devicePixelRatio > 0) ? Screen.devicePixelRatio : 1) * parent.scale
                         source: (savePresetPopup.visible && savePresetPopup.targetMonitor) ? savePresetPopup.getWallpaperSource(savePresetPopup.targetMonitor) : ""
                         fillMode: Image.PreserveAspectCrop
                         smooth: true

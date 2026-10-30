@@ -17,6 +17,8 @@ Scope {
     property int usedSeconds: 0
     property double lastStamp: -1
     property bool baselineReady: false
+    readonly property string eventDir: Caching.getRunDir("focustime")
+    property string eventPath: ""
 
     readonly property var appEntry: appClass !== "" ? DesktopEntries.heuristicLookup(appClass) : null
     readonly property string displayName: (appEntry && appEntry.name) ? appEntry.name : (appName || appClass)
@@ -37,7 +39,7 @@ Scope {
 
     FileView {
         id: eventFile
-        path: Caching.getRunDir("focustime") + "/limit_event.json"
+        path: overlayScope.eventPath
         watchChanges: true
         printErrors: false
         onFileChanged: reload()
@@ -63,10 +65,10 @@ Scope {
     }
 
     Timer {
-        interval: 2000
-        repeat: true
+        interval: 1000
+        repeat: false
         running: true
-        onTriggered: eventFile.reload()
+        onTriggered: overlayScope.eventPath = overlayScope.eventDir + "/limit_event.json"
     }
 
     Variants {

@@ -238,13 +238,24 @@ Item {
         }
     }
 
-    MediaPlayer {
-        id: globalPreviewPlayer
-        audioOutput: AudioOutput { muted: true }
-        loops: MediaPlayer.Infinite
+    Component {
+        id: previewPlayerComponent
+        MediaPlayer {
+            audioOutput: AudioOutput { muted: true }
+            loops: MediaPlayer.Infinite
+        }
+    }
+
+    property var globalPreviewPlayer: null
+    readonly property bool previewPlaying: !!globalPreviewPlayer && globalPreviewPlayer.playbackState === MediaPlayer.PlayingState
+
+    function ensurePreviewPlayer() {
+        if (!globalPreviewPlayer) globalPreviewPlayer = previewPlayerComponent.createObject(window);
+        return globalPreviewPlayer;
     }
 
     function resetPreviewPlayer() {
+        if (!globalPreviewPlayer) return;
         if (globalPreviewPlayer.playbackState === MediaPlayer.PlayingState) {
             globalPreviewPlayer.stop();
         }
@@ -1662,7 +1673,7 @@ Item {
 
             ListView.onPooled: {
                 imageRetryTimer.stop();
-                if (delegateRoot.isPlayingVideo || globalPreviewPlayer.videoOutput === previewOutput) {
+                if (delegateRoot.isPlayingVideo || (window.globalPreviewPlayer && previewOutputLoader.item && window.globalPreviewPlayer.videoOutput === previewOutputLoader.item)) {
                     window.resetPreviewPlayer();
                     delegateRoot.isPlayingVideo = false;
                 }
@@ -1706,16 +1717,17 @@ Item {
                     isPlayingVideo = false;
                 } else {
                     window.resetPreviewPlayer();
-                    globalPreviewPlayer.videoOutput = previewOutput;
-                    globalPreviewPlayer.source = delegateRoot.itemFileUrl !== "" ? delegateRoot.itemFileUrl : ("file://" + window.srcDir + "/" + window.getOriginalFileName(delegateRoot.safeFileName));
+                    let player = window.ensurePreviewPlayer();
                     isPlayingVideo = true;
-                    globalPreviewPlayer.play();
+                    player.videoOutput = previewOutputLoader.item;
+                    player.source = delegateRoot.itemFileUrl !== "" ? delegateRoot.itemFileUrl : ("file://" + window.srcDir + "/" + window.getOriginalFileName(delegateRoot.safeFileName));
+                    player.play();
                 }
             }
 
             onIsVisuallyEnlargedChanged: {
                 if (!isVisuallyEnlarged) {
-                    if (globalPreviewPlayer.videoOutput === previewOutput) {
+                    if (window.globalPreviewPlayer && previewOutputLoader.item && window.globalPreviewPlayer.videoOutput === previewOutputLoader.item) {
                         window.resetPreviewPlayer();
                     }
                     isPlayingVideo = false;
@@ -1822,15 +1834,20 @@ Item {
                             transform: Matrix4x4 { property real s: -window.skewFactor; matrix: Qt.matrix4x4(1, s, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) }
                         }
 
-                        VideoOutput {
-                            id: previewOutput
+                        Loader {
+                            id: previewOutputLoader
                             anchors.centerIn: parent ? parent : undefined
                             anchors.horizontalCenterOffset: window.s(-50)
                             width: (window.itemWidth * 1.5) + ((window.itemHeight + window.s(30)) * Math.abs(window.skewFactor)) + window.s(50)
                             height: window.itemHeight + window.s(30)
-                            fillMode: VideoOutput.PreserveAspectCrop
-                            visible: delegateRoot.isPlayingVideo && globalPreviewPlayer.playbackState === MediaPlayer.PlayingState
+                            active: delegateRoot.isPlayingVideo
+                            visible: delegateRoot.isPlayingVideo && window.previewPlaying
                             transform: Matrix4x4 { property real s: -window.skewFactor; matrix: Qt.matrix4x4(1, s, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) }
+                            sourceComponent: Component {
+                                VideoOutput {
+                                    fillMode: VideoOutput.PreserveAspectCrop
+                                }
+                            }
                         }
 
                         IconButton {
@@ -1841,10 +1858,10 @@ Item {
                             size: window.s(50)
                             cornerRadius: window.s(16)
                             iconFontSize: window.s(20)
-                            buttonIcon: delegateRoot.isPlayingVideo && globalPreviewPlayer.playbackState === MediaPlayer.PlayingState ? "󰏤" : "󰐊"
+                            buttonIcon: delegateRoot.isPlayingVideo && window.previewPlaying ? "󰏤" : "󰐊"
                             accentColor: Qt.rgba(ThemeBackend.surface0.r, ThemeBackend.surface0.g, ThemeBackend.surface0.b, 0.65)
                             textColor: ThemeBackend.text
-                            opacity: (delegateRoot.isPlayingVideo && globalPreviewPlayer.playbackState === MediaPlayer.PlayingState) ? (isHoveredOrHighlighted ? 0.9 : 0.18) : 0.88
+                            opacity: (delegateRoot.isPlayingVideo && window.previewPlaying) ? (isHoveredOrHighlighted ? 0.9 : 0.18) : 0.88
                             Behavior on opacity { NumberAnimation { duration: 250 } }
                             enabled: !window.isApplying
                             onClicked: delegateRoot.toggleVideoPlay()

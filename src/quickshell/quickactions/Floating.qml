@@ -21,6 +21,24 @@ Variants {
             WlrLayershell.keyboardFocus: shouldHaveKeyboardFocus ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
             exclusionMode: ExclusionMode.Ignore
             color: "transparent"
+            visible: surfaceNeeded
+
+            readonly property real screenWidth: (screen && screen.width > 0) ? screen.width : width
+            readonly property real screenHeight: (screen && screen.height > 0) ? screen.height : height
+
+            readonly property bool surfaceActive: isSidebarVisible || isPeekVisible || isPinned || isExpanded
+                || visibleProgress > 0.001 || expandProgress > 0.001
+                || pendingMode !== "" || edgeTransitionTimer.running || teleportTimer.running
+            readonly property bool surfaceNeeded: surfaceActive || surfaceLingerTimer.running
+
+            onSurfaceActiveChanged: {
+                if (!surfaceActive) surfaceLingerTimer.restart();
+            }
+
+            Timer {
+                id: surfaceLingerTimer
+                interval: 2000
+            }
 
             readonly property bool shouldHaveKeyboardFocus: isSidebarVisible && (isExpanded || hasInputFocus)
 
@@ -80,8 +98,15 @@ Variants {
                 }
             }
 
+            property bool modulesWarm: false
+
+            onIsPeekVisibleChanged: {
+                if (isPeekVisible) modulesWarm = true;
+            }
+
             onIsSidebarVisibleChanged: {
                 if (isSidebarVisible) {
+                    modulesWarm = true;
                     SysData.prewarm();
                     grabKeyboardFocus();
                     Qt.callLater(grabKeyboardFocus);
@@ -95,9 +120,9 @@ Variants {
 
             property real barInset: barAutohide ? 0 : s(48)
             property real topBound: barPosition === "top" ? barInset : 0
-            property real bottomBound: floatingWidget.height - (barPosition === "bottom" ? barInset : 0)
+            property real bottomBound: floatingWidget.screenHeight - (barPosition === "bottom" ? barInset : 0)
             property real leftBound: barPosition === "left" ? barInset : 0
-            property real rightBound: floatingWidget.width - (barPosition === "right" ? barInset : 0)
+            property real rightBound: floatingWidget.screenWidth - (barPosition === "right" ? barInset : 0)
 
             property real edgeHitSize: Math.max(2, Math.round(s(3)))
 
@@ -157,11 +182,11 @@ Variants {
                 return baseLen * 1.2;
             }
 
-            property real dockHStart: Math.max(leftBound, Math.round((floatingWidget.width - dockLength) / 2))
-            property real dockHEnd: Math.min(rightBound, Math.round((floatingWidget.width + dockLength) / 2))
+            property real dockHStart: Math.max(leftBound, Math.round((floatingWidget.screenWidth - dockLength) / 2))
+            property real dockHEnd: Math.min(rightBound, Math.round((floatingWidget.screenWidth + dockLength) / 2))
 
-            property real dockVStart: Math.max(topBound, Math.round((floatingWidget.height - dockLength) / 2))
-            property real dockVEnd: Math.min(bottomBound, Math.round((floatingWidget.height + dockLength) / 2))
+            property real dockVStart: Math.max(topBound, Math.round((floatingWidget.screenHeight - dockLength) / 2))
+            property real dockVEnd: Math.min(bottomBound, Math.round((floatingWidget.screenHeight + dockLength) / 2))
 
             readonly property bool isDockOnTop: isDockActive && dockPosition === "top"
             readonly property real topEdgeA_x: leftBound
@@ -190,7 +215,65 @@ Variants {
             readonly property bool isAnyEdgeHovered: topEdgeA.containsMouse || topEdgeB.containsMouse ||
                                                      bottomEdgeA.containsMouse || bottomEdgeB.containsMouse ||
                                                      leftEdgeA.containsMouse || leftEdgeB.containsMouse ||
-                                                     rightEdgeA.containsMouse || rightEdgeB.containsMouse
+                                                     rightEdgeA.containsMouse || rightEdgeB.containsMouse ||
+                                                     topTrigger.hovered || bottomTrigger.hovered ||
+                                                     leftTrigger.hovered || rightTrigger.hovered
+
+            FloatingEdgeTrigger {
+                id: topTrigger
+                screen: floatingWidget.screen
+                host: floatingWidget
+                edge: "top"
+                visible: !floatingWidget.visible && (lengthA > 0 || lengthB > 0)
+                inset: floatingWidget.topBound
+                thickness: floatingWidget.edgeHitSize
+                startA: floatingWidget.topEdgeA_x
+                lengthA: floatingWidget.topEdgeA_w
+                startB: floatingWidget.topEdgeB_x
+                lengthB: floatingWidget.topEdgeB_w
+            }
+
+            FloatingEdgeTrigger {
+                id: bottomTrigger
+                screen: floatingWidget.screen
+                host: floatingWidget
+                edge: "bottom"
+                visible: !floatingWidget.visible && (lengthA > 0 || lengthB > 0)
+                inset: floatingWidget.screenHeight - floatingWidget.bottomBound
+                thickness: floatingWidget.edgeHitSize
+                startA: floatingWidget.bottomEdgeA_x
+                lengthA: floatingWidget.bottomEdgeA_w
+                startB: floatingWidget.bottomEdgeB_x
+                lengthB: floatingWidget.bottomEdgeB_w
+            }
+
+            FloatingEdgeTrigger {
+                id: leftTrigger
+                screen: floatingWidget.screen
+                host: floatingWidget
+                edge: "left"
+                visible: !floatingWidget.visible && (lengthA > 0 || lengthB > 0)
+                inset: floatingWidget.leftBound
+                thickness: floatingWidget.edgeHitSize
+                startA: floatingWidget.leftEdgeA_y
+                lengthA: floatingWidget.leftEdgeA_h
+                startB: floatingWidget.leftEdgeB_y
+                lengthB: floatingWidget.leftEdgeB_h
+            }
+
+            FloatingEdgeTrigger {
+                id: rightTrigger
+                screen: floatingWidget.screen
+                host: floatingWidget
+                edge: "right"
+                visible: !floatingWidget.visible && (lengthA > 0 || lengthB > 0)
+                inset: floatingWidget.screenWidth - floatingWidget.rightBound
+                thickness: floatingWidget.edgeHitSize
+                startA: floatingWidget.rightEdgeA_y
+                lengthA: floatingWidget.rightEdgeA_h
+                startB: floatingWidget.rightEdgeB_y
+                lengthB: floatingWidget.rightEdgeB_h
+            }
 
             function handleEdgeEntered(edge, mousePos) {
                 SysData.prewarm();
@@ -415,7 +498,7 @@ Variants {
                 }
                 floatingWidget.activeIndex = tabIndex;
                 let sideEdge = (floatingWidget.barPosition === "left") ? "right" : "left";
-                let centerPos = floatingWidget.height / 2;
+                let centerPos = floatingWidget.screenHeight / 2;
                 floatingWidget.useGraceTimer = true;
                 floatingWidget.showSidebar(sideEdge, centerPos, true);
                 hideTimer.restart();
@@ -813,7 +896,7 @@ Variants {
             property bool disableAnim: true
 
             property string activeEdge: barPosition === "left" ? "right" : "left"
-            property real currentPos: (activeEdge === "left" || activeEdge === "right") ? (floatingWidget.height / 2) : (floatingWidget.width / 2)
+            property real currentPos: (activeEdge === "left" || activeEdge === "right") ? (floatingWidget.screenHeight / 2) : (floatingWidget.screenWidth / 2)
 
             property real baseSidebarH: {
                 let count = floatingWidget.tabCount;
@@ -1441,9 +1524,12 @@ Variants {
                                 anchors.leftMargin: floatingWidget.s(4)
                                 anchors.rightMargin: floatingWidget.s(4)
 
+                                readonly property bool isEager: modelData.indexOf("Timer") !== -1
+
                                 visible: index === floatingWidget.activeIndex && floatingWidget.expandProgress > 0.01
+                                active: isEager || floatingWidget.modulesWarm || (isCurrentTarget && floatingWidget.isExpanded)
                                 source: modelData
-                                asynchronous: false
+                                asynchronous: !isEager
 
                                 property var scaleFunc: floatingWidget.s
                                 property var mochaColors: ThemeBackend
@@ -1632,8 +1718,13 @@ Variants {
                                             : (pinMouse.containsMouse
                                                 ? Qt.rgba(ThemeBackend.mauve.r, ThemeBackend.mauve.g, ThemeBackend.mauve.b, 0.25)
                                                 : "transparent"))
+                                    border.width: floatingWidget.s(2)
+                                    border.color: floatingWidget.isPinned
+                                        ? ThemeBackend.mauve
+                                        : Qt.rgba(ThemeBackend.text.r, ThemeBackend.text.g, ThemeBackend.text.b, 0.2)
 
                                     Behavior on color { ColorAnimation { duration: 250 } }
+                                    Behavior on border.color { ColorAnimation { duration: 250 } }
 
                                     MouseArea {
                                         id: pinMouse
