@@ -809,7 +809,7 @@
       "empty_title": "Keine Autostart-Anwendungen",
       "empty_desc": "Klicken Sie auf 'Anwendung hinzufügen', um Befehle, Binärdateien, Verzögerungen und Wiederholungen festzulegen.",
       "name_label": "Name",
-      "name_placeholder": "z. B. Discord, EasyEffects, Skript",
+      "name_placeholder": "z. B. Discord, Telegram, Skript",
       "exec_label": "Ausführungsbefehl",
       "exec_placeholder": "Binärpfad oder Name mit Flags (z. B. discord --start-minimized)",
       "browse_file": "Datei durchsuchen",
@@ -1161,7 +1161,9 @@
     "equalizer": "Equalizer",
     "eq": {
       "apply": "Anwenden",
-      "saved": "Gespeichert"
+      "saved": "Gespeichert",
+      "dynamic": "Dynamisch",
+      "dynamic_active": "Passt sich deinem Klang an"
     },
     "audio": {
       "title": "Audio",
@@ -1732,6 +1734,11 @@
       "status_running": "Serpantinum-Daemon läuft (PID: {PID}).",
       "status_stopped": "Serpantinum-Daemon läuft nicht.",
       "unknown_arg": "Unbekanntes Argument: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects ist noch aktiv",
+      "body": "Serpantinum hat jetzt eine eigene Audio-Engine, und EasyEffects kann sie stören. Wurde EasyEffects nur für Serpantinum genutzt, den Start bei der Anmeldung deaktivieren."
     }
   },
   "installer": {

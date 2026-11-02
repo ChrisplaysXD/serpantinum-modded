@@ -1117,7 +1117,9 @@
     "equalizer": "Equalizer",
     "eq": {
       "apply": "Toepassen",
-      "saved": "Opgeslagen"
+      "saved": "Opgeslagen",
+      "dynamic": "Dynamisch",
+      "dynamic_active": "Past zich aan je geluid aan"
     },
     "presets": {
       "flat": "Vlak",
@@ -1685,6 +1687,11 @@
       "status_running": "Serpantinum-daemon is actief (PID: {PID}).",
       "status_stopped": "Serpantinum-daemon is niet actief.",
       "unknown_arg": "Onbekend argument: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects is nog ingeschakeld",
+      "body": "Serpantinum heeft nu een eigen audio-engine en EasyEffects kan daarmee storen. Gebruikte u EasyEffects alleen voor Serpantinum, zorg dan dat het niet meer bij het aanmelden start."
     }
   },
   "installer": {

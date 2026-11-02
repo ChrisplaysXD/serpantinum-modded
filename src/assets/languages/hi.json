@@ -1117,7 +1117,9 @@
     "equalizer": "इक्वलाइज़र",
     "eq": {
       "apply": "लागू करें",
-      "saved": "सहेजा गया"
+      "saved": "सहेजा गया",
+      "dynamic": "डायनामिक",
+      "dynamic_active": "आपकी ध्वनि के अनुसार ढल रहा है"
     },
     "presets": {
       "flat": "फ़्लैट",
@@ -1685,6 +1687,11 @@
       "status_running": "Serpantinum डेमन चल रहा है (PID: {PID})।",
       "status_stopped": "Serpantinum डेमन नहीं चल रहा है।",
       "unknown_arg": "अज्ञात तर्क: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects अभी भी चालू है",
+      "body": "Serpantinum के पास अब अपना ऑडियो इंजन है, और EasyEffects इसमें बाधा डाल सकता है। अगर आप EasyEffects का उपयोग केवल Serpantinum के लिए करते थे, तो लॉगिन पर इसका अपने-आप शुरू होना बंद करें।"
     }
   },
   "installer": {

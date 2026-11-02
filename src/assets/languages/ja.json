@@ -143,7 +143,9 @@
     "equalizer": "イコライザー",
     "eq": {
       "apply": "適用",
-      "saved": "保存済み"
+      "saved": "保存済み",
+      "dynamic": "ダイナミック",
+      "dynamic_active": "サウンドに合わせて調整中"
     },
     "presets": {
       "flat": "フラット",
@@ -711,6 +713,11 @@
       "status_running": "Serpantinum デーモンが実行中です (PID: {PID})。",
       "status_stopped": "Serpantinum デーモンは実行されていません。",
       "unknown_arg": "不明な引数: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects がまだ有効です",
+      "body": "Serpantinum に独自のオーディオエンジンが搭載され、EasyEffects はそれと干渉する可能性があります。EasyEffects を Serpantinum のためだけに使っていた場合は、ログイン時に起動しないようにしてください。"
     }
   },
   "installer": {

@@ -792,7 +792,7 @@
       "empty_title": "Немає програм в автозапуску",
       "empty_desc": "Натисніть «додати програму», щоб вказати команди, бінарники, затримку та кількість запусків.",
       "name_label": "Назва",
-      "name_placeholder": "наприклад, discord, EasyEffects, скрипт",
+      "name_placeholder": "наприклад, discord, Telegram, скрипт",
       "exec_label": "Команда / виконуваний файл",
       "exec_placeholder": "Шлях до бінарника або команда з прапорцями (наприклад, discord --start-minimized)",
       "browse_file": "Обрати файл",
@@ -1140,7 +1140,9 @@
     "equalizer": "Еквалайзер",
     "eq": {
       "apply": "Застосувати",
-      "saved": "Збережено"
+      "saved": "Збережено",
+      "dynamic": "Динамічний",
+      "dynamic_active": "Підлаштовується під ваш звук"
     },
     "audio": {
       "title": "Аудіо",
@@ -1708,6 +1710,11 @@
       "status_running": "Службу serpantinum запущено (PID: {PID}).",
       "status_stopped": "Службу serpantinum не запущено.",
       "unknown_arg": "Невідомий аргумент: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects досі увімкнено",
+      "body": "Тепер Serpantinum має власний аудіорушій, і EasyEffects може йому заважати. Якщо ви використовували EasyEffects лише для Serpantinum, вимкніть його запуск під час входу в систему."
     }
   },
   "installer": {

@@ -1117,7 +1117,9 @@
     "equalizer": "Equalizador",
     "eq": {
       "apply": "Aplicar",
-      "saved": "Salvo"
+      "saved": "Salvo",
+      "dynamic": "Dinâmico",
+      "dynamic_active": "Adaptando-se ao seu som"
     },
     "audio": {
       "title": "Áudio",
@@ -1685,6 +1687,11 @@
       "status_running": "Daemon do serpantinum em execução (PID: {PID}).",
       "status_stopped": "O daemon do serpantinum não está em execução.",
       "unknown_arg": "Argumento desconhecido: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "O EasyEffects ainda está ativado",
+      "body": "O Serpantinum agora tem seu próprio mecanismo de áudio, e o EasyEffects pode interferir nele. Se você usava o EasyEffects só para o Serpantinum, impeça que ele inicie ao entrar na sessão."
     }
   },
   "installer": {

@@ -1117,7 +1117,9 @@
     "equalizer": "Еквалайзер",
     "eq": {
       "apply": "Прилагане",
-      "saved": "Запазено"
+      "saved": "Запазено",
+      "dynamic": "Динамичен",
+      "dynamic_active": "Адаптира се към вашия звук"
     },
     "presets": {
       "flat": "Плосък",
@@ -1685,6 +1687,11 @@
       "status_running": "Демонът на Serpantinum работи (PID: {PID}).",
       "status_stopped": "Демонът на Serpantinum не работи.",
       "unknown_arg": "Неизвестен аргумент: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects все още е активен",
+      "body": "Serpantinum вече има собствен аудио двигател и EasyEffects може да му пречи. Ако сте използвали EasyEffects само за Serpantinum, спрете стартирането му при вход."
     }
   },
   "installer": {

@@ -180,6 +180,7 @@ Item {
             freqFetcher.running = false;
             btConnectSimTimer.stop();
             btConnectDelayTimer.stop();
+            btLinkDropTimer.stop();
             busyTimeout.stop();
             failClearTimer.stop();
             btRebuildDebounce.stop();
@@ -190,6 +191,7 @@ Item {
             popupWindowRoot.pendingWifiId = "";
             popupWindowRoot.pendingWifiSsid = "";
             popupWindowRoot.pendingPairThenConnect = "";
+            popupWindowRoot.connectAfterLinkDrop = "";
             popupWindowRoot.btOpsInFlight = ({});
             popupWindowRoot.hoveredCardCount = 0;
             popupWindowRoot.disconnectHoverCount = 0;
@@ -300,7 +302,14 @@ Item {
                 Connections {
                     target: device || null
                     ignoreUnknownSignals: true
-                    function onConnectedChanged() { popupWindowRoot.requestBtRebuild(); }
+                    function onConnectedChanged() {
+                        popupWindowRoot.requestBtRebuild();
+                        if (device && !device.connected && popupWindowRoot.connectAfterLinkDrop === device.address) {
+                            popupWindowRoot.connectAfterLinkDrop = "";
+                            btLinkDropTimer.stop();
+                            popupWindowRoot.connectPairedDevice(device.address);
+                        }
+                    }
                     function onBatteryChanged() { popupWindowRoot.requestBtRebuild(); }
                     function onBatteryAvailableChanged() { popupWindowRoot.requestBtRebuild(); }
                     function onStateChanged() { popupWindowRoot.requestBtRebuild(); }
@@ -308,19 +317,15 @@ Item {
                         popupWindowRoot.requestBtRebuild();
                         if (device && device.paired && popupWindowRoot.pendingPairThenConnect === device.address) {
                             popupWindowRoot.pendingPairThenConnect = "";
-                            let mac = device.address;
-                            popupWindowRoot.withBtOpLock(mac, function() {
-                                let devList = popupWindowRoot.getBtDevicesList();
-                                let d = null;
-                                for (let i = 0; i < devList.length; i++) {
-                                    if (devList[i] && devList[i].address === mac) { d = devList[i]; break; }
-                                }
-                                if (!d) return;
-                                d.connect();
-                                btConnectSimTimer.targetId = popupWindowRoot.connectingId;
-                                btConnectSimTimer.attemptId = popupWindowRoot.activeConnectId;
-                                btConnectSimTimer.restart();
-                            });
+                            if (device.connected) {
+                                // BlueZ still reports the pairing link as connected, so connect() would be
+                                // ignored ("already connected") and the device would stay paired but disconnected.
+                                // Connect once that link drops (onConnectedChanged).
+                                popupWindowRoot.connectAfterLinkDrop = device.address;
+                                btLinkDropTimer.restart();
+                                return;
+                            }
+                            popupWindowRoot.connectPairedDevice(device.address);
                         }
                     }
                     function onTrustedChanged() { popupWindowRoot.requestBtRebuild(); }
@@ -696,6 +701,25 @@ Item {
 
     property var btOpsInFlight: ({})
     property string pendingPairThenConnect: ""
+    property string connectAfterLinkDrop: ""
+
+    function connectPairedDevice(mac) {
+        popupWindowRoot.withBtOpLock(mac, function() {
+            let devList = popupWindowRoot.getBtDevicesList();
+            let d = null;
+            for (let i = 0; i < devList.length; i++) {
+                if (devList[i] && devList[i].address === mac) { d = devList[i]; break; }
+            }
+            if (!d) return;
+            d.connect();
+            btConnectSimTimer.targetId = popupWindowRoot.connectingId;
+            btConnectSimTimer.attemptId = popupWindowRoot.activeConnectId;
+            btConnectSimTimer.restart();
+        });
+    }
+
+    // If the pairing link never drops, the device stayed connected and there is nothing left to do
+    Timer { id: btLinkDropTimer; interval: 15000; onTriggered: popupWindowRoot.connectAfterLinkDrop = "" }
 
     function isBtOpBusy(mac) {
         return !!popupWindowRoot.btOpsInFlight[mac];
@@ -1640,7 +1664,7 @@ Item {
                     return calcActiveBeams();
                 }
 
-                property real beamCount: Math.min(8.0, activeBeams.length)
+                property real beamCount: Math.min(16.0, activeBeams.length)
                 property real coreRadius: {
                     var _tick = popupWindowRoot.globalOrbitAngle;
                     var r = 0;
@@ -1658,6 +1682,14 @@ Item {
                 property vector4d beam5: activeBeams.length > 5 ? activeBeams[5] : Qt.vector4d(-1, -1, -1, -1)
                 property vector4d beam6: activeBeams.length > 6 ? activeBeams[6] : Qt.vector4d(-1, -1, -1, -1)
                 property vector4d beam7: activeBeams.length > 7 ? activeBeams[7] : Qt.vector4d(-1, -1, -1, -1)
+                property vector4d beam8: activeBeams.length > 8 ? activeBeams[8] : Qt.vector4d(-1, -1, -1, -1)
+                property vector4d beam9: activeBeams.length > 9 ? activeBeams[9] : Qt.vector4d(-1, -1, -1, -1)
+                property vector4d beam10: activeBeams.length > 10 ? activeBeams[10] : Qt.vector4d(-1, -1, -1, -1)
+                property vector4d beam11: activeBeams.length > 11 ? activeBeams[11] : Qt.vector4d(-1, -1, -1, -1)
+                property vector4d beam12: activeBeams.length > 12 ? activeBeams[12] : Qt.vector4d(-1, -1, -1, -1)
+                property vector4d beam13: activeBeams.length > 13 ? activeBeams[13] : Qt.vector4d(-1, -1, -1, -1)
+                property vector4d beam14: activeBeams.length > 14 ? activeBeams[14] : Qt.vector4d(-1, -1, -1, -1)
+                property vector4d beam15: activeBeams.length > 15 ? activeBeams[15] : Qt.vector4d(-1, -1, -1, -1)
 
                 fragmentShader: "file://" + Caching.serpantinumDir + "/assets/shaders/vfx/node_beams_clipped.frag.qsb"
             }

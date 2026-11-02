@@ -1117,7 +1117,9 @@
     "equalizer": "Bộ cân chỉnh âm thanh",
     "eq": {
       "apply": "Áp dụng",
-      "saved": "Đã lưu"
+      "saved": "Đã lưu",
+      "dynamic": "Động",
+      "dynamic_active": "Đang thích ứng với âm thanh của bạn"
     },
     "audio": {
       "title": "Âm thanh",
@@ -1685,6 +1687,11 @@
       "status_running": "Daemon Serpantinum đang chạy (PID: {PID}).",
       "status_stopped": "Daemon Serpantinum không chạy.",
       "unknown_arg": "Đối số không xác định: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects vẫn đang bật",
+      "body": "Serpantinum giờ đã có công cụ âm thanh riêng và EasyEffects có thể gây xung đột. Nếu bạn chỉ dùng EasyEffects cho Serpantinum, hãy tắt việc tự khởi động khi đăng nhập."
     }
   },
   "installer": {

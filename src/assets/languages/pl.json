@@ -146,7 +146,9 @@
     "equalizer": "Korektor",
     "eq": {
       "apply": "Zastosuj",
-      "saved": "Zapisano"
+      "saved": "Zapisano",
+      "dynamic": "Dynamiczny",
+      "dynamic_active": "Dostosowuje się do twojego dźwięku"
     },
     "presets": {
       "flat": "Płaski",
@@ -714,6 +716,11 @@
       "status_running": "Demon Serpantinum jest uruchomiony (PID: {PID}).",
       "status_stopped": "Demon Serpantinum nie jest uruchomiony.",
       "unknown_arg": "Nieznany argument: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects jest nadal włączony",
+      "body": "Serpantinum ma teraz własny silnik dźwięku, a EasyEffects może mu przeszkadzać. Jeśli EasyEffects służył Ci tylko do Serpantinum, wyłącz jego uruchamianie przy logowaniu."
     }
   },
   "installer": {

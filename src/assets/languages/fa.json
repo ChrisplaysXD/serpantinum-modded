@@ -1117,7 +1117,9 @@
     "equalizer": "اکولایزر",
     "eq": {
       "apply": "اِعمال",
-      "saved": "ذخیره شد"
+      "saved": "ذخیره شد",
+      "dynamic": "پویا",
+      "dynamic_active": "در حال سازگاری با صدای شما"
     },
     "presets": {
       "flat": "یکنواخت",
@@ -1685,6 +1687,11 @@
       "status_running": "دیمن serpantinum در حال اجرا است (PID: {PID}).",
       "status_stopped": "دیمن serpantinum در حال اجرا نیست.",
       "unknown_arg": "آرگومان ناشناخته: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects هنوز فعال است",
+      "body": "Serpantinum اکنون موتور صوتی خودش را دارد و EasyEffects ممکن است با آن تداخل کند. اگر EasyEffects را فقط برای Serpantinum استفاده می‌کردید، اجرای خودکار آن هنگام ورود را غیرفعال کنید."
     }
   },
   "installer": {

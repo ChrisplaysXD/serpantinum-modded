@@ -1117,7 +1117,9 @@
     "equalizer": "均衡器",
     "eq": {
       "apply": "应用",
-      "saved": "已保存"
+      "saved": "已保存",
+      "dynamic": "动态",
+      "dynamic_active": "正在适应你的声音"
     },
     "presets": {
       "flat": "平直",
@@ -1685,6 +1687,11 @@
       "status_running": "Serpantinum 守护进程正在运行 (PID: {PID})。",
       "status_stopped": "Serpantinum 守护进程未运行。",
       "unknown_arg": "未知参数：{ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects 仍处于启用状态",
+      "body": "Serpantinum 现在拥有自己的音频引擎，EasyEffects 可能会与其冲突。如果你只是为 Serpantinum 使用 EasyEffects，请关闭它的登录自启动。"
     }
   },
   "installer": {

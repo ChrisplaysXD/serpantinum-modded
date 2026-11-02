@@ -809,7 +809,7 @@
       "empty_title": "Нет приложений в автозапуске",
       "empty_desc": "Нажмите «добавить приложение», чтобы указать команды, бинарники, задержку и количество запусков.",
       "name_label": "Название",
-      "name_placeholder": "например, discord, EasyEffects, скрипт",
+      "name_placeholder": "например, discord, Telegram, скрипт",
       "exec_label": "Команда / исполняемый файл",
       "exec_placeholder": "Путь к бинарнику или команда с флагами (например, discord --start-minimized)",
       "browse_file": "Выбрать файл",
@@ -1161,7 +1161,9 @@
     "equalizer": "Эквалайзер",
     "eq": {
       "apply": "Применить",
-      "saved": "Сохранено"
+      "saved": "Сохранено",
+      "dynamic": "Динамический",
+      "dynamic_active": "Подстраивается под ваш звук"
     },
     "audio": {
       "title": "Аудио",
@@ -1733,6 +1735,11 @@
       "status_running": "Служба serpantinum запущена (PID: {PID}).",
       "status_stopped": "Служба serpantinum не запущена.",
       "unknown_arg": "Неизвестный аргумент: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects всё ещё включён",
+      "body": "Теперь у Serpantinum есть собственный аудиодвижок, и EasyEffects может ему мешать. Если вы использовали EasyEffects только для Serpantinum, отключите его запуск при входе в систему."
     }
   },
   "installer": {

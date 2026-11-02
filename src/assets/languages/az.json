@@ -1111,7 +1111,9 @@
     "equalizer": "Səs tezliyi tənzimləyicisi",
     "eq": {
       "apply": "Tətbiq et",
-      "saved": "Saxlanılıb"
+      "saved": "Saxlanılıb",
+      "dynamic": "Dinamik",
+      "dynamic_active": "Səsinizə uyğunlaşır"
     },
     "audio": {
       "title": "Səs",
@@ -1679,6 +1681,11 @@
       "status_running": "Serpantinum arxa plan xidməti işləyir (PID: {PID}).",
       "status_stopped": "Serpantinum arxa plan xidməti işləmir.",
       "unknown_arg": "Naməlum arqument: {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects hələ də aktivdir",
+      "body": "Serpantinum artıq öz səs mühərrikinə malikdir və EasyEffects ona mane ola bilər. EasyEffects-dən yalnız Serpantinum üçün istifadə edirdinizsə, onun sistemə girişdə başlamasını söndürün."
     }
   },
   "installer": {

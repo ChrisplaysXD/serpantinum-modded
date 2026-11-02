@@ -1117,7 +1117,9 @@
     "equalizer": "等化器",
     "eq": {
       "apply": "套用",
-      "saved": "已儲存"
+      "saved": "已儲存",
+      "dynamic": "動態",
+      "dynamic_active": "正在適應你的聲音"
     },
     "presets": {
       "flat": "平直",
@@ -1685,6 +1687,11 @@
       "status_running": "Serpantinum 常駐程式正在執行（PID: {PID}）。",
       "status_stopped": "Serpantinum 常駐程式未執行。",
       "unknown_arg": "未知引數：{ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects 仍處於啟用狀態",
+      "body": "Serpantinum 現在擁有自己的音訊引擎，EasyEffects 可能會與其衝突。如果你只是為 Serpantinum 使用 EasyEffects，請關閉它的登入自動啟動。"
     }
   },
   "installer": {

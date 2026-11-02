@@ -1117,7 +1117,9 @@
     "equalizer": "Égaliseur",
     "eq": {
       "apply": "Appliquer",
-      "saved": "Enregistré"
+      "saved": "Enregistré",
+      "dynamic": "Dynamique",
+      "dynamic_active": "S'adapte à votre son"
     },
     "presets": {
       "flat": "Plat",
@@ -1685,6 +1687,11 @@
       "status_running": "Le démon Serpantinum est en cours d'exécution (PID : {PID}).",
       "status_stopped": "Le démon Serpantinum n'est pas en cours d'exécution.",
       "unknown_arg": "Argument inconnu : {ARG}"
+    },
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "EasyEffects est toujours activé",
+      "body": "Serpantinum dispose désormais de son propre moteur audio, et EasyEffects peut interférer avec lui. Si vous utilisiez EasyEffects uniquement pour Serpantinum, empêchez-le de démarrer à l'ouverture de session."
     }
   },
   "installer": {

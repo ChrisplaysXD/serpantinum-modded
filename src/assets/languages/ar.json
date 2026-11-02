@@ -138,7 +138,12 @@
       "usage": "الاستخدام: serpantinumd [start|stop|restart|status]"
     },
     "launching": "جارٍ إطلاق خدمة خلفية Serpantinum...",
-    "shutting_down": "جارٍ إيقاف خدمة خلفية Serpantinum..."
+    "shutting_down": "جارٍ إيقاف خدمة خلفية Serpantinum...",
+    "app_name": "Serpantinum",
+    "easyeffects": {
+      "title": "لا يزال EasyEffects مفعّلًا",
+      "body": "أصبح لدى Serpantinum الآن محرك صوت خاص به، وقد يتعارض EasyEffects معه. إذا كنت تستخدم EasyEffects من أجل Serpantinum فقط، فأوقف تشغيله التلقائي عند تسجيل الدخول."
+    }
   },
   "datetime": {
     "full_date": "dddd، MMMM dd"
@@ -191,7 +196,7 @@
         "title": "تمكين التشغيل التلقائي"
       },
       "name_label": "الاسم",
-      "name_placeholder": "مثال: Discord، EasyEffects، سكربت مخصص",
+      "name_placeholder": "مثال: Discord، Telegram، سكربت مخصص",
       "no_log": "السجل فارغ حاليًا",
       "repeat_delay_desc": "الفارق الزمني بين عمليات التشغيل المتكررة",
       "repeat_delay_label": "فاصل التكرار",
@@ -1323,7 +1328,9 @@
     "by_artist": "بواسطة {artist}",
     "eq": {
       "apply": "تطبيق",
-      "saved": "تم الحفظ"
+      "saved": "تم الحفظ",
+      "dynamic": "ديناميكي",
+      "dynamic_active": "يتكيف مع صوتك"
     },
     "audio": {
       "title": "الصوت",
