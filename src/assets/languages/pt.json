@@ -598,6 +598,10 @@
           "title": "Mostrar controles",
           "desc": "Exibe os botões de anterior, reproduzir e próxima"
         },
+        "hide_when_idle": {
+          "title": "Ocultar quando nada estiver tocando",
+          "desc": "Oculta o widget da barra enquanto nenhuma mídia estiver ativa"
+        },
         "preview": {
           "title": "Título da música",
           "author": "Song author"
@@ -1103,6 +1107,9 @@
       },
       "setting": {
         "show_text": "Mostrar texto"
+      },
+      "category": {
+        "lockscreen": "Tela de bloqueio"
       }
     }
   },
@@ -1511,11 +1518,21 @@
     },
     "redactor": {
       "no_widgets_active": "Nenhum widget ativo",
-      "click_to_add": "Clique num ícone na barra inferior para adicionar",
+      "click_to_add": "Escolha uma categoria ou pesquise na barra inferior para adicionar um widget",
       "done": "Concluir",
       "widget_singular": "widget",
       "widgets_plural": "widgets",
-      "widgets_short": "w"
+      "widgets_short": "w",
+      "category": {
+        "time": "Hora e texto",
+        "media": "Mídia",
+        "system": "Sistema",
+        "info": "Informações",
+        "other": "Outros"
+      },
+      "search": "Pesquisar widgets",
+      "results": "Resultados",
+      "no_results": "Nada encontrado"
     },
     "types": {
       "clock": "Relógio",
@@ -1528,7 +1545,8 @@
       "battery": "Bateria",
       "github": "Github",
       "time": "Hora",
-      "notes": "Notas"
+      "notes": "Notas",
+      "text": "Texto"
     },
     "variants": {
       "digital": "Digital",
@@ -1577,7 +1595,8 @@
     },
     "settings": {
       "lyricsLines": "Linhas",
-      "lyricsAlignment": "Alinhamento"
+      "lyricsAlignment": "Alinhamento",
+      "textContent": "Texto"
     },
     "align": {
       "left": "Esquerda",
@@ -1586,6 +1605,9 @@
     },
     "notes": {
       "empty": "Ainda não há notas"
+    },
+    "text": {
+      "placeholder": "Digite o texto"
     }
   },
   "cli": {
