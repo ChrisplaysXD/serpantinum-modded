@@ -598,6 +598,10 @@
           "title": "Tampilkan kontrol",
           "desc": "Tampilkan tombol sebelumnya, putar, dan berikutnya"
         },
+        "hide_when_idle": {
+          "title": "Sembunyikan saat tidak ada yang diputar",
+          "desc": "Sembunyikan widget dari bilah saat tidak ada media aktif"
+        },
         "preview": {
           "title": "Judul lagu",
           "author": "Song author"
@@ -1103,6 +1107,9 @@
       },
       "setting": {
         "show_text": "Tampilkan teks"
+      },
+      "category": {
+        "lockscreen": "Layar kunci"
       }
     }
   },
@@ -1514,11 +1521,21 @@
     },
     "redactor": {
       "no_widgets_active": "Tidak ada widget aktif",
-      "click_to_add": "Klik ikon widget di bilah alat bawah untuk menambahkannya",
+      "click_to_add": "Pilih kategori atau cari di bilah alat bawah untuk menambahkan widget",
       "done": "Selesai",
       "widget_singular": "widget",
       "widgets_plural": "widget",
-      "widgets_short": "w"
+      "widgets_short": "w",
+      "category": {
+        "time": "Waktu dan teks",
+        "media": "Media",
+        "system": "Sistem",
+        "info": "Info",
+        "other": "Lainnya"
+      },
+      "search": "Cari widget",
+      "results": "Hasil",
+      "no_results": "Tidak ada yang ditemukan"
     },
     "types": {
       "clock": "Jam",
@@ -1531,7 +1548,8 @@
       "battery": "Baterai",
       "github": "Github",
       "time": "Waktu",
-      "notes": "Catatan"
+      "notes": "Catatan",
+      "text": "Teks"
     },
     "variants": {
       "digital": "Digital",
@@ -1577,7 +1595,8 @@
     },
     "settings": {
       "lyricsLines": "Baris",
-      "lyricsAlignment": "Perataan"
+      "lyricsAlignment": "Perataan",
+      "textContent": "Teks"
     },
     "align": {
       "left": "Kiri",
@@ -1586,6 +1605,9 @@
     },
     "notes": {
       "empty": "Belum ada catatan"
+    },
+    "text": {
+      "placeholder": "Masukkan teks"
     }
   },
   "cli": {

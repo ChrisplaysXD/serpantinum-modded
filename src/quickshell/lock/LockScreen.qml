@@ -249,6 +249,12 @@ FocusScope {
     }
 
     Keys.onPressed: (event) => {
+        // A stalled compositor can hold back the key release (e.g. on resume from suspend),
+        // and the client-side repeat would then fill the password field. Only Backspace repeats.
+        if (event.isAutoRepeat && event.key !== Qt.Key_Backspace) {
+            event.accepted = true;
+            return;
+        }
         if (!lockScreenRoot.isPlayingIntro && !lockScreenRoot.isUnlocking) {
             if (!lockScreenRoot.inputActive) {
                 if (event.key !== Qt.Key_Escape) {
@@ -558,6 +564,8 @@ FocusScope {
         }
     }
 
+    readonly property bool backdropSettled: backdrop.wallpaperSettled
+
     LockBackdrop {
         id: backdrop
         screenRoot: lockScreenRoot
@@ -572,18 +580,18 @@ FocusScope {
                 property: "panelReveal"
                 from: 0.0
                 to: 1.0
-                duration: 750
-                easing.type: Easing.OutCubic
+                duration: 600
+                easing.type: Easing.Linear
             }
 
             SequentialAnimation {
-                PauseAnimation { duration: 250 }
+                PauseAnimation { duration: 460 }
                 NumberAnimation {
                     target: lockScreenRoot
                     property: "contentReveal"
                     from: 0.0
                     to: 1.0
-                    duration: 250
+                    duration: 140
                     easing.type: Easing.OutCubic
                 }
             }

@@ -598,6 +598,10 @@
           "title": "컨트롤 표시",
           "desc": "이전, 재생, 다음 버튼을 표시합니다"
         },
+        "hide_when_idle": {
+          "title": "재생 중이 아닐 때 숨기기",
+          "desc": "활성 미디어가 없는 동안 바에서 위젯을 숨깁니다"
+        },
         "preview": {
           "title": "곡 제목",
           "author": "Song author"
@@ -1103,6 +1107,9 @@
       },
       "setting": {
         "show_text": "텍스트 표시"
+      },
+      "category": {
+        "lockscreen": "잠금 화면"
       }
     }
   },
@@ -1511,11 +1518,21 @@
     },
     "redactor": {
       "no_widgets_active": "활성화된 위젯 없음",
-      "click_to_add": "아래 도구 모음에서 위젯 아이콘을 클릭해 추가하세요",
+      "click_to_add": "아래 도구 모음에서 카테고리를 선택하거나 검색해 위젯을 추가하세요",
       "done": "완료",
       "widget_singular": "개 위젯",
       "widgets_plural": "개 위젯",
-      "widgets_short": "개"
+      "widgets_short": "개",
+      "category": {
+        "time": "시간 및 텍스트",
+        "media": "미디어",
+        "system": "시스템",
+        "info": "정보",
+        "other": "기타"
+      },
+      "search": "위젯 검색",
+      "results": "결과",
+      "no_results": "찾을 수 없음"
     },
     "types": {
       "clock": "시계",
@@ -1528,7 +1545,8 @@
       "battery": "배터리",
       "github": "Github",
       "time": "시간",
-      "notes": "메모"
+      "notes": "메모",
+      "text": "텍스트"
     },
     "variants": {
       "digital": "디지털",
@@ -1577,7 +1595,8 @@
     },
     "settings": {
       "lyricsLines": "줄 수",
-      "lyricsAlignment": "정렬"
+      "lyricsAlignment": "정렬",
+      "textContent": "텍스트"
     },
     "align": {
       "left": "왼쪽",
@@ -1586,6 +1605,9 @@
     },
     "notes": {
       "empty": "아직 메모가 없습니다"
+    },
+    "text": {
+      "placeholder": "텍스트 입력"
     }
   },
   "cli": {

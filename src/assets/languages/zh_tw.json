@@ -598,6 +598,10 @@
           "title": "顯示控制按鈕",
           "desc": "顯示上一首、播放與下一首按鈕"
         },
+        "hide_when_idle": {
+          "title": "無播放時隱藏",
+          "desc": "沒有媒體播放時從列中隱藏該元件"
+        },
         "preview": {
           "title": "歌曲標題",
           "author": "Song author"
@@ -1103,6 +1107,9 @@
       },
       "setting": {
         "show_text": "顯示文字"
+      },
+      "category": {
+        "lockscreen": "鎖定畫面"
       }
     }
   },
@@ -1514,11 +1521,21 @@
     },
     "redactor": {
       "no_widgets_active": "無啟用中的小工具",
-      "click_to_add": "按一下底部工具列中的小工具圖示以新增",
+      "click_to_add": "在底部工具列中選擇一個類別或進行搜尋以新增小工具",
       "done": "完成",
       "widget_singular": "個小工具",
       "widgets_plural": "個小工具",
-      "widgets_short": "個"
+      "widgets_short": "個",
+      "category": {
+        "time": "時間與文字",
+        "media": "媒體",
+        "system": "系統",
+        "info": "資訊",
+        "other": "其他"
+      },
+      "search": "搜尋小工具",
+      "results": "結果",
+      "no_results": "找不到任何內容"
     },
     "types": {
       "clock": "時鐘",
@@ -1531,7 +1548,8 @@
       "battery": "電池",
       "github": "GitHub",
       "time": "時間",
-      "notes": "筆記"
+      "notes": "筆記",
+      "text": "文字"
     },
     "variants": {
       "digital": "數位",
@@ -1577,7 +1595,8 @@
     },
     "settings": {
       "lyricsLines": "行數",
-      "lyricsAlignment": "對齊方式"
+      "lyricsAlignment": "對齊方式",
+      "textContent": "文字"
     },
     "align": {
       "left": "靠左",
@@ -1586,6 +1605,9 @@
     },
     "notes": {
       "empty": "尚無筆記"
+    },
+    "text": {
+      "placeholder": "輸入文字"
     }
   },
   "cli": {

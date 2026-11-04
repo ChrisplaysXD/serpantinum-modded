@@ -599,6 +599,10 @@
           "title": "Mostrar controles",
           "desc": "Muestra los botones de anterior, reproducir y siguiente"
         },
+        "hide_when_idle": {
+          "title": "Ocultar cuando no se reproduce nada",
+          "desc": "Oculta el widget de la barra mientras no haya contenido activo"
+        },
         "preview": {
           "title": "Título de la canción",
           "author": "Song author"
@@ -1147,6 +1151,9 @@
       },
       "setting": {
         "show_text": "Mostrar texto"
+      },
+      "category": {
+        "lockscreen": "Pantalla de bloqueo"
       }
     }
   },
@@ -1555,11 +1562,21 @@
     },
     "redactor": {
       "no_widgets_active": "No hay widgets activos",
-      "click_to_add": "Haz clic en el icono de un widget en la barra inferior para añadirlo",
+      "click_to_add": "Elige una categoría o busca en la barra inferior para añadir un widget",
       "done": "Listo",
       "widget_singular": "widget",
       "widgets_plural": "widgets",
-      "widgets_short": "w"
+      "widgets_short": "w",
+      "category": {
+        "time": "Hora y texto",
+        "media": "Multimedia",
+        "system": "Sistema",
+        "info": "Información",
+        "other": "Otros"
+      },
+      "search": "Buscar widgets",
+      "results": "Resultados",
+      "no_results": "No se encontró nada"
     },
     "types": {
       "clock": "Reloj",
@@ -1572,7 +1589,8 @@
       "battery": "Batería",
       "github": "Github",
       "time": "Hora",
-      "notes": "Notas"
+      "notes": "Notas",
+      "text": "Texto"
     },
     "variants": {
       "digital": "Digital",
@@ -1621,7 +1639,8 @@
     },
     "settings": {
       "lyricsLines": "Líneas",
-      "lyricsAlignment": "Alineación"
+      "lyricsAlignment": "Alineación",
+      "textContent": "Texto"
     },
     "align": {
       "left": "Izquierda",
@@ -1630,6 +1649,9 @@
     },
     "notes": {
       "empty": "Aún no hay notas"
+    },
+    "text": {
+      "placeholder": "Introduce texto"
     }
   },
   "cli": {

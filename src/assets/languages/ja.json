@@ -129,6 +129,9 @@
       },
       "setting": {
         "show_text": "テキストを表示"
+      },
+      "category": {
+        "lockscreen": "ロック画面"
       }
     }
   },
@@ -540,11 +543,21 @@
     },
     "redactor": {
       "no_widgets_active": "アクティブなウィジェットがありません",
-      "click_to_add": "下部ツールバーのウィジェットアイコンをクリックして追加",
+      "click_to_add": "下部ツールバーでカテゴリを選ぶか検索してウィジェットを追加",
       "done": "完了",
       "widget_singular": "ウィジェット",
       "widgets_plural": "ウィジェット",
-      "widgets_short": "個"
+      "widgets_short": "個",
+      "category": {
+        "time": "時刻とテキスト",
+        "media": "メディア",
+        "system": "システム",
+        "info": "情報",
+        "other": "その他"
+      },
+      "search": "ウィジェットを検索",
+      "results": "結果",
+      "no_results": "見つかりませんでした"
     },
     "types": {
       "clock": "時計",
@@ -557,7 +570,8 @@
       "battery": "バッテリー",
       "github": "GitHub",
       "time": "時刻",
-      "notes": "メモ"
+      "notes": "メモ",
+      "text": "テキスト"
     },
     "variants": {
       "digital": "デジタル",
@@ -603,7 +617,8 @@
     },
     "settings": {
       "lyricsLines": "行数",
-      "lyricsAlignment": "配置"
+      "lyricsAlignment": "配置",
+      "textContent": "テキスト"
     },
     "align": {
       "left": "左揃え",
@@ -612,6 +627,9 @@
     },
     "notes": {
       "empty": "メモはまだありません"
+    },
+    "text": {
+      "placeholder": "テキストを入力"
     }
   },
   "cli": {
@@ -1432,6 +1450,10 @@
         "show_controls": {
           "title": "コントロールを表示",
           "desc": "前へ・再生・次へボタンを表示します"
+        },
+        "hide_when_idle": {
+          "title": "何も再生していないときは非表示",
+          "desc": "メディアが再生されていない間はバーからウィジェットを隠す"
         },
         "preview": {
           "title": "曲のタイトル",
