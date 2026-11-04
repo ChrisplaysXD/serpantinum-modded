@@ -217,10 +217,6 @@
         "title": "Швидкі дії",
         "desc": "Увімкнути плавальний оверлей швидких дій"
       },
-      "separatewindow": {
-        "title": "Відкривати налаштування в окремому вікні",
-        "desc": "Відкривати налаштування як звичайне вікно програми зі зміною розміру замість панелі всередині оболонки"
-      },
       "location": {
         "title": "Місцезнаходження",
         "desc": "Налаштування місцезнаходження для погоди та часу сходу/заходу сонця",
@@ -997,6 +993,11 @@
         "failed": "Не вдалося завантажити. Перевірте з'єднання.",
         "offline": "Не вдається отримати список мов. Показано лише встановлені мови.",
         "loading": "Завантаження мов..."
+      },
+      "directory": {
+        "title": "Папка скриншотів",
+        "desc": "Папка, до якої зберігаються скриншоти",
+        "select_dir": "Обрати теку..."
       }
     }
   },
@@ -1638,7 +1639,7 @@
     "description": "Оболонка робочого столу для композиторів wayland.",
     "commands": "Команди:",
     "script_commands": "Команди скриптів:",
-    "launch_desc": "Запуск автономних компонентів (start, widgetredactor, lock-redactor)",
+    "launch_desc": "Запуск автономних компонентів (start)",
     "msg_desc": "Надсилання команд або перемикання робочих просторів менеджеру інтерфейсу",
     "ipc_desc": "Передавання викликів IPC напряму оболонці",
     "kill_desc": "Коректна зупинка запущеної служби",
@@ -1652,18 +1653,16 @@
     "daemon_restarted": "Службу serpantinum перезапущено.",
     "starting_daemon": "Службу не запущено. Запуск serpantinumd у фоновому режимі...",
     "error_missing_qml": "Помилка: не вказано ціль для запуску.",
-    "launch_usage": "Використання: serpantinum launch <start|widgetredactor|lock-redactor> [аргументи...]",
+    "launch_usage": "Використання: serpantinum launch <start> [аргументи...]",
     "error_qml_not_found": "Помилка: не вдалося знайти {NAME}.qml у {DIR}",
     "error_shell_qml_not_found": "Помилка: не вдалося визначити шлях до shell.qml у {DIR}",
     "error_unknown_command": "Помилка: невідома команда '{CMD}'.",
     "error_unknown_target": "Помилка: невідома ціль '{TARGET}'.",
     "launch_help": {
-      "usage": "Використання: serpantinum launch <start|widgetredactor|lock-redactor> [аргументи...]",
+      "usage": "Використання: serpantinum launch <start> [аргументи...]",
       "description": "Запуск автономних компонентів напряму в режимі runner.",
       "available_targets": "Доступні цілі:",
-      "target_start": "Запустити інтерфейс початкового налаштування",
-      "target_widgetredactor": "Запустити інтерфейс редактора віджетів робочого столу",
-      "target_lock_redactor": "Перемкнути, відкрити або закрити редактор макета екрана блокування"
+      "target_start": "Запустити інтерфейс початкового налаштування"
     },
     "msg_help": {
       "usage": "Використання: serpantinum msg <команда|робочийпростір> [аргументи...]",
@@ -1696,7 +1695,8 @@
       "hibernate": "Перевести систему в режим глибокого сну",
       "reboot": "Перезавантажити систему",
       "poweroff": "Вимкнути систему",
-      "redactor": "Відкрити або перемкнути редактор макета віджетів стільниці"
+      "redactor": "Відкрити або перемкнути редактор макета віджетів стільниці",
+      "lock_redactor": "Перемкнути, відкрити або закрити редактор макета екрана блокування"
     },
     "usage_label": "Використання:",
     "config_desc": "Читання та зміна налаштувань (get, set, dump, path, edit)",
@@ -1708,9 +1708,9 @@
     "error_unknown_theme": "Помилка: невідома тема '{NAME}'.",
     "error_no_wallpapers": "Помилка: у каталозі шпалер не знайдено шпалер.",
     "error_file_not_found": "Помилка: файл не знайдено: {PATH}",
-    "info_desc": "Показати поточний стан налаштування (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
-    "set_desc": "Змінити налаштування (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "Виконати одноразову дію (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "info_desc": "Показати поточний стан налаштування (notifications, idle, dock, sfx, theme, lang, wallpaper, monitors, updates)",
+    "set_desc": "Змінити налаштування (notifications, idle, dock, sfx, theme, lang, wallpaper)",
+    "trigger_desc": "Виконати одноразову дію (idle, notifications, theme, firstlaunch)",
     "settings_desc": "Відкрити вікно налаштувань (за потреби на потрібній вкладці)"
   },
   "daemon": {

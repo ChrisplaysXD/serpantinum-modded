@@ -50,16 +50,14 @@
     },
     "kill_desc": "إيقاف خدمة الخلفية قيد التشغيل بشكل نظيف",
     "restart_desc": "إعادة تشغيل خدمة الخلفية",
-    "launch_desc": "تشغيل مكونات مستقلة (start، widgetredactor, lock-redactor)",
+    "launch_desc": "تشغيل مكونات مستقلة (start)",
     "launch_help": {
       "available_targets": "الأهداف المتاحة:",
       "description": "تشغيل مكونات مستقلة مباشرة في وضع runner.",
       "target_start": "تشغيل واجهة البدء والإعداد الأولي",
-      "target_widgetredactor": "محرر ومصمم الأدوات",
-      "target_lock_redactor": "تبديل محرر تخطيط شاشة القفل أو فتحه أو إغلاقه",
-      "usage": "الاستخدام: serpantinum launch <start|widgetredactor|lock-redactor> [وسائط...]"
+      "usage": "الاستخدام: serpantinum launch <start> [وسائط...]"
     },
-    "launch_usage": "الاستخدام: serpantinum launch <start|widgetredactor|lock-redactor> [وسائط...]",
+    "launch_usage": "الاستخدام: serpantinum launch <start> [وسائط...]",
     "msg_desc": "إرسال أوامر أو التبديل بين مساحات العمل إلى مدير الواجهة",
     "msg_help": {
       "available_commands": "الرسائل المتاحة:",
@@ -90,7 +88,8 @@
       "hibernate": "إسبات النظام",
       "reboot": "إعادة تشغيل النظام",
       "poweroff": "إيقاف تشغيل النظام",
-      "redactor": "فتح محرر تخطيط عناصر سطح المكتب أو تبديله"
+      "redactor": "فتح محرر تخطيط عناصر سطح المكتب أو تبديله",
+      "lock_redactor": "تبديل محرر تخطيط شاشة القفل أو فتحه أو إغلاقه"
     },
     "starting_daemon": "خدمة الخلفية لا تعمل. جارٍ بدء serpantinumd في الخلفية...",
     "usage": "الاستخدام: serpantinum [أمر] [خيارات...]",
@@ -106,9 +105,9 @@
     "error_unknown_theme": "خطأ: سمة غير معروفة '{NAME}'.",
     "error_no_wallpapers": "خطأ: لم يتم العثور على خلفيات في مجلد الخلفيات.",
     "error_file_not_found": "خطأ: الملف غير موجود: {PATH}",
-    "info_desc": "عرض الحالة الحالية لإعداد (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
-    "set_desc": "تغيير إعداد (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "تشغيل إجراء لمرة واحدة (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "info_desc": "عرض الحالة الحالية لإعداد (notifications, idle, dock, sfx, theme, lang, wallpaper, monitors, updates)",
+    "set_desc": "تغيير إعداد (notifications, idle, dock, sfx, theme, lang, wallpaper)",
+    "trigger_desc": "تشغيل إجراء لمرة واحدة (idle, notifications, theme, firstlaunch)",
     "settings_desc": "فتح نافذة الإعدادات (اختياريًا على تبويب محدد)"
   },
   "clipboard": {
@@ -766,10 +765,6 @@
         "desc": "تمكين نافذة الإجراءات السريعة العائمة",
         "title": "الإجراءات السريعة"
       },
-      "separatewindow": {
-        "title": "فتح الإعدادات في نافذة منفصلة",
-        "desc": "فتح الإعدادات كنافذة تطبيق عادية قابلة لتغيير الحجم بدلاً من لوحة داخل الواجهة"
-      },
       "screenshot_on_release": {
         "desc": "التقاط الشاشة فور الانتهاء من التحديد بزر الفأرة دون الحاجة للنقر على زر الالتقاط",
         "title": "التقاط المنطقة عند إفلات زر الفأرة"
@@ -1167,6 +1162,11 @@
         "failed": "فشل التنزيل. تحقق من اتصالك.",
         "offline": "تعذر الوصول إلى قائمة اللغات. يتم عرض اللغات المثبّتة فقط.",
         "loading": "جارٍ تحميل اللغات..."
+      },
+      "directory": {
+        "title": "مجلد لقطات الشاشة",
+        "desc": "المجلد الذي تُحفظ فيه لقطات الشاشة",
+        "select_dir": "اختر مجلدًا..."
       }
     }
   },

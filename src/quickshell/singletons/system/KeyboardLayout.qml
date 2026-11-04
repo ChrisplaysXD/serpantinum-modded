@@ -2,6 +2,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Hyprland
 import "../../"
 
 Singleton {
@@ -14,8 +15,9 @@ Singleton {
 
     readonly property bool isNiri: NiriState.isNiri
     readonly property bool isMango: MangoState.isMango
-    readonly property bool isSway: SystemInfo.desktopEnv ? SystemInfo.desktopEnv.toLowerCase().indexOf("sway") !== -1 : false
-    readonly property string compositor: isMango ? "mango" : (isSway ? "sway" : "hyprland")
+    readonly property bool isSway: !isNiri && SwayState.isSway
+    readonly property bool isHyprland: !isNiri && !isMango && !isSway
+    property string mainKeyboard: ""
 
     function subscribe() {
         subscribers++;
@@ -34,8 +36,17 @@ Singleton {
             applyNiriLayout();
             return;
         }
-        kbPoller.running = false;
-        kbPoller.running = true;
+        if (isSway) {
+            SwayState.subscribeKeyboard();
+            applySwayLayout();
+            return;
+        }
+        if (isMango) {
+            mangoLayoutStream.running = true;
+            return;
+        }
+        devicesPoller.running = false;
+        devicesPoller.running = true;
     }
 
     function stop() {
@@ -43,15 +54,28 @@ Singleton {
             NiriState.unsubscribe();
             return;
         }
-        kbPoller.running = false;
-        kbWaiter.running = false;
+        if (isSway) {
+            SwayState.unsubscribeKeyboard();
+            return;
+        }
+        mangoRestartTimer.stop();
+        mangoLayoutStream.running = false;
+        devicesPoller.running = false;
     }
 
     function refresh() {
         if (!active || isNiri) return;
-        kbWaiter.running = false;
-        kbPoller.running = false;
-        kbPoller.running = true;
+        if (isSway) {
+            SwayState.refreshKeyboard();
+            return;
+        }
+        if (isMango) {
+            mangoLayoutStream.running = false;
+            mangoLayoutStream.running = true;
+            return;
+        }
+        devicesPoller.running = false;
+        devicesPoller.running = true;
     }
 
     function switchNext() {
@@ -80,33 +104,82 @@ Singleton {
         function onKeyboardReadyChanged() { root.applyNiriLayout(); }
     }
 
-    Process {
-        id: kbPoller
-        command: [
-            "bash",
-            "-c",
-            root.isMango
-                ? "layout=$(mmsg get keyboardlayout 2>/dev/null | jq -r '.layout // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
-                : root.isSway
-                ? "layout=$(swaymsg -t get_inputs 2>/dev/null | jq -r '[.[] | select(.type == \"keyboard\" and .xkb_active_layout_name != null)] | .[0].xkb_active_layout_name // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
-                : "layout=$(LC_ALL=C hyprctl devices -j 2>/dev/null | jq -r '(.keyboards[] | select(.main == true) | .active_keymap) // .keyboards[0].active_keymap // empty' | head -n1); [[ -z \"$layout\" || \"$layout\" == \"null\" ]] && layout=\"US\"; echo \"${layout:0:2}\" | tr '[:lower:]' '[:upper:]'"
-        ]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                let txt = this.text.trim();
-                if (txt !== "") root.layout = txt;
-                root.ready = true;
-                if (root.active && !root.isNiri && !kbWaiter.running) kbWaiter.running = true;
+    function applySwayLayout() {
+        if (!SwayState.keyboardReady) return;
+        root.layout = SwayState.shortKeyboardLayout;
+        root.ready = true;
+    }
+
+    Connections {
+        target: SwayState
+        enabled: root.isSway && root.active
+        function onShortKeyboardLayoutChanged() { root.applySwayLayout(); }
+        function onKeyboardReadyChanged() { root.applySwayLayout(); }
+    }
+
+    function applyLayoutName(name) {
+        let txt = (name && name !== "null") ? String(name) : "US";
+        root.layout = txt.substring(0, 2).toUpperCase();
+        root.ready = true;
+    }
+
+    Connections {
+        target: root.isHyprland ? Hyprland : null
+        enabled: root.isHyprland && root.active
+        function onRawEvent(event) {
+            if (!event || event.name !== "activelayout") return;
+            let args = event.parse(2);
+            if (args.length === 2 && root.mainKeyboard !== "" && args[0] === root.mainKeyboard) {
+                root.applyLayoutName(args[1]);
+            } else if (!devicesPoller.running) {
+                devicesPoller.running = true;
             }
         }
     }
 
     Process {
-        id: kbWaiter
-        command: ["bash", Caching.qsDir + "/watchers/kb_wait.sh", root.compositor]
+        id: devicesPoller
+        command: ["hyprctl", "devices", "-j"]
+        environment: ({ "LC_ALL": "C" })
+        stdout: StdioCollector {
+            onStreamFinished: {
+                let keyboards = [];
+                try {
+                    keyboards = JSON.parse(this.text).keyboards || [];
+                } catch (e) {}
+                let kb = keyboards.find(k => k.main === true) || keyboards[0] || null;
+                root.mainKeyboard = kb ? String(kb.name || "") : "";
+                root.applyLayoutName(kb ? kb.active_keymap : "");
+            }
+        }
+    }
+
+    Process {
+        id: mangoLayoutStream
+        command: ["mmsg", "watch", "keyboardlayout"]
+        stdout: SplitParser {
+            splitMarker: "\n"
+            onRead: data => {
+                let payload = null;
+                try {
+                    payload = JSON.parse(data);
+                } catch (e) {
+                    return;
+                }
+                root.applyLayoutName(payload ? payload.layout : "");
+            }
+        }
         onExited: {
-            kbPoller.running = false;
-            if (root.active && !root.isNiri) kbPoller.running = true;
+            if (root.active && root.isMango) mangoRestartTimer.restart();
+        }
+    }
+
+    Timer {
+        id: mangoRestartTimer
+        interval: 1000
+        repeat: false
+        onTriggered: {
+            if (root.active && root.isMango && !mangoLayoutStream.running) mangoLayoutStream.running = true;
         }
     }
 }

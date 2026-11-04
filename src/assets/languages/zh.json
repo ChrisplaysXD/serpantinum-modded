@@ -219,10 +219,6 @@
         "title": "快捷操作",
         "desc": "启用悬浮快捷操作面板"
       },
-      "separatewindow": {
-        "title": "在单独窗口中打开设置",
-        "desc": "将设置作为可调整大小的普通应用窗口打开，而不是外壳内的面板"
-      },
       "location": {
         "title": "地理位置",
         "desc": "配置地理位置以用于日出日落计划和天气",
@@ -974,6 +970,11 @@
         "failed": "下载失败。请检查网络连接。",
         "offline": "无法访问语言列表。仅显示已安装的语言。",
         "loading": "正在加载语言..."
+      },
+      "directory": {
+        "title": "截图文件夹",
+        "desc": "保存截图的文件夹",
+        "select_dir": "选择目录..."
       }
     }
   },
@@ -1615,7 +1616,7 @@
     "description": "专为 Wayland 合成器打造的桌面 Shell。",
     "commands": "命令：",
     "script_commands": "脚本命令：",
-    "launch_desc": "启动独立组件（start、widgetredactor, lock-redactor）",
+    "launch_desc": "启动独立组件（start）",
     "msg_desc": "向界面管理器发送命令或工作区切换",
     "ipc_desc": "直接向 Shell 转发 IPC 调用",
     "kill_desc": "干净地停止正在运行的守护进程",
@@ -1629,18 +1630,16 @@
     "daemon_restarted": "Serpantinum 守护进程已重启。",
     "starting_daemon": "守护进程未运行。正在后台启动 serpantinumd...",
     "error_missing_qml": "错误：缺少要启动的目标。",
-    "launch_usage": "Usage: serpantinum launch <start|widgetredactor|lock-redactor> [args...]",
+    "launch_usage": "Usage: serpantinum launch <start> [args...]",
     "error_qml_not_found": "Error: could not resolve {NAME}.qml in {DIR}",
     "error_shell_qml_not_found": "Error: could not resolve path to shell.qml in {DIR}",
     "error_unknown_command": "Error: unknown command '{CMD}'.",
     "error_unknown_target": "Error: unknown target '{TARGET}'.",
     "launch_help": {
-      "usage": "Usage: serpantinum launch <start|widgetredactor|lock-redactor> [arguments...]",
+      "usage": "Usage: serpantinum launch <start> [arguments...]",
       "description": "直接在运行器模式下启动独立组件。",
       "available_targets": "可用目标：",
-      "target_start": "启动初始设置引导界面",
-      "target_widgetredactor": "启动桌面小组件编辑器界面",
-      "target_lock_redactor": "切换、打开或关闭锁屏布局编辑器"
+      "target_start": "启动初始设置引导界面"
     },
     "msg_help": {
       "usage": "Usage: serpantinum msg <command|workspace> [arguments...]",
@@ -1673,7 +1672,8 @@
       "hibernate": "休眠系统",
       "reboot": "重启系统",
       "poweroff": "关闭系统",
-      "redactor": "打开或切换桌面小部件布局编辑器"
+      "redactor": "打开或切换桌面小部件布局编辑器",
+      "lock_redactor": "切换、打开或关闭锁屏布局编辑器"
     },
     "usage_label": "用法:",
     "config_desc": "读取和更改设置 (get, set, dump, path, edit)",
@@ -1685,9 +1685,9 @@
     "error_unknown_theme": "错误：未知主题“{NAME}”。",
     "error_no_wallpapers": "错误：壁纸目录中未找到壁纸。",
     "error_file_not_found": "错误：未找到文件：{PATH}",
-    "info_desc": "显示设置的当前状态 (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
-    "set_desc": "更改设置 (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "执行一次性操作 (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "info_desc": "显示设置的当前状态 (notifications, idle, dock, sfx, theme, lang, wallpaper, monitors, updates)",
+    "set_desc": "更改设置 (notifications, idle, dock, sfx, theme, lang, wallpaper)",
+    "trigger_desc": "执行一次性操作 (idle, notifications, theme, firstlaunch)",
     "settings_desc": "打开设置窗口（可指定标签页）"
   },
   "daemon": {

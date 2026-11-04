@@ -38,10 +38,6 @@ Item {
 
     function _syncStream() {
         let want = isNiri && subscribers > 0;
-        if (want) {
-            niriWindowsPoller.running = true;
-            niriWorkspacesPoller.running = true;
-        }
         if (eventStream.running !== want) {
             eventStream.running = want;
         }
@@ -181,6 +177,11 @@ Item {
         } else if ((p = ev.WindowOpenedOrChanged)) {
             if (p.window && p.window.id !== undefined) {
                 let wCopy = Object.assign({}, _windows);
+                if (p.window.is_focused) {
+                    for (let wid in wCopy) {
+                        if (wCopy[wid] && wCopy[wid].is_focused) wCopy[wid] = Object.assign({}, wCopy[wid], { is_focused: false });
+                    }
+                }
                 wCopy[p.window.id] = p.window;
                 _windows = wCopy;
             }

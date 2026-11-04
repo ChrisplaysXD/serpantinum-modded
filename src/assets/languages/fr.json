@@ -219,10 +219,6 @@
         "title": "Actions rapides",
         "desc": "Activer le volet flottant d'actions rapides"
       },
-      "separatewindow": {
-        "title": "Ouvrir les paramètres dans une fenêtre séparée",
-        "desc": "Ouvrir les paramètres comme une fenêtre d'application redimensionnable au lieu d'un panneau intégré au shell"
-      },
       "location": {
         "title": "Localisation",
         "desc": "Configurer la localisation pour le cycle solaire automatique et la météo",
@@ -974,6 +970,11 @@
         "failed": "Échec du téléchargement. Vérifiez votre connexion.",
         "offline": "Impossible d'accéder à la liste des langues. Seules les langues installées sont affichées.",
         "loading": "Chargement des langues..."
+      },
+      "directory": {
+        "title": "Dossier des captures d'écran",
+        "desc": "Dossier où les captures d'écran sont enregistrées",
+        "select_dir": "Sélectionner le dossier..."
       }
     }
   },
@@ -1615,7 +1616,7 @@
     "description": "Un shell de bureau pour les gestionnaires de fenêtres Wayland.",
     "commands": "Commandes :",
     "script_commands": "Commandes de scripts :",
-    "launch_desc": "Lancer des composants autonomes (start, widgetredactor, lock-redactor)",
+    "launch_desc": "Lancer des composants autonomes (start)",
     "msg_desc": "Envoyer des commandes ou des changements d'espace de travail au gestionnaire d'interface",
     "ipc_desc": "Transférer les appels IPC directement au shell",
     "kill_desc": "Arrêter proprement le démon en cours d'exécution",
@@ -1629,18 +1630,16 @@
     "daemon_restarted": "Le démon Serpantinum est redémarré.",
     "starting_daemon": "Le démon n'est pas en cours d'exécution. Démarrage de serpantinumd en arrière-plan...",
     "error_missing_qml": "Erreur : cible de lancement manquante.",
-    "launch_usage": "Utilisation : serpantinum launch <start|widgetredactor|lock-redactor> [arguments...]",
+    "launch_usage": "Utilisation : serpantinum launch <start> [arguments...]",
     "error_qml_not_found": "Erreur : impossible de résoudre {NAME}.qml dans {DIR}",
     "error_shell_qml_not_found": "Erreur : impossible de résoudre le chemin vers shell.qml dans {DIR}",
     "error_unknown_command": "Erreur : commande inconnue '{CMD}'.",
     "error_unknown_target": "Erreur : cible inconnue '{TARGET}'.",
     "launch_help": {
-      "usage": "Utilisation : serpantinum launch <start|widgetredactor|lock-redactor> [arguments...]",
+      "usage": "Utilisation : serpantinum launch <start> [arguments...]",
       "description": "Lancer des composants autonomes directement en mode exécutable.",
       "available_targets": "Cibles disponibles :",
-      "target_start": "Lancer l'interface de configuration initiale",
-      "target_widgetredactor": "Lancer l'interface d'édition des widgets du bureau",
-      "target_lock_redactor": "Basculer, ouvrir ou fermer l'éditeur de disposition de l'écran de verrouillage"
+      "target_start": "Lancer l'interface de configuration initiale"
     },
     "msg_help": {
       "usage": "Utilisation : serpantinum msg <commande|espace_de_travail> [arguments...]",
@@ -1673,7 +1672,8 @@
       "hibernate": "Mettre le système en hibernation",
       "reboot": "Redémarrer le système",
       "poweroff": "Éteindre le système",
-      "redactor": "Ouvrir ou basculer l'éditeur de disposition des widgets du bureau"
+      "redactor": "Ouvrir ou basculer l'éditeur de disposition des widgets du bureau",
+      "lock_redactor": "Basculer, ouvrir ou fermer l'éditeur de disposition de l'écran de verrouillage"
     },
     "usage_label": "Utilisation :",
     "config_desc": "Lire et modifier les paramètres (get, set, dump, path, edit)",
@@ -1685,9 +1685,9 @@
     "error_unknown_theme": "Erreur : thème inconnu '{NAME}'.",
     "error_no_wallpapers": "Erreur : aucun fond d'écran trouvé dans le dossier des fonds d'écran.",
     "error_file_not_found": "Erreur : fichier introuvable : {PATH}",
-    "info_desc": "Afficher l'état actuel d'un réglage (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
-    "set_desc": "Modifier un réglage (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "Exécuter une action ponctuelle (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "info_desc": "Afficher l'état actuel d'un réglage (notifications, idle, dock, sfx, theme, lang, wallpaper, monitors, updates)",
+    "set_desc": "Modifier un réglage (notifications, idle, dock, sfx, theme, lang, wallpaper)",
+    "trigger_desc": "Exécuter une action ponctuelle (idle, notifications, theme, firstlaunch)",
     "settings_desc": "Ouvrir la fenêtre des paramètres (éventuellement sur un onglet)"
   },
   "daemon": {

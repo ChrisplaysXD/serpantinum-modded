@@ -220,10 +220,6 @@
         "title": "Schnellaktionen",
         "desc": "Schwebendes Schnellaktions-Overlay aktivieren"
       },
-      "separatewindow": {
-        "title": "Einstellungen in separatem Fenster öffnen",
-        "desc": "Einstellungen als normales, skalierbares Anwendungsfenster statt als Panel in der Shell öffnen"
-      },
       "location": {
         "title": "Standort",
         "desc": "Standort für automatischen Sonnenzeitplan und Wetter konfigurieren",
@@ -1018,6 +1014,11 @@
         "failed": "Download fehlgeschlagen. Prüfe deine Verbindung.",
         "offline": "Die Sprachliste ist nicht erreichbar. Es werden nur installierte Sprachen angezeigt.",
         "loading": "Sprachen werden geladen..."
+      },
+      "directory": {
+        "title": "Screenshot-Ordner",
+        "desc": "Ordner, in dem Screenshots gespeichert werden",
+        "select_dir": "Ordner auswählen..."
       }
     }
   },
@@ -1662,7 +1663,7 @@
     "description": "Eine Desktop-Shell für Wayland-Compositoren.",
     "commands": "Befehle:",
     "script_commands": "Skript-Befehle:",
-    "launch_desc": "Eigenständige Komponenten starten (start, widgetredactor, lock-redactor)",
+    "launch_desc": "Eigenständige Komponenten starten (start)",
     "msg_desc": "Befehle oder Arbeitsflächenwechsel an den UI-Manager senden",
     "ipc_desc": "IPC-Aufrufe direkt an die Shell weiterleiten",
     "kill_desc": "Laufenden Daemon sauber beenden",
@@ -1676,18 +1677,16 @@
     "daemon_restarted": "Serpantinum-Daemon neu gestartet.",
     "starting_daemon": "Daemon läuft nicht. serpantinumd wird im Hintergrund gestartet...",
     "error_missing_qml": "Fehler: Fehlendes Startziel.",
-    "launch_usage": "Verwendung: serpantinum launch <start|widgetredactor|lock-redactor> [argumente...]",
+    "launch_usage": "Verwendung: serpantinum launch <start> [argumente...]",
     "error_qml_not_found": "Fehler: {NAME}.qml in {DIR} konnte nicht aufgelöst werden",
     "error_shell_qml_not_found": "Fehler: Pfad zu shell.qml in {DIR} konnte nicht aufgelöst werden",
     "error_unknown_command": "Fehler: Unbekannter Befehl '{CMD}'.",
     "error_unknown_target": "Fehler: Unbekanntes Ziel '{TARGET}'.",
     "launch_help": {
-      "usage": "Verwendung: serpantinum launch <start|widgetredactor|lock-redactor> [argumente...]",
+      "usage": "Verwendung: serpantinum launch <start> [argumente...]",
       "description": "Eigenständige Komponenten direkt im Runner-Modus ausführen.",
       "available_targets": "Verfügbare Ziele:",
-      "target_start": "Start-Einrichtungsoberfläche öffnen",
-      "target_widgetredactor": "Desktop-Widget-Editor öffnen",
-      "target_lock_redactor": "Layout-Editor des Sperrbildschirms umschalten, öffnen oder schließen"
+      "target_start": "Start-Einrichtungsoberfläche öffnen"
     },
     "msg_help": {
       "usage": "Verwendung: serpantinum msg <befehl|arbeitsfläche> [argumente...]",
@@ -1720,7 +1719,8 @@
       "hibernate": "System in den Ruhezustand versetzen",
       "reboot": "System neu starten",
       "poweroff": "System herunterfahren",
-      "redactor": "Desktop-Widget-Editor öffnen oder umschalten"
+      "redactor": "Desktop-Widget-Editor öffnen oder umschalten",
+      "lock_redactor": "Layout-Editor des Sperrbildschirms umschalten, öffnen oder schließen"
     },
     "usage_label": "Verwendung:",
     "config_desc": "Einstellungen lesen und ändern (get, set, dump, path, edit)",
@@ -1732,9 +1732,9 @@
     "error_unknown_theme": "Fehler: Unbekanntes Design '{NAME}'.",
     "error_no_wallpapers": "Fehler: Keine Hintergrundbilder im Hintergrundbild-Verzeichnis gefunden.",
     "error_file_not_found": "Fehler: Datei nicht gefunden: {PATH}",
-    "info_desc": "Aktuellen Zustand einer Einstellung anzeigen (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
-    "set_desc": "Eine Einstellung ändern (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "Eine einmalige Aktion ausführen (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "info_desc": "Aktuellen Zustand einer Einstellung anzeigen (notifications, idle, dock, sfx, theme, lang, wallpaper, monitors, updates)",
+    "set_desc": "Eine Einstellung ändern (notifications, idle, dock, sfx, theme, lang, wallpaper)",
+    "trigger_desc": "Eine einmalige Aktion ausführen (idle, notifications, theme, firstlaunch)",
     "settings_desc": "Einstellungsfenster öffnen (optional auf einem bestimmten Tab)"
   },
   "daemon": {

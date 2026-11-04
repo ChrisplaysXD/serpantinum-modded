@@ -144,22 +144,6 @@ Scope {
 
                 function s(val) { return Scaler.s(val); }
 
-                function sendIpc(funcName, args) {
-                    let cmd = ["quickshell", "-p", Caching.mainQml, "ipc", "call", "widgets-" + redactorWindow.safeMonitorName, funcName];
-                    if (args && args.length > 0) {
-                        cmd = cmd.concat(args);
-                    }
-                    Quickshell.execDetached(cmd);
-                }
-
-                function sendBarIpc(funcName, args) {
-                    let cmd = ["quickshell", "-p", Caching.mainQml, "ipc", "call", "topbar", funcName];
-                    if (args && args.length > 0) {
-                        cmd = cmd.concat(args);
-                    }
-                    Quickshell.execDetached(cmd);
-                }
-
                 Timer {
                     id: exitTimer
                     interval: 100
@@ -171,8 +155,6 @@ Scope {
                     redactorMode.selectedId = "";
                     root.targetSelectedWidgetId = "";
                     WidgetSync.setRedactMode(redactorWindow.safeMonitorName, false);
-                    sendIpc("setRedactMode", ["false"]);
-                    sendBarIpc("setRedactMode", ["false"]);
                     exitTimer.start();
                 }
 
@@ -180,8 +162,6 @@ Scope {
                     redactorMode.selectedId = "";
                     root.targetSelectedWidgetId = "";
                     WidgetSync.setRedactMode(redactorWindow.safeMonitorName, false);
-                    sendIpc("setRedactMode", ["false"]);
-                    sendBarIpc("setRedactMode", ["false"]);
                 }
 
                 Shortcut {
@@ -257,6 +237,11 @@ Scope {
                     Connections {
                         target: WidgetSync
                         ignoreUnknownSignals: true
+
+                        function onPresetApplied(monitor, widgetsList) {
+                            if (String(monitor).replace(/[^a-zA-Z0-9_-]/g, "_") !== redactorWindow.safeMonitorName) return;
+                            redactorMode.loadLayoutFromText(JSON.stringify(widgetsList));
+                        }
 
                         function onPositionChanged(monitor, widgetId, x, y) {
                             if (monitor !== redactorWindow.safeMonitorName) return;
@@ -2307,8 +2292,6 @@ Scope {
                         redactorMode.updateToolbarObscured();
                         Qt.callLater(() => {
                             WidgetSync.setRedactMode(redactorWindow.safeMonitorName, true);
-                            redactorWindow.sendIpc("setRedactMode", ["true"]);
-                            redactorWindow.sendBarIpc("setRedactMode", ["true"]);
                         });
                         initTimer.restart();
                     }

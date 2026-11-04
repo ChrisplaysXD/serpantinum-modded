@@ -354,7 +354,7 @@ PanelWindow {
         DesktopMenuController.hide();
         let targetTab = tab !== undefined ? String(tab).trim() : "";
         let dir = (typeof Caching !== "undefined" && Caching.serpantinumDir) ? Caching.serpantinumDir : "";
-        let args = (Config.getSetting("general", {}).settingsSeparateWindow ? "open" : "toggle") + " settings" + (targetTab ? (" " + targetTab) : "");
+        let args = "toggle settings" + (targetTab ? (" " + targetTab) : "");
         let cmd = (dir ? ("if [ -f '" + dir + "/scripts/qs_manager.sh' ]; then bash '" + dir + "/scripts/qs_manager.sh' " + args + "; else ") : "")
             + "if command -v serpantinum >/dev/null 2>&1; then serpantinum msg " + args + "; elif command -v qs_manager.sh >/dev/null 2>&1; then qs_manager.sh " + args + "; fi"
             + (dir ? "; fi" : "");
@@ -559,13 +559,8 @@ PanelWindow {
                                     let wId = DesktopMenuController.targetWidgetId;
                                     if (wId) {
                                         let mon = (desktopMenuWindow.screen && desktopMenuWindow.screen.name) ? desktopMenuWindow.screen.name : ((DesktopMenuController.screen && DesktopMenuController.screen.name) ? DesktopMenuController.screen.name : "");
-                                        let safeMon = mon.replace(/[^a-zA-Z0-9_-]/g, "_");
                                         if (typeof WidgetSync !== "undefined") {
                                             WidgetSync.removeWidget(mon, wId);
-                                        }
-                                        let mainQml = (typeof Caching !== "undefined" && Caching.mainQml) ? Caching.mainQml : "";
-                                        if (mainQml) {
-                                            Quickshell.execDetached(["quickshell", "-p", mainQml, "ipc", "call", "widgets-" + safeMon, "remove", wId]);
                                         }
                                     }
                                     DesktopMenuController.hide();

@@ -219,10 +219,6 @@
         "title": "快速控制項目",
         "desc": "啟用浮動快速控制面板"
       },
-      "separatewindow": {
-        "title": "在獨立視窗中開啟設定",
-        "desc": "將設定作為可調整大小的一般應用程式視窗開啟，而非殼層內的面板"
-      },
       "location": {
         "title": "位置",
         "desc": "設定位置以自動排程日照時間與天氣",
@@ -974,6 +970,11 @@
         "failed": "下載失敗。請檢查網路連線。",
         "offline": "無法存取語言清單。僅顯示已安裝的語言。",
         "loading": "正在載入語言..."
+      },
+      "directory": {
+        "title": "螢幕截圖資料夾",
+        "desc": "儲存螢幕截圖的資料夾",
+        "select_dir": "選取目錄..."
       }
     }
   },
@@ -1629,18 +1630,16 @@
     "daemon_restarted": "Serpantinum 常駐程式已重新啟動。",
     "starting_daemon": "常駐程式未執行。正在背景啟動 serpantinumd...",
     "error_missing_qml": "錯誤：缺少啟動目標。",
-    "launch_usage": "用法：serpantinum launch <start|widgetredactor|lock-redactor> [引數...]",
+    "launch_usage": "用法：serpantinum launch <start> [引數...]",
     "error_qml_not_found": "錯誤：無法在 {DIR} 中解析 {NAME}.qml",
     "error_shell_qml_not_found": "錯誤：無法在 {DIR} 中解析 shell.qml 的路徑",
     "error_unknown_command": "錯誤：未知的指令「{CMD}」。",
     "error_unknown_target": "錯誤：未知的目標「{TARGET}」。",
     "launch_help": {
-      "usage": "用法：serpantinum launch <start|widgetredactor|lock-redactor> [引數...]",
+      "usage": "用法：serpantinum launch <start> [引數...]",
       "description": "直接以執行器模式啟動獨立元件。",
       "available_targets": "可用目標：",
-      "target_start": "啟動初始設定介面",
-      "target_widgetredactor": "啟動桌面小工具編輯器介面",
-      "target_lock_redactor": "切換、開啟或關閉鎖定畫面版面編輯器"
+      "target_start": "啟動初始設定介面"
     },
     "msg_help": {
       "usage": "用法：serpantinum msg <command|workspace> [引數...]",
@@ -1673,7 +1672,8 @@
       "hibernate": "休眠系統",
       "reboot": "重新啟動系統",
       "poweroff": "關閉系統",
-      "redactor": "開啟或切換桌面小工具版面編輯器"
+      "redactor": "開啟或切換桌面小工具版面編輯器",
+      "lock_redactor": "切換、開啟或關閉鎖定畫面版面編輯器"
     },
     "usage_label": "用法:",
     "config_desc": "讀取和變更設定 (get, set, dump, path, edit)",
@@ -1685,9 +1685,9 @@
     "error_unknown_theme": "錯誤：未知主題「{NAME}」。",
     "error_no_wallpapers": "錯誤：桌布目錄中找不到桌布。",
     "error_file_not_found": "錯誤：找不到檔案：{PATH}",
-    "info_desc": "顯示設定的目前狀態 (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
-    "set_desc": "變更設定 (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "執行一次性操作 (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "info_desc": "顯示設定的目前狀態 (notifications, idle, dock, sfx, theme, lang, wallpaper, monitors, updates)",
+    "set_desc": "變更設定 (notifications, idle, dock, sfx, theme, lang, wallpaper)",
+    "trigger_desc": "執行一次性操作 (idle, notifications, theme, firstlaunch)",
     "settings_desc": "開啟設定視窗（可指定分頁）"
   },
   "daemon": {

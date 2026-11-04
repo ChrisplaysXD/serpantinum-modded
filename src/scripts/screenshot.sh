@@ -51,15 +51,21 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 source "$SCRIPT_DIR/caching.sh"
 source "$SCRIPT_DIR/i18n.sh"
+source "$SCRIPT_DIR/config.sh"
 qs_ensure_cache "screenshot"
 qs_ensure_cache "recording"
 
 CACHE_DIR="$QS_CACHE_RECORDING"
-SAVE_DIR="${XDG_PICTURES_DIR:-$HOME/Pictures}/Screenshots"
+SAVE_DIR="$(get_setting "screenshotDir" "")"
+[ -z "$SAVE_DIR" ] && SAVE_DIR="${XDG_PICTURES_DIR:-$HOME/Pictures}/Screenshots"
 RECORD_DIR="${XDG_VIDEOS_DIR:-$HOME/Videos}/Recordings"
 mkdir -p "$SAVE_DIR" "$RECORD_DIR"
 
-REQUIRED_CMDS=("grim" "satty" "wl-copy" "pactl" "quickshell" "zbarimg" "python3")
+REQUIRED_CMDS=("grim" "wl-copy" "quickshell")
+[ "$EDIT_MODE" = true ] && REQUIRED_CMDS+=("satty")
+[ "$SCAN_QR_MODE" = true ] && REQUIRED_CMDS+=("zbarimg" "python3")
+[ "$OCR_MODE" = true ] && REQUIRED_CMDS+=("python3")
+[ "$RECORD_MODE" = true ] && REQUIRED_CMDS+=("pactl")
 MISSING_CMDS=()
 for cmd in "${REQUIRED_CMDS[@]}"; do
     if ! command -v "$cmd" &> /dev/null; then

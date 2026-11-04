@@ -219,10 +219,6 @@
         "title": "Azioni rapide",
         "desc": "Attiva il pannello fluttuante per le azioni rapide"
       },
-      "separatewindow": {
-        "title": "Apri le impostazioni in una finestra separata",
-        "desc": "Apri le impostazioni come una normale finestra ridimensionabile invece di un pannello nella shell"
-      },
       "location": {
         "title": "Posizione",
         "desc": "Imposta la posizione per il meteo e l'orario solare in automatico",
@@ -973,6 +969,11 @@
         "failed": "Download non riuscito. Controlla la connessione.",
         "offline": "Impossibile raggiungere l'elenco delle lingue. Vengono mostrate solo le lingue installate.",
         "loading": "Caricamento delle lingue..."
+      },
+      "directory": {
+        "title": "Cartella degli screenshot",
+        "desc": "Cartella in cui vengono salvati gli screenshot",
+        "select_dir": "Seleziona cartella..."
       }
     }
   },
@@ -1614,7 +1615,7 @@
     "description": "Una shell desktop per compositor Wayland.",
     "commands": "Comandi:",
     "script_commands": "Comandi Script:",
-    "launch_desc": "Avvia componenti autonomi (start, widgetredactor, lock-redactor)",
+    "launch_desc": "Avvia componenti autonomi (start)",
     "msg_desc": "Invia comandi o cambi di workspace al gestore dell'interfaccia",
     "ipc_desc": "Inoltra chiamate IPC direttamente alla shell",
     "kill_desc": "Interrompe in modo pulito il demone in esecuzione",
@@ -1628,18 +1629,16 @@
     "daemon_restarted": "Demone di Serpantinum riavviato.",
     "starting_daemon": "Demone non in esecuzione. Avvio di serpantinumd in background...",
     "error_missing_qml": "Errore: target da avviare mancante.",
-    "launch_usage": "Uso: serpantinum launch <start|widgetredactor|lock-redactor> [argomenti...]",
+    "launch_usage": "Uso: serpantinum launch <start> [argomenti...]",
     "error_qml_not_found": "Errore: impossibile trovare {NAME}.qml in {DIR}",
     "error_shell_qml_not_found": "Errore: impossibile trovare il percorso di shell.qml in {DIR}",
     "error_unknown_command": "Errore: comando sconosciuto '{CMD}'.",
     "error_unknown_target": "Errore: target sconosciuto '{TARGET}'.",
     "launch_help": {
-      "usage": "Uso: serpantinum launch <start|widgetredactor|lock-redactor> [argomenti...]",
+      "usage": "Uso: serpantinum launch <start> [argomenti...]",
       "description": "Avvia componenti autonomi direttamente in modalità esecuzione.",
       "available_targets": "Target disponibili:",
-      "target_start": "Avvia l'interfaccia di configurazione iniziale",
-      "target_widgetredactor": "Avvia l'interfaccia dell'editor di widget desktop",
-      "target_lock_redactor": "Attiva/disattiva, apri o chiudi l'editor del layout della schermata di blocco"
+      "target_start": "Avvia l'interfaccia di configurazione iniziale"
     },
     "msg_help": {
       "usage": "Uso: serpantinum msg <comando|workspace> [argomenti...]",
@@ -1672,7 +1671,8 @@
       "hibernate": "Iberna il sistema",
       "reboot": "Riavvia il sistema",
       "poweroff": "Spegni il sistema",
-      "redactor": "Apri o attiva/disattiva l'editor del layout dei widget del desktop"
+      "redactor": "Apri o attiva/disattiva l'editor del layout dei widget del desktop",
+      "lock_redactor": "Attiva/disattiva, apri o chiudi l'editor del layout della schermata di blocco"
     },
     "usage_label": "Utilizzo:",
     "config_desc": "Leggi e modifica le impostazioni (get, set, dump, path, edit)",
@@ -1684,9 +1684,9 @@
     "error_unknown_theme": "Errore: tema sconosciuto '{NAME}'.",
     "error_no_wallpapers": "Errore: nessuno sfondo trovato nella cartella degli sfondi.",
     "error_file_not_found": "Errore: file non trovato: {PATH}",
-    "info_desc": "Mostra lo stato attuale di un'impostazione (dnd, caffeine, dock, theme, wallpaper, monitors, updates...)",
-    "set_desc": "Modifica un'impostazione (dnd, caffeine, dock, sfx-mute, matugen, lang, theme, wallpaper)",
-    "trigger_desc": "Esegui un'azione singola (idle, notifications-clear, firstlaunch, theme-reload, theme-generate)",
+    "info_desc": "Mostra lo stato attuale di un'impostazione (notifications, idle, dock, sfx, theme, lang, wallpaper, monitors, updates)",
+    "set_desc": "Modifica un'impostazione (notifications, idle, dock, sfx, theme, lang, wallpaper)",
+    "trigger_desc": "Esegui un'azione singola (idle, notifications, theme, firstlaunch)",
     "settings_desc": "Apri la finestra delle impostazioni (facoltativamente su una scheda)"
   },
   "daemon": {

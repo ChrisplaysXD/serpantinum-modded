@@ -129,6 +129,7 @@ Item {
                 else if (line === "inhibit 0") idleRoot.isAppInhibited = false;
                 else if (line === "sleep" && idleRoot.lockOnSleep) idleRoot.lockSession(true);
                 else if (line === "wake") idleRoot.reauthLockSession();
+                else if (line.startsWith("log ")) console.info("idle_helper: " + line.slice(4));
             }
         }
         onStarted: idleRoot.syncSleepLock()
@@ -381,6 +382,30 @@ Item {
         function trigger(name: string): void { idleRoot.executeAction(name); }
         function execute(name: string): void { idleRoot.executeAction(name); }
         function run(name: string): void { idleRoot.executeAction(name); }
+        function status(): string { return idleRoot.statusJson(); }
+    }
+
+    function statusJson() {
+        return JSON.stringify({
+            "active": idleRoot.isIdleSystemActive,
+            "enabled": idleRoot.idleEnabled,
+            "caffeine": {
+                "on": idleRoot.manualInhibit,
+                "remaining": idleRoot.manualInhibit && Number(idleSettings.caffeineEndTime) > 0 ? Math.max(0, Math.round((Number(idleSettings.caffeineEndTime) - Date.now()) / 1000)) : 0
+            },
+            "appInhibited": idleRoot.isAppInhibited,
+            "mediaPlaying": idleRoot.isMediaPlaying,
+            "locked": idleRoot.isLocked,
+            "dimmed": idleRoot.isDimmed,
+            "actions": idleRoot.allActions.map(a => ({
+                "id": a.id,
+                "enabled": a.enabled !== undefined ? a.enabled : true,
+                "timeout": idleRoot.getActionTimeout(a),
+                "valid": idleRoot.isActionPipelineValid(a),
+                "respectInhibitors": a.respectInhibitors !== undefined ? a.respectInhibitors : true,
+                "mprisInhibit": !!a.mprisInhibit
+            }))
+        }, null, 2);
     }
 
     Dim {
