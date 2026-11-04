@@ -23,7 +23,23 @@ Item {
     }
 
     function effectiveSource() {
-        return MprisController.artUrl;
+        if (root.hasAlbumArt && MprisController.artUrl !== undefined && MprisController.artUrl !== "") {
+            return MprisController.artUrl;
+        }
+
+        let themeConfig = Config.getSetting("theme", {});
+        if (typeof Wallpaper !== "undefined" && typeof Wallpaper.getWallpaperPath === "function") {
+            let wp = Wallpaper.getWallpaperPath("");
+            if (wp && wp !== "") return wp;
+        }
+        if (themeConfig.wallpaper && themeConfig.wallpaper !== "") {
+            return themeConfig.wallpaper;
+        }
+        if (typeof Caching !== "undefined" && typeof Caching.getCacheDir === "function") {
+            let snap = Caching.getCacheDir("wallpaper") + "/current_wallpaper.png";
+            if (snap && snap !== "") return snap;
+        }
+        return Config.getSetting("wallpaper", "");
     }
 
     function applyThemeSource() {
@@ -31,7 +47,7 @@ Item {
             return;
         }
         let themeConfig = Config.getSetting("theme", {});
-        let targetImg = root.hasAlbumArt ? root.effectiveSource() : "";
+        let targetImg = root.effectiveSource();
         if (targetImg && targetImg !== "" && typeof Matugen !== "undefined" && typeof Matugen.generate === "function") {
             if (Matugen.isRunning) {
                 console.warn("[AlbumTheme] matugen already running, skipping");
@@ -49,9 +65,9 @@ Item {
                 ThemeBackend.applyMatugenColors();
             }
         } else {
-            // album selected but no art, or non-album source: regenerate from wallpaper
-            if (typeof ThemeBackend !== "undefined" && typeof ThemeBackend.updateColors === "function") {
-                ThemeBackend.updateColors();
+            // no resolvable source anywhere: apply cached colors
+            if (typeof ThemeBackend !== "undefined" && typeof ThemeBackend.applyMatugenColors === "function") {
+                ThemeBackend.applyMatugenColors();
             }
         }
     }

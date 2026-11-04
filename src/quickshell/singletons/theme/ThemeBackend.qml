@@ -269,7 +269,7 @@ Item {
         if (root.isMatugenTheme()) {
             root.applyMatugenColors();
             let wp = themeConfig.wallpaper || Config.getSetting("wallpaper", "");
-            if (typeof AlbumTheme !== "undefined" && AlbumTheme.hasAlbumArt) wp = AlbumTheme.effectiveSource(); // local hook
+            if (typeof AlbumTheme !== "undefined" && AlbumTheme.effectiveSource() !== "") wp = AlbumTheme.effectiveSource(); // local hook
             if (!Caching.isStandalone && wp && wp !== "" && typeof Matugen !== "undefined" && typeof Matugen.generate === "function") {
                 Matugen.generate(wp, themeConfig.mode, themeConfig.schemeType);
             }
