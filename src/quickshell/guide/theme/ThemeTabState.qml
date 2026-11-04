@@ -582,8 +582,8 @@ GuideTab {
         let current = Config.getSetting("theme", themeTabRoot.defaultThemeSettings);
         current.themeSource = val;
         Config.setSetting("theme", current);
-        if (typeof ThemeBackend !== "undefined" && typeof ThemeBackend.applyThemeSource === "function") {
-            ThemeBackend.applyThemeSource();
+        if (typeof AlbumTheme !== "undefined" && typeof AlbumTheme.applyThemeSource === "function") {
+            AlbumTheme.applyThemeSource();
         } else if (typeof ThemeBackend !== "undefined") {
             ThemeBackend.updateColors();
         }
@@ -613,7 +613,9 @@ GuideTab {
                 }
             }
 
-            if (typeof ThemeBackend !== "undefined" && typeof ThemeBackend.applyThemeSource === "function") {
+            if (typeof AlbumTheme !== "undefined" && typeof AlbumTheme.applyThemeSource === "function") {
+                AlbumTheme.applyThemeSource();
+            } else if (typeof ThemeBackend !== "undefined" && typeof ThemeBackend.applyThemeSource === "function") {
                 ThemeBackend.applyThemeSource();
             } else if (themeTabRoot.currentWallpaperPath && themeTabRoot.currentWallpaperPath !== "") {
                 if (typeof Matugen !== "undefined" && typeof Matugen.generate === "function") {
